@@ -42,11 +42,36 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         a {
             text-decoration: none;
             color: inherit;
+        }
+
+        /* ================= ANIMACIONES GLOBALES ================= */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); }
         }
 
         /* ================= NAVBAR (STICKY) ================= */
@@ -117,13 +142,19 @@
             display: none;
             font-size: 1.5rem;
             cursor: pointer;
+            color: var(--text-dark);
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
         }
 
         /* ================= HERO SECTION ================= */
         .hero {
             text-align: center;
-            padding: 6rem 2rem;
-            background: var(--white);
+            padding: 8rem 2rem;
+            background: linear-gradient(180deg, var(--white) 0%, var(--bg-light) 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -131,7 +162,7 @@
         }
 
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
             max-width: 800px;
             margin-bottom: 1.5rem;
@@ -168,7 +199,8 @@
 
         .btn-primary:hover {
             background-color: #3367D6;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
         }
 
         .btn-secondary {
@@ -186,16 +218,16 @@
             color: var(--google-red);
         }
 
-        /* ================= SERVICIOS (GRID) ================= */
+        /* ================= SERVICIOS ================= */
         .services {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .section-title {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 3rem;
             position: relative;
         }
@@ -208,15 +240,16 @@
 
         .card {
             background: var(--white);
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
             border-top: 4px solid transparent;
         }
 
         .card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
         }
 
         .card:nth-child(1) { border-top-color: var(--google-blue); }
@@ -233,47 +266,9 @@
             font-size: 0.95rem;
         }
 
-        /* ================= PRODUCTO ESTRELLA ================= */
-        .product-feature {
-            background: var(--white);
-            padding: 5rem 2rem;
-        }
-
-        .product-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .feature-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .feature-list li {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            background: var(--bg-light);
-            padding: 1.5rem;
-            border-radius: 10px;
-        }
-
-        .feature-list i {
-            font-size: 1.5rem;
-        }
-        
-        .icon-blue { color: var(--google-blue); }
-        .icon-red { color: var(--google-red); }
-        .icon-yellow { color: var(--google-yellow); }
-        .icon-green { color: var(--google-green); }
-
-        /* ================= SECCIÓN DE COMPRA ================= */
+        /* ================= ZONA COMPRA ================= */
         .product-showcase {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             background: var(--bg-light);
         }
 
@@ -281,7 +276,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 4rem;
+            gap: 5rem;
             align-items: center;
             max-width: 1000px;
             margin: 0 auto;
@@ -289,14 +284,11 @@
 
         .product-image img {
             width: 100%;
-            max-width: 320px;
+            max-width: 350px;
             border-radius: 12px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
-        }
-
-        .product-image img:hover {
-            transform: scale(1.02);
+            /* Aquí aplicamos la animación flotante al cartel */
+            animation: float 5s ease-in-out infinite; 
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
         }
 
         .product-details {
@@ -309,7 +301,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Controles de Precio y Cantidad */
         .price-container {
             display: flex;
             align-items: baseline;
@@ -335,11 +326,16 @@
             border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 600;
-            display: none; /* Oculto por defecto, se activa con JS */
             margin-bottom: 1.5rem;
             display: inline-block;
             opacity: 0;
-            transition: opacity 0.3s;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .discount-badge.show {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .quantity-wrapper {
@@ -380,10 +376,9 @@
             font-family: 'Poppins', sans-serif;
             background: transparent;
             color: var(--text-dark);
-            -moz-appearance: textfield; /* Quitar flechas en Firefox */
+            -moz-appearance: textfield;
         }
 
-        /* Quitar flechas nativas en Chrome/Safari */
         .qty-input::-webkit-outer-spin-button,
         .qty-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -407,17 +402,17 @@
             border-radius: 50%;
             border: 2px solid #ddd;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .color-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-4px) scale(1.1);
         }
 
         .color-btn.active {
             border: 3px solid var(--google-blue);
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
         #color-name {
@@ -430,9 +425,9 @@
             width: 100%;
         }
 
-        /* ================= FAQ SECTION ================= */
+        /* ================= FAQ ================= */
         .faq-section {
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             background: var(--white);
         }
 
@@ -449,28 +444,33 @@
             border-radius: 8px;
             padding: 1.2rem 1.5rem;
             border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .faq-item summary {
             font-weight: 600;
             font-size: 1.1rem;
             cursor: pointer;
-            list-style: none; /* Oculta la flecha por defecto */
+            list-style: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .faq-item summary::-webkit-details-marker {
-            display: none; /* Oculta la flecha en Chrome/Safari */
+            display: none;
         }
 
         .faq-item summary::after {
-            content: '\f078'; /* Icono de flecha hacia abajo de FontAwesome */
+            content: '\f078';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             color: var(--google-blue);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease;
         }
 
         .faq-item[open] summary::after {
@@ -483,19 +483,21 @@
             border-top: 1px solid #ddd;
             padding-top: 1rem;
             line-height: 1.7;
+            /* Pequeña animación al abrir el FAQ */
+            animation: slideDown 0.4s ease-out;
         }
 
-        /* ================= FOOTER / CONTACTO ================= */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= FOOTER ================= */
         .footer-cta {
             background-color: var(--text-dark);
             color: var(--white);
-            padding: 5rem 2rem;
+            padding: 6rem 2rem;
             text-align: center;
-        }
-
-        .footer-cta h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
         }
 
         .form-container {
@@ -504,6 +506,7 @@
             background: rgba(255,255,255,0.05);
             padding: 2rem;
             border-radius: 12px;
+            backdrop-filter: blur(5px);
         }
 
         .form-group {
@@ -522,15 +525,17 @@
             width: 100%;
             padding: 1rem;
             border: 1px solid #444;
-            background: #111;
+            background: rgba(0,0,0,0.2);
             color: var(--white);
             border-radius: 6px;
             font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, background 0.3s;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--google-blue);
+            background: rgba(0,0,0,0.4);
         }
 
         textarea.form-control {
@@ -548,29 +553,41 @@
             font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
+            /* Aplicamos la animación del latido */
+            animation: pulse-green 2s infinite;
         }
 
         .btn-submit:hover {
             background-color: #2b8b45;
+            transform: translateY(-2px);
+            animation: none; /* Para la animación al pasar el ratón */
         }
 
-        /* ================= MEDIA QUERIES (RESPONSIVE) ================= */
+        /* ================= MEDIA QUERIES ================= */
         @media (max-width: 768px) {
             .nav-links {
-                display: none;
+                display: flex;
                 flex-direction: column;
                 position: absolute;
-                top: 70px;
+                top: 100%; /* Justo debajo de la barra */
                 left: 0;
                 width: 100%;
                 background: rgba(255,255,255,0.98);
                 padding: 2rem;
                 box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+                /* Animación del menú móvil */
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-20px);
+                transition: all 0.4s ease;
+                border-top: 1px solid #eee;
             }
 
             .nav-links.active {
-                display: flex;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
             }
 
             .hamburger {
@@ -578,7 +595,7 @@
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
         }
 
@@ -602,7 +619,6 @@
         </div>
         <div class="nav-links" id="nav-links">
             <a href="#servicios">Servicios</a>
-            <a href="#producto-estrella">Cómo funciona</a>
             <a href="#comprar">Comprar</a>
             <a href="#faq">FAQ</a>
             <a href="#contacto" class="btn-nav">Pedir ahora</a>
@@ -610,82 +626,53 @@
     </nav>
 
     <main>
-        <!-- HERO SECTION -->
-        <header class="hero">
-            <h1>Multiplica tus reseñas de Google en segundos y sin esfuerzo.</h1>
-            <p>Especialistas en digitalizar tu negocio local. La herramienta definitiva para convertir a tus clientes satisfechos en reputación online.</p>
+        <!-- HERO -->
+        <header class="hero fade-up">
+            <h1>Multiplica tus reseñas de Google en segundos.</h1>
+            <p>Especialistas en digitalizar tu negocio local. Convierte a tus clientes satisfechos en tu mejor publicidad online.</p>
             <div class="hero-buttons">
-                <a href="#comprar" class="btn-primary">Ver Soportes Inteligentes</a>
-                <a href="#servicios" class="btn-secondary">Nuestros Servicios</a>
+                <a href="#comprar" class="btn-primary">Ver Soportes</a>
+                <a href="#servicios" class="btn-secondary">Saber más</a>
             </div>
         </header>
 
-        <!-- SECCIÓN DE SERVICIOS -->
+        <!-- SERVICIOS -->
         <section id="servicios" class="services">
-            <h2 class="section-title">Nuestras Soluciones</h2>
+            <h2 class="section-title fade-up">Nuestras Soluciones</h2>
             <div class="services-grid">
-                <div class="card">
-                    <h3>Soportes Inteligentes NFC + QR</h3>
-                    <p>Haz que conseguir 5 estrellas sea fácil y rápido. Tus clientes solo tienen que acercar su teléfono para dejar una reseña al instante.</p>
+                <div class="card fade-up">
+                    <h3>Soportes Inteligentes</h3>
+                    <p>Tus clientes solo tienen que acercar su teléfono para dejar una reseña al instante mediante NFC.</p>
                 </div>
-                <div class="card">
+                <div class="card fade-up" style="transition-delay: 0.1s;">
                     <h3>Menús Digitales</h3>
-                    <p>Diseño de cartas con QR para mesas, con una estética moderna, responsiva y extremadamente fáciles de actualizar para tu local.</p>
+                    <p>Diseño de cartas con QR modernas, responsivas y fáciles de actualizar para tu restaurante.</p>
                 </div>
-                <div class="card">
+                <div class="card fade-up" style="transition-delay: 0.2s;">
                     <h3>Cartelería a Medida</h3>
-                    <p>Promociones, ofertas y horarios diseñados visualmente para destacar en tu local y captar la atención de tus clientes.</p>
+                    <p>Promociones y horarios diseñados visualmente para destacar y captar la atención.</p>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN PRODUCTO ESTRELLA -->
-        <section id="producto-estrella" class="product-feature">
-            <div class="product-container">
-                <h2 class="section-title">El poder de la tecnología NFC</h2>
-                <ul class="feature-list">
-                    <li>
-                        <i class="fa-solid fa-wifi icon-blue"></i>
-                        Doble Tecnología (Tap & Scan)
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-bolt icon-yellow"></i>
-                        Cero Fricción en 5 segundos
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-gem icon-red"></i>
-                        Diseño Premium Acrílico (Blanco/Negro)
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-chart-line icon-green"></i>
-                        Mejora tu SEO Local
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- SECCIÓN DE COMPRA / SELECTOR DE COLOR Y CANTIDAD -->
+        <!-- COMPRA -->
         <section id="comprar" class="product-showcase">
-            <h2 class="section-title">Prepara tu pedido</h2>
+            <h2 class="section-title fade-up">Prepara tu pedido</h2>
             <div class="showcase-container">
                 
-                <!-- IMAGEN PRINCIPAL (Blanco por defecto) -->
-                <div class="product-image">
+                <div class="product-image fade-up">
                     <img id="main-product-img" src="cartel blanco.png" alt="Cartel NFC Google Review Blanco">
                 </div>
 
-                <!-- Detalles y botones de selección -->
-                <div class="product-details">
+                <div class="product-details fade-up">
                     <h3>Placa NFC Inteligente Google</h3>
                     
-                    <!-- Precios Dinámicos -->
                     <div class="price-container">
                         <span class="price" id="price-display">15,00€</span>
                         <span class="price-note">IVA inc. (Pago único)</span>
                     </div>
                     <div class="discount-badge" id="discount-badge">¡Ahorras 2€ por cada unidad extra!</div>
                     
-                    <!-- Selector de Cantidad -->
                     <p class="selector-title">Cantidad:</p>
                     <div class="quantity-wrapper">
                         <div class="quantity-controls">
@@ -695,7 +682,6 @@
                         </div>
                     </div>
 
-                    <!-- Selector de Color -->
                     <p class="selector-title">Color del metacrilato:</p>
                     <div class="color-selector">
                         <button class="color-btn active" data-img="cartel blanco.png" data-color="Blanco" style="background-color: #ffffff;"></button>
@@ -708,36 +694,29 @@
             </div>
         </section>
 
-        <!-- SECCIÓN FAQ (PREGUNTAS FRECUENTES) -->
+        <!-- FAQ -->
         <section id="faq" class="faq-section">
-            <h2 class="section-title">Preguntas Frecuentes</h2>
-            <div class="faq-container">
+            <h2 class="section-title fade-up">Preguntas Frecuentes</h2>
+            <div class="faq-container fade-up">
                 <details class="faq-item">
                     <summary>¿Necesito enchufar el cartel o lleva pilas?</summary>
-                    <p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El propio teléfono móvil de tu cliente emite la energía necesaria para leer el chip interno al acercarlo, por lo que el cartel dura años sin ningún tipo de mantenimiento.</p>
+                    <p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El propio teléfono móvil de tu cliente emite la energía necesaria para leer el chip interno al acercarlo, por lo que el cartel dura años sin mantenimiento.</p>
                 </details>
-                
-                <details class="faq-item">
-                    <summary>¿Funciona con cualquier teléfono móvil?</summary>
-                    <p>Sí, casi la totalidad de los teléfonos modernos (tanto iPhone como Android) llevan lector NFC integrado y activado por defecto. Además, para garantizar el 100% de compatibilidad con móviles muy antiguos, el cartel lleva impreso un código QR que se puede escanear con la cámara normal.</p>
-                </details>
-
                 <details class="faq-item">
                     <summary>¿Tengo que pagar alguna cuota mensual?</summary>
-                    <p>No, es un único pago por el producto físico. No hay suscripciones, ni gastos ocultos, ni mantenimientos de software. Tú lo compras, te lo configuramos, y ya es tuyo para siempre.</p>
+                    <p>No, es un único pago por el producto físico. No hay suscripciones, ni gastos ocultos. Tú lo compras, te lo configuramos, y ya es tuyo para siempre.</p>
                 </details>
-
                 <details class="faq-item">
                     <summary>¿Cómo configuro el cartel para que enlace a mi negocio?</summary>
-                    <p>No tienes que configurar nada, ¡nosotros lo hacemos por ti! Al realizar tu pedido nos pondremos en contacto contigo para pedirte el enlace a tu perfil de Google My Business, y nosotros nos encargaremos de grabar y codificar el chip NFC antes de enviártelo. Lo recibirás listo para ponerlo en tu mostrador.</p>
+                    <p>Nosotros lo hacemos por ti. Al pedirlo, nos pasas el enlace a tu perfil de Google My Business y lo grabamos antes de enviártelo.</p>
                 </details>
             </div>
         </section>
     </main>
 
-    <!-- FOOTER / CTA Y FORMULARIO -->
-    <footer id="contacto" class="footer-cta">
-        <h2>¿Quieres impulsar tu negocio de hostelería hoy mismo?</h2>
+    <!-- FOOTER -->
+    <footer id="contacto" class="footer-cta fade-up">
+        <h2>Impulsa tu negocio hoy</h2>
         
         <div class="form-container">
             <form action="https://formspree.io/f/xzdnvggy" method="POST">
@@ -764,30 +743,57 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // --- 1. Menú Hamburguesa ---
+        // --- 1. INTERSECTION OBSERVER (Animaciones al hacer scroll) ---
+        // Hace que los elementos con la clase .fade-up aparezcan cuando haces scroll hacia abajo.
+        const observerOptions = {
+            threshold: 0.1, // Se activa cuando el 10% del elemento es visible
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Dejar de observar una vez que aparece
+                }
+            });
+        }, observerOptions);
+
+        // Seleccionamos todos los elementos que queremos animar
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- 2. MENÚ HAMBURGUESA MÓVIL ---
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
 
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active'); // Para rotar el icono
         });
 
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
             });
         });
 
-        // --- 2. Lógica del Selector de Color ---
+        // --- 3. LÓGICA DEL SELECTOR DE COLOR ---
         const colorBtns = document.querySelectorAll('.color-btn');
         const mainImg = document.getElementById('main-product-img');
         const colorName = document.getElementById('color-name');
-        let colorElegido = "Blanco"; // Guardamos el color para el formulario
+        let colorElegido = "Blanco";
 
         colorBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                const newSrc = this.getAttribute('data-img');
-                mainImg.src = newSrc;
+                // Pequeña transición para que el cambio no sea tan brusco
+                mainImg.style.opacity = '0.5';
+                setTimeout(() => {
+                    mainImg.src = this.getAttribute('data-img');
+                    mainImg.style.opacity = '1';
+                }, 150);
                 
                 colorElegido = this.getAttribute('data-color');
                 colorName.innerHTML = `Color seleccionado: <strong>${colorElegido}</strong>`;
@@ -797,7 +803,7 @@
             });
         });
 
-        // --- 3. Lógica del Selector de Cantidad y Precios Dinámicos ---
+        // --- 4. CALCULADORA DE PRECIOS Y CANTIDAD ---
         const btnMinus = document.getElementById('btn-minus');
         const btnPlus = document.getElementById('btn-plus');
         const qtyInput = document.getElementById('qty-input');
@@ -809,41 +815,32 @@
 
         function calcularPrecio() {
             let qty = parseInt(qtyInput.value);
-            
-            // Formula: Precio base por cantidad menos el descuento progresivo
-            // 1ud = 15€
-            // 2ud = (2 * 15) - (1 * 2) = 28€
-            // 3ud = (3 * 15) - (2 * 2) = 41€
             let total = (qty * PRECIO_BASE) - ((qty - 1) * DESCUENTO_POR_EXTRA);
             
-            // Actualizar el texto en pantalla (añadimos .00€)
             priceDisplay.innerText = total + ",00€";
 
-            // Mostrar el badge de ahorro si hay más de 1 unidad
             let ahorroTotal = (qty - 1) * DESCUENTO_POR_EXTRA;
             if (ahorroTotal > 0) {
                 discountBadge.innerText = `¡Te ahorras ${ahorroTotal}€!`;
-                discountBadge.style.opacity = "1";
+                discountBadge.classList.add('show');
             } else {
-                discountBadge.style.opacity = "0";
+                discountBadge.classList.remove('show');
             }
         }
 
         btnPlus.addEventListener('click', () => {
-            let currentVal = parseInt(qtyInput.value);
-            qtyInput.value = currentVal + 1;
+            qtyInput.value = parseInt(qtyInput.value) + 1;
             calcularPrecio();
         });
 
         btnMinus.addEventListener('click', () => {
-            let currentVal = parseInt(qtyInput.value);
-            if (currentVal > 1) {
-                qtyInput.value = currentVal - 1;
+            if (parseInt(qtyInput.value) > 1) {
+                qtyInput.value = parseInt(qtyInput.value) - 1;
                 calcularPrecio();
             }
         });
 
-        // --- 4. Autorellenar el formulario de contacto ---
+        // --- 5. AUTORELLENAR FORMULARIO ---
         const btnOrder = document.getElementById('btn-order');
         const messageBox = document.getElementById('message');
 
@@ -851,17 +848,13 @@
             const cantidadFinal = qtyInput.value;
             const precioFinal = priceDisplay.innerText;
             
-            const mensajePredefinido = `¡Hola! Me gustaría encargar ${cantidadFinal} cartel/es NFC de color ${colorElegido}. He calculado que el total con la oferta aplicada es de ${precioFinal}.\n\n(Puedes borrar esto y escribir tus dudas aquí): `;
+            messageBox.value = `¡Hola! Me gustaría encargar ${cantidadFinal} cartel/es NFC de color ${colorElegido}. Total estimado: ${precioFinal}.\n\n(Escribe aquí tus dudas adicionales): `;
             
-            messageBox.value = mensajePredefinido;
-            
-            // Hacemos un pequeño resalte visual en el textarea para que vea que se rellenó solo
             setTimeout(() => {
                 messageBox.focus();
                 messageBox.style.borderColor = "var(--google-blue)";
             }, 800);
         });
-
     </script>
 </body>
 </html>
