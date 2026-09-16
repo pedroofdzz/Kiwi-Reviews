@@ -624,7 +624,7 @@
             animation: none;
         }
 
-        /* Estilos del Bloque QR Instagram */
+        /* Estilos del Bloque QR Instagram y Botón */
         .social-qr {
             text-align: center;
             display: flex;
@@ -639,24 +639,55 @@
             margin-bottom: 1rem;
         }
 
+        .qr-link {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .qr-link:hover {
+            transform: scale(1.05);
+        }
+
         .social-qr img {
             width: 100%;
             max-width: 220px;
             border-radius: 12px;
             background-color: #fff;
             padding: 15px;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .social-qr img:hover {
-            transform: scale(1.05);
+            margin-bottom: 1rem;
         }
 
         .social-qr p {
             color: #ccc;
             font-size: 0.95rem;
             line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Botón Instagram estilo degradado */
+        .btn-instagram {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: #fff;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
+        }
+
+        .btn-instagram i {
+            margin-right: 8px;
+            font-size: 1.3rem;
+        }
+
+        .btn-instagram:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(220, 39, 67, 0.5);
+            color: #fff;
         }
 
         /* ================= MEDIA QUERIES ================= */
@@ -684,7 +715,6 @@
                 transform: translateY(0);
             }
 
-            /* Adaptación del menú desplegable para móviles */
             .dropdown-content {
                 position: static;
                 box-shadow: none;
@@ -869,12 +899,20 @@
                 </form>
             </div>
 
-            <!-- Columna Derecha: QR Instagram -->
+            <!-- Columna Derecha: Redes Sociales -->
             <div class="social-qr">
-                <h3>Síguenos en Instagram</h3>
-                <!-- Aquí se carga tu código QR -->
-                <img src="image_ae67c6.png" alt="Código QR de nuestro Instagram">
-                <p>Escanea este código o haz clic en él (cuando añadamos el enlace) para ver nuestros últimos trabajos, novedades y ofertas especiales en nuestra red social.</p>
+                <h3>Síguenos en Redes Sociales</h3>
+                
+                <!-- Enlace rodeando la imagen QR para que también sea clicable -->
+                <a href="https://instagram.com/kiwi__review" target="_blank" class="qr-link">
+                    <img src="image_ae67c6.png" alt="Código QR de nuestro Instagram">
+                </a>
+                
+                <p>Escanea este código o haz clic en el botón de abajo para ver nuestros últimos trabajos, novedades y ofertas especiales.</p>
+                
+                <a href="https://instagram.com/kiwi__review" target="_blank" class="btn-instagram">
+                    <i class="fa-brands fa-instagram"></i> Ir a Instagram
+                </a>
             </div>
 
         </div>
@@ -882,7 +920,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // --- 1. INTERSECTION OBSERVER (Animaciones al hacer scroll) ---
+        // --- 1. INTERSECTION OBSERVER ---
         const observerOptions = {
             threshold: 0.1,
             rootMargin: "0px 0px -50px 0px"
@@ -910,7 +948,6 @@
             hamburger.classList.toggle('active'); 
         });
 
-        // Hacemos que se cierre al hacer clic en los enlaces normales (no desplegables)
         document.querySelectorAll('.nav-links > a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
