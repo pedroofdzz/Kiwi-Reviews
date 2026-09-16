@@ -160,6 +160,10 @@
             font-weight: 600;
             box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
             transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
         }
 
         .btn-primary:hover {
@@ -305,17 +309,85 @@
             margin-bottom: 0.5rem;
         }
 
+        /* Controles de Precio y Cantidad */
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
         .price {
             font-size: 2.2rem;
             font-weight: 700;
             color: var(--google-blue);
+        }
+
+        .price-note {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .discount-badge {
+            background: var(--google-green);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: none; /* Oculto por defecto, se activa con JS */
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .quantity-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1.5rem;
         }
 
-        .price span {
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 400;
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .qty-btn {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: var(--text-dark);
+        }
+
+        .qty-btn:hover { background: #f0f0f0; }
+        
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            background: transparent;
+            color: var(--text-dark);
+            -moz-appearance: textfield; /* Quitar flechas en Firefox */
+        }
+
+        /* Quitar flechas nativas en Chrome/Safari */
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .selector-title {
@@ -349,9 +421,68 @@
         }
 
         #color-name {
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             color: var(--text-muted);
             font-size: 0.95rem;
+        }
+        
+        .btn-order-block {
+            width: 100%;
+        }
+
+        /* ================= FAQ SECTION ================= */
+        .faq-section {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #eee;
+        }
+
+        .faq-item summary {
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            list-style: none; /* Oculta la flecha por defecto */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-item summary::-webkit-details-marker {
+            display: none; /* Oculta la flecha en Chrome/Safari */
+        }
+
+        .faq-item summary::after {
+            content: '\f078'; /* Icono de flecha hacia abajo de FontAwesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--google-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        .faq-item p {
+            margin-top: 1rem;
+            color: var(--text-muted);
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+            line-height: 1.7;
         }
 
         /* ================= FOOTER / CONTACTO ================= */
@@ -473,7 +604,7 @@
             <a href="#servicios">Servicios</a>
             <a href="#producto-estrella">Cómo funciona</a>
             <a href="#comprar">Comprar</a>
-            <a href="#contacto">Contacto</a>
+            <a href="#faq">FAQ</a>
             <a href="#contacto" class="btn-nav">Pedir ahora</a>
         </div>
     </nav>
@@ -533,9 +664,9 @@
             </div>
         </section>
 
-        <!-- SECCIÓN DE COMPRA / SELECTOR DE COLOR -->
+        <!-- SECCIÓN DE COMPRA / SELECTOR DE COLOR Y CANTIDAD -->
         <section id="comprar" class="product-showcase">
-            <h2 class="section-title">Elige el color para tu local</h2>
+            <h2 class="section-title">Prepara tu pedido</h2>
             <div class="showcase-container">
                 
                 <!-- IMAGEN PRINCIPAL (Blanco por defecto) -->
@@ -546,20 +677,60 @@
                 <!-- Detalles y botones de selección -->
                 <div class="product-details">
                     <h3>Placa NFC Inteligente Google</h3>
-                    <p class="price">29,99€ <span>/ unidad (pago único)</span></p>
                     
+                    <!-- Precios Dinámicos -->
+                    <div class="price-container">
+                        <span class="price" id="price-display">15,00€</span>
+                        <span class="price-note">IVA inc. (Pago único)</span>
+                    </div>
+                    <div class="discount-badge" id="discount-badge">¡Ahorras 2€ por cada unidad extra!</div>
+                    
+                    <!-- Selector de Cantidad -->
+                    <p class="selector-title">Cantidad:</p>
+                    <div class="quantity-wrapper">
+                        <div class="quantity-controls">
+                            <button class="qty-btn" id="btn-minus"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="qty-input" class="qty-input" value="1" min="1" readonly>
+                            <button class="qty-btn" id="btn-plus"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Selector de Color -->
                     <p class="selector-title">Color del metacrilato:</p>
                     <div class="color-selector">
-                        <!-- BOTÓN BLANCO -->
                         <button class="color-btn active" data-img="cartel blanco.png" data-color="Blanco" style="background-color: #ffffff;"></button>
-                        
-                        <!-- BOTÓN NEGRO -->
                         <button class="color-btn" data-img="cartel negro.png" data-color="Negro" style="background-color: #000000;"></button>
                     </div>
                     <p id="color-name">Color seleccionado: <strong>Blanco</strong></p>
 
-                    <a href="#contacto" class="btn-primary">Solicitar Pedido</a>
+                    <a href="#contacto" id="btn-order" class="btn-primary btn-order-block">Solicitar Pedido</a>
                 </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN FAQ (PREGUNTAS FRECUENTES) -->
+        <section id="faq" class="faq-section">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <div class="faq-container">
+                <details class="faq-item">
+                    <summary>¿Necesito enchufar el cartel o lleva pilas?</summary>
+                    <p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El propio teléfono móvil de tu cliente emite la energía necesaria para leer el chip interno al acercarlo, por lo que el cartel dura años sin ningún tipo de mantenimiento.</p>
+                </details>
+                
+                <details class="faq-item">
+                    <summary>¿Funciona con cualquier teléfono móvil?</summary>
+                    <p>Sí, casi la totalidad de los teléfonos modernos (tanto iPhone como Android) llevan lector NFC integrado y activado por defecto. Además, para garantizar el 100% de compatibilidad con móviles muy antiguos, el cartel lleva impreso un código QR que se puede escanear con la cámara normal.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>¿Tengo que pagar alguna cuota mensual?</summary>
+                    <p>No, es un único pago por el producto físico. No hay suscripciones, ni gastos ocultos, ni mantenimientos de software. Tú lo compras, te lo configuramos, y ya es tuyo para siempre.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>¿Cómo configuro el cartel para que enlace a mi negocio?</summary>
+                    <p>No tienes que configurar nada, ¡nosotros lo hacemos por ti! Al realizar tu pedido nos pondremos en contacto contigo para pedirte el enlace a tu perfil de Google My Business, y nosotros nos encargaremos de grabar y codificar el chip NFC antes de enviártelo. Lo recibirás listo para ponerlo en tu mostrador.</p>
+                </details>
             </div>
         </section>
     </main>
@@ -593,7 +764,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // Menú Hamburguesa para versión móvil
+        // --- 1. Menú Hamburguesa ---
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
 
@@ -601,33 +772,96 @@
             navLinks.classList.toggle('active');
         });
 
-        // Cerrar menú al hacer click en un enlace
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
             });
         });
 
-        // Lógica del selector de colores del producto
+        // --- 2. Lógica del Selector de Color ---
         const colorBtns = document.querySelectorAll('.color-btn');
         const mainImg = document.getElementById('main-product-img');
         const colorName = document.getElementById('color-name');
+        let colorElegido = "Blanco"; // Guardamos el color para el formulario
 
         colorBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // Cambiar la imagen principal
                 const newSrc = this.getAttribute('data-img');
                 mainImg.src = newSrc;
                 
-                // Actualizar el texto que indica el color seleccionado
-                const selectedColor = this.getAttribute('data-color');
-                colorName.innerHTML = `Color seleccionado: <strong>${selectedColor}</strong>`;
+                colorElegido = this.getAttribute('data-color');
+                colorName.innerHTML = `Color seleccionado: <strong>${colorElegido}</strong>`;
                 
-                // Cambiar el borde azul al botón activo
                 colorBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             });
         });
+
+        // --- 3. Lógica del Selector de Cantidad y Precios Dinámicos ---
+        const btnMinus = document.getElementById('btn-minus');
+        const btnPlus = document.getElementById('btn-plus');
+        const qtyInput = document.getElementById('qty-input');
+        const priceDisplay = document.getElementById('price-display');
+        const discountBadge = document.getElementById('discount-badge');
+        
+        const PRECIO_BASE = 15;
+        const DESCUENTO_POR_EXTRA = 2;
+
+        function calcularPrecio() {
+            let qty = parseInt(qtyInput.value);
+            
+            // Formula: Precio base por cantidad menos el descuento progresivo
+            // 1ud = 15€
+            // 2ud = (2 * 15) - (1 * 2) = 28€
+            // 3ud = (3 * 15) - (2 * 2) = 41€
+            let total = (qty * PRECIO_BASE) - ((qty - 1) * DESCUENTO_POR_EXTRA);
+            
+            // Actualizar el texto en pantalla (añadimos .00€)
+            priceDisplay.innerText = total + ",00€";
+
+            // Mostrar el badge de ahorro si hay más de 1 unidad
+            let ahorroTotal = (qty - 1) * DESCUENTO_POR_EXTRA;
+            if (ahorroTotal > 0) {
+                discountBadge.innerText = `¡Te ahorras ${ahorroTotal}€!`;
+                discountBadge.style.opacity = "1";
+            } else {
+                discountBadge.style.opacity = "0";
+            }
+        }
+
+        btnPlus.addEventListener('click', () => {
+            let currentVal = parseInt(qtyInput.value);
+            qtyInput.value = currentVal + 1;
+            calcularPrecio();
+        });
+
+        btnMinus.addEventListener('click', () => {
+            let currentVal = parseInt(qtyInput.value);
+            if (currentVal > 1) {
+                qtyInput.value = currentVal - 1;
+                calcularPrecio();
+            }
+        });
+
+        // --- 4. Autorellenar el formulario de contacto ---
+        const btnOrder = document.getElementById('btn-order');
+        const messageBox = document.getElementById('message');
+
+        btnOrder.addEventListener('click', () => {
+            const cantidadFinal = qtyInput.value;
+            const precioFinal = priceDisplay.innerText;
+            
+            const mensajePredefinido = `¡Hola! Me gustaría encargar ${cantidadFinal} cartel/es NFC de color ${colorElegido}. He calculado que el total con la oferta aplicada es de ${precioFinal}.\n\n(Puedes borrar esto y escribir tus dudas aquí): `;
+            
+            messageBox.value = mensajePredefinido;
+            
+            // Hacemos un pequeño resalte visual en el textarea para que vea que se rellenó solo
+            setTimeout(() => {
+                messageBox.focus();
+                messageBox.style.borderColor = "var(--google-blue)";
+            }, 800);
+        });
+
     </script>
 </body>
 </html>
