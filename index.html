@@ -33,6 +33,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-light);
@@ -109,7 +113,6 @@
             transform: translateY(-2px);
         }
 
-        /* Menú Hamburguesa (Móvil) */
         .hamburger {
             display: none;
             font-size: 1.5rem;
@@ -264,6 +267,93 @@
         .icon-yellow { color: var(--google-yellow); }
         .icon-green { color: var(--google-green); }
 
+        /* ================= SECCIÓN DE COMPRA ================= */
+        .product-showcase {
+            padding: 5rem 2rem;
+            background: var(--bg-light);
+        }
+
+        .showcase-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .product-image img {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .product-image img:hover {
+            transform: scale(1.02);
+        }
+
+        .product-details {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .product-details h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--google-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .selector-title {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .color-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .color-btn.active {
+            border: 3px solid var(--google-blue);
+            transform: scale(1.1);
+        }
+
+        #color-name {
+            margin-bottom: 2.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
         /* ================= FOOTER / CONTACTO ================= */
         .footer-cta {
             background-color: var(--text-dark);
@@ -382,81 +472,104 @@
         <div class="nav-links" id="nav-links">
             <a href="#servicios">Servicios</a>
             <a href="#producto-estrella">Cómo funciona</a>
+            <a href="#comprar">Comprar</a>
             <a href="#contacto">Contacto</a>
             <a href="#contacto" class="btn-nav">Pedir ahora</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <header class="hero">
-        <h1>Multiplica tus reseñas de Google en segundos y sin esfuerzo.</h1>
-        <p>Especialistas en digitalizar tu negocio local. La herramienta definitiva para convertir a tus clientes satisfechos en reputación online.</p>
-        <div class="hero-buttons">
-            <a href="#producto-estrella" class="btn-primary">Ver Soportes Inteligentes</a>
-            <a href="#servicios" class="btn-secondary">Nuestros Servicios</a>
-        </div>
-    </header>
+    <main>
+        <!-- HERO SECTION -->
+        <header class="hero">
+            <h1>Multiplica tus reseñas de Google en segundos y sin esfuerzo.</h1>
+            <p>Especialistas en digitalizar tu negocio local. La herramienta definitiva para convertir a tus clientes satisfechos en reputación online.</p>
+            <div class="hero-buttons">
+                <a href="#comprar" class="btn-primary">Ver Soportes Inteligentes</a>
+                <a href="#servicios" class="btn-secondary">Nuestros Servicios</a>
+            </div>
+        </header>
 
-    <!-- SECCIÓN DE SERVICIOS -->
-    <section id="servicios" class="services">
-        <h2 class="section-title">Nuestras Soluciones</h2>
-        <div class="services-grid">
-            <div class="card">
-                <h3>Soportes Inteligentes NFC + QR</h3>
-                <p>Haz que conseguir 5 estrellas sea fácil y rápido. Tus clientes solo tienen que acercar su teléfono para dejar una reseña al instante.</p>
+        <!-- SECCIÓN DE SERVICIOS -->
+        <section id="servicios" class="services">
+            <h2 class="section-title">Nuestras Soluciones</h2>
+            <div class="services-grid">
+                <div class="card">
+                    <h3>Soportes Inteligentes NFC + QR</h3>
+                    <p>Haz que conseguir 5 estrellas sea fácil y rápido. Tus clientes solo tienen que acercar su teléfono para dejar una reseña al instante.</p>
+                </div>
+                <div class="card">
+                    <h3>Menús Digitales</h3>
+                    <p>Diseño de cartas con QR para mesas, con una estética moderna, responsiva y extremadamente fáciles de actualizar para tu local.</p>
+                </div>
+                <div class="card">
+                    <h3>Cartelería a Medida</h3>
+                    <p>Promociones, ofertas y horarios diseñados visualmente para destacar en tu local y captar la atención de tus clientes.</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>Menús Digitales</h3>
-                <p>Diseño de cartas con QR para mesas, con una estética moderna, responsiva y extremadamente fáciles de actualizar para tu local.</p>
-            </div>
-            <div class="card">
-                <h3>Cartelería a Medida</h3>
-                <p>Promociones, ofertas y horarios diseñados visualmente para destacar en tu local y captar la atención de tus clientes.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- SECCIÓN PRODUCTO ESTRELLA -->
-    <section id="producto-estrella" class="product-feature">
-        <div class="product-container">
-            <h2 class="section-title">El poder de la tecnología NFC</h2>
-            <ul class="feature-list">
-                <li>
-                    <i class="fa-solid fa-wifi icon-blue"></i>
-                    Doble Tecnología (Tap & Scan)
-                </li>
-                <li>
-                    <i class="fa-solid fa-bolt icon-yellow"></i>
-                    Cero Fricción en 5 segundos
-                </li>
-                <li>
-                    <i class="fa-solid fa-gem icon-red"></i>
-                    Diseño Premium Acrílico (Blanco/Negro)
-                </li>
-                <li>
-                    <i class="fa-solid fa-chart-line icon-green"></i>
-                    Mejora tu SEO Local
-                </li>
-            </ul>
-        </div>
-    </section>
+        <!-- SECCIÓN PRODUCTO ESTRELLA -->
+        <section id="producto-estrella" class="product-feature">
+            <div class="product-container">
+                <h2 class="section-title">El poder de la tecnología NFC</h2>
+                <ul class="feature-list">
+                    <li>
+                        <i class="fa-solid fa-wifi icon-blue"></i>
+                        Doble Tecnología (Tap & Scan)
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-bolt icon-yellow"></i>
+                        Cero Fricción en 5 segundos
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-gem icon-red"></i>
+                        Diseño Premium Acrílico (Blanco/Negro)
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-chart-line icon-green"></i>
+                        Mejora tu SEO Local
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE COMPRA / SELECTOR DE COLOR -->
+        <section id="comprar" class="product-showcase">
+            <h2 class="section-title">Elige el color para tu local</h2>
+            <div class="showcase-container">
+                
+                <!-- IMAGEN PRINCIPAL (Blanco por defecto) -->
+                <div class="product-image">
+                    <img id="main-product-img" src="cartel blanco.png" alt="Cartel NFC Google Review Blanco">
+                </div>
+
+                <!-- Detalles y botones de selección -->
+                <div class="product-details">
+                    <h3>Placa NFC Inteligente Google</h3>
+                    <p class="price">29,99€ <span>/ unidad (pago único)</span></p>
+                    
+                    <p class="selector-title">Color del metacrilato:</p>
+                    <div class="color-selector">
+                        <!-- BOTÓN BLANCO -->
+                        <button class="color-btn active" data-img="cartel blanco.png" data-color="Blanco" style="background-color: #ffffff;"></button>
+                        
+                        <!-- BOTÓN NEGRO -->
+                        <button class="color-btn" data-img="cartel negro.png" data-color="Negro" style="background-color: #000000;"></button>
+                    </div>
+                    <p id="color-name">Color seleccionado: <strong>Blanco</strong></p>
+
+                    <a href="#contacto" class="btn-primary">Solicitar Pedido</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- FOOTER / CTA Y FORMULARIO -->
     <footer id="contacto" class="footer-cta">
         <h2>¿Quieres impulsar tu negocio de hostelería hoy mismo?</h2>
         
         <div class="form-container">
-            <!-- 
-            =============================================================
-            CONFIGURACIÓN DE FORMSPREE:
-            1. Regístrate en https://formspree.io/
-            2. Crea un nuevo formulario para obtener tu ID único.
-            3. Sustituye "TU_ID_AQUI" en el atributo 'action' de abajo 
-               por tu identificador de Formspree (ej. /f/xqkndyro).
-            ============================================================= 
-            -->
             <form action="https://formspree.io/f/xzdnvggy" method="POST">
-
                 <div class="form-group">
                     <label for="name">Nombre</label>
                     <input type="text" id="name" name="name" class="form-control" required placeholder="Tu nombre">
@@ -478,7 +591,7 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT BÁSICO -->
+    <!-- JAVASCRIPT -->
     <script>
         // Menú Hamburguesa para versión móvil
         const hamburger = document.getElementById('hamburger');
@@ -492,6 +605,27 @@
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+            });
+        });
+
+        // Lógica del selector de colores del producto
+        const colorBtns = document.querySelectorAll('.color-btn');
+        const mainImg = document.getElementById('main-product-img');
+        const colorName = document.getElementById('color-name');
+
+        colorBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Cambiar la imagen principal
+                const newSrc = this.getAttribute('data-img');
+                mainImg.src = newSrc;
+                
+                // Actualizar el texto que indica el color seleccionado
+                const selectedColor = this.getAttribute('data-color');
+                colorName.innerHTML = `Color seleccionado: <strong>${selectedColor}</strong>`;
+                
+                // Cambiar el borde azul al botón activo
+                colorBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
             });
         });
     </script>
