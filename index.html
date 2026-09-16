@@ -124,6 +124,53 @@
             color: var(--google-blue);
         }
 
+        /* Estilos del Menú Desplegable */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--white);
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--bg-light);
+            color: var(--google-blue);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .btn-nav {
             background-color: var(--google-blue);
             color: var(--white) !important;
@@ -286,7 +333,6 @@
             width: 100%;
             max-width: 350px;
             border-radius: 12px;
-            /* Aquí aplicamos la animación flotante al cartel */
             animation: float 5s ease-in-out infinite; 
             filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
         }
@@ -483,7 +529,6 @@
             border-top: 1px solid #ddd;
             padding-top: 1rem;
             line-height: 1.7;
-            /* Pequeña animación al abrir el FAQ */
             animation: slideDown 0.4s ease-out;
         }
 
@@ -492,23 +537,39 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ================= FOOTER ================= */
+        /* ================= FOOTER / CONTACTO ================= */
         .footer-cta {
             background-color: var(--text-dark);
             color: var(--white);
             padding: 6rem 2rem;
+        }
+
+        .footer-cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
             text-align: center;
         }
 
-        .form-container {
-            max-width: 500px;
+        .footer-content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 3rem;
+            max-width: 1100px;
             margin: 0 auto;
+        }
+
+        .form-container, .social-qr {
+            flex: 1;
+            min-width: 320px;
             background: rgba(255,255,255,0.05);
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 12px;
             backdrop-filter: blur(5px);
         }
 
+        /* Estilos del Formulario */
         .form-group {
             margin-bottom: 1.5rem;
             text-align: left;
@@ -554,14 +615,48 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
-            /* Aplicamos la animación del latido */
             animation: pulse-green 2s infinite;
         }
 
         .btn-submit:hover {
             background-color: #2b8b45;
             transform: translateY(-2px);
-            animation: none; /* Para la animación al pasar el ratón */
+            animation: none;
+        }
+
+        /* Estilos del Bloque QR Instagram */
+        .social-qr {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .social-qr h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-qr img {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 12px;
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .social-qr img:hover {
+            transform: scale(1.05);
+        }
+
+        .social-qr p {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         /* ================= MEDIA QUERIES ================= */
@@ -570,13 +665,12 @@
                 display: flex;
                 flex-direction: column;
                 position: absolute;
-                top: 100%; /* Justo debajo de la barra */
+                top: 100%; 
                 left: 0;
                 width: 100%;
                 background: rgba(255,255,255,0.98);
                 padding: 2rem;
                 box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-                /* Animación del menú móvil */
                 opacity: 0;
                 visibility: hidden;
                 transform: translateY(-20px);
@@ -590,12 +684,33 @@
                 transform: translateY(0);
             }
 
+            /* Adaptación del menú desplegable para móviles */
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                background-color: transparent;
+                padding-left: 1rem;
+                display: none; 
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+            .dropdown-content a {
+                color: var(--text-dark);
+                border-bottom: none;
+                padding: 8px 16px;
+            }
+
             .hamburger {
                 display: block;
             }
 
             .hero h1 {
                 font-size: 2.2rem;
+            }
+            
+            .footer-content-wrapper {
+                flex-direction: column;
             }
         }
 
@@ -621,6 +736,17 @@
             <a href="#servicios">Servicios</a>
             <a href="#comprar">Comprar</a>
             <a href="#faq">FAQ</a>
+            
+            <!-- MENÚ DESPLEGABLE -->
+            <div class="dropdown">
+                <a href="#" class="dropbtn">Más <i class="fas fa-chevron-down" style="font-size: 0.8em; margin-left: 5px;"></i></a>
+                <div class="dropdown-content">
+                    <a href="#">Próximos Productos</a>
+                    <a href="#">Blog (Próximamente)</a>
+                    <a href="#">Sobre Nosotros</a>
+                </div>
+            </div>
+
             <a href="#contacto" class="btn-nav">Pedir ahora</a>
         </div>
     </nav>
@@ -714,39 +840,51 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER Y CONTACTO A DOS COLUMNAS -->
     <footer id="contacto" class="footer-cta fade-up">
         <h2>Impulsa tu negocio hoy</h2>
         
-        <div class="form-container">
-            <form action="https://formspree.io/f/xzdnvggy" method="POST">
-                <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" name="name" class="form-control" required placeholder="Tu nombre">
-                </div>
-                <div class="form-group">
-                    <label for="local">Local / Restaurante</label>
-                    <input type="text" id="local" name="local" class="form-control" required placeholder="Nombre de tu negocio">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" required placeholder="tu@correo.com">
-                </div>
-                <div class="form-group">
-                    <label for="message">Mensaje</label>
-                    <textarea id="message" name="message" class="form-control" required placeholder="Cuéntanos qué necesitas..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Enviar Consulta</button>
-            </form>
+        <div class="footer-content-wrapper">
+            
+            <!-- Columna Izquierda: Formulario -->
+            <div class="form-container">
+                <form action="https://formspree.io/f/xzdnvggy" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" class="form-control" required placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="local">Local / Restaurante</label>
+                        <input type="text" id="local" name="local" class="form-control" required placeholder="Nombre de tu negocio">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required placeholder="tu@correo.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="message" class="form-control" required placeholder="Cuéntanos qué necesitas..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Enviar Consulta</button>
+                </form>
+            </div>
+
+            <!-- Columna Derecha: QR Instagram -->
+            <div class="social-qr">
+                <h3>Síguenos en Instagram</h3>
+                <!-- Aquí se carga tu código QR -->
+                <img src="image_ae67c6.png" alt="Código QR de nuestro Instagram">
+                <p>Escanea este código o haz clic en él (cuando añadamos el enlace) para ver nuestros últimos trabajos, novedades y ofertas especiales en nuestra red social.</p>
+            </div>
+
         </div>
     </footer>
 
     <!-- JAVASCRIPT -->
     <script>
         // --- 1. INTERSECTION OBSERVER (Animaciones al hacer scroll) ---
-        // Hace que los elementos con la clase .fade-up aparezcan cuando haces scroll hacia abajo.
         const observerOptions = {
-            threshold: 0.1, // Se activa cuando el 10% del elemento es visible
+            threshold: 0.1,
             rootMargin: "0px 0px -50px 0px"
         };
 
@@ -754,12 +892,11 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Dejar de observar una vez que aparece
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // Seleccionamos todos los elementos que queremos animar
         document.querySelectorAll('.fade-up').forEach(el => {
             observer.observe(el);
         });
@@ -770,10 +907,11 @@
 
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active'); // Para rotar el icono
+            hamburger.classList.toggle('active'); 
         });
 
-        document.querySelectorAll('.nav-links a').forEach(link => {
+        // Hacemos que se cierre al hacer clic en los enlaces normales (no desplegables)
+        document.querySelectorAll('.nav-links > a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
                 hamburger.classList.remove('active');
@@ -788,7 +926,6 @@
 
         colorBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // Pequeña transición para que el cambio no sea tan brusco
                 mainImg.style.opacity = '0.5';
                 setTimeout(() => {
                     mainImg.src = this.getAttribute('data-img');
