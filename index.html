@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiwi Review & Accesos RFID</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* ================= VARIABLES ================= */
         :root {
             --bg-light: #F8F9FA;
             --text-dark: #202124;
@@ -22,18 +25,20 @@
             --white: #FFFFFF;
         }
 
+        /* ================= RESET Y BASE ================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
+        /* ================= ANIMACIONES GLOBALES ================= */
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* SPLIT SCREEN */
+        /* ================= PANTALLA INICIAL (SPLIT SCREEN) ================= */
         #menu-container { display: flex; height: 100vh; width: 100vw; transition: opacity 0.5s ease; background: #111; }
         .split { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; cursor: pointer; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); overflow: hidden; }
         .split:hover { flex: 1.3; }
@@ -51,23 +56,16 @@
 
         #kiwi-section, #rfid-section, #shared-reviews, #shared-footer { display: none; opacity: 0; animation: slideInUp 0.6s forwards; }
 
+        /* ================= NAVBAR Y COMPONENTES COMPARTIDOS ================= */
         .btn-back-menu { background-color: var(--text-dark); color: var(--white) !important; padding: 0.5rem 1rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; margin-right: 15px; display: flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s; font-size: 0.9rem; }
         .btn-back-menu:hover { background-color: var(--google-red); transform: translateY(-2px); }
 
-        /* NAVBAR Y FRASE MOTIVADORA */
         .navbar { position: sticky; top: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .logo-container { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .logo-text { font-weight: 700; font-size: 1.5rem; color: var(--text-dark); letter-spacing: -0.5px; }
         
-        .daily-quote {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #000; font-size: 0.8rem; font-weight: 700;
-            padding: 4px 12px; border-radius: 20px;
-            box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3);
-            margin-left: 10px; animation: pulse-quote 2.5s infinite;
-            display: inline-flex; align-items: center; gap: 5px;
-        }
+        .daily-quote { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3); margin-left: 10px; animation: pulse-quote 2.5s infinite; display: inline-flex; align-items: center; gap: 5px; }
         @keyframes pulse-quote { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         .nav-links { display: flex; gap: 2rem; align-items: center; }
@@ -94,6 +92,30 @@
         .btn-primary { background-color: var(--google-blue); color: var(--white); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
         .btn-primary:hover { background-color: #3367D6; transform: translateY(-3px); }
 
+        /* ================= COMPONENTES REUTILIZABLES (SERVICIOS Y FAQ) ================= */
+        .services { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .services-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 769px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+        .card { background: var(--white); padding: 2.5rem 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; border-top: 4px solid transparent; }
+        .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .card:nth-child(1) { border-top-color: var(--google-blue); }
+        .card:nth-child(2) { border-top-color: var(--google-yellow); }
+        .card:nth-child(3) { border-top-color: var(--google-green); }
+        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .faq-section { padding: 6rem 2rem; background: var(--white); }
+        .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+        .faq-item { background: var(--bg-light); border-radius: 8px; padding: 1.2rem 1.5rem; border: 1px solid #eee; transition: all 0.3s; }
+        .faq-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .faq-item summary { font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--google-blue); transition: transform 0.4s ease; }
+        .faq-item[open] summary::after { transform: rotate(180deg); }
+        .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid #ddd; padding-top: 1rem; line-height: 1.7; animation: slideDown 0.4s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= TIENDA KIWI ================= */
         .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
         .showcase-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5rem; align-items: center; max-width: 1000px; margin: 0 auto; }
         .product-image img { width: 100%; max-width: 350px; border-radius: 12px; animation: float 5s ease-in-out infinite; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); }
@@ -103,6 +125,7 @@
         .color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: all 0.3s; }
         .color-btn.active { border: 3px solid var(--google-blue); transform: scale(1.2); }
 
+        /* ================= TIENDA RFID ================= */
         .rfid-showcase { max-width: 1100px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; }
         .rfid-product-card { background: var(--white); padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 5px solid var(--google-green); transition: transform 0.4s; }
         .rfid-product-card:hover { transform: translateY(-10px); }
@@ -111,29 +134,26 @@
         .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.8rem; font-weight: 700; color: var(--google-blue); margin-top: 1rem; margin-bottom: 2rem; }
 
-        /* ================= SECCIÓN DE RESEÑAS / CLIENTES ================= */
-        .reviews-section { padding: 5rem 2rem; background: var(--white); }
+        /* ================= SECCIÓN DE RESEÑAS ================= */
+        .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid #eee; }
         .reviews-container { max-width: 1000px; margin: 0 auto; }
-        
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
-        .review-card { background: var(--bg-light); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; }
+        .review-card { background: var(--white); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
         .review-card::before { content: "\f10d"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 20px; right: 20px; font-size: 2rem; color: rgba(66,133,244,0.1); }
         .review-stars { color: var(--google-yellow); margin-bottom: 10px; font-size: 1.2rem; }
         .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; }
         .review-author { font-weight: 700; font-size: 0.95rem; }
 
-        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--bg-light); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
+        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
         .add-review-box h3 { margin-bottom: 1rem; }
-        
         .star-rating-input { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; margin-bottom: 20px; font-size: 2rem; }
         .star-rating-input input { display: none; }
         .star-rating-input label { color: #ccc; cursor: pointer; transition: color 0.2s; }
         .star-rating-input input:checked ~ label, .star-rating-input label:hover, .star-rating-input label:hover ~ label { color: var(--google-yellow); }
-        
         .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
 
-        /* FOOTER COMPARTIDO */
+        /* ================= FOOTER COMPARTIDO ================= */
         .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
         .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
@@ -152,7 +172,7 @@
         @media (max-width: 768px) {
             #menu-container { flex-direction: column; }
             .split h1 { font-size: 2.2rem; }
-            .daily-quote { display: none; /* Ocultamos la frase en móvil para que no rompa el diseño */ }
+            .daily-quote { display: none; }
             .footer-content-wrapper { flex-direction: column; }
         }
     </style>
@@ -180,7 +200,7 @@
     </div>
 
 
-    <!-- 2. SECCIÓN KIWI REVIEW -->
+    <!-- ================= 2. SECCIÓN KIWI REVIEW (CARTELES) ================= -->
     <div id="kiwi-section">
         <nav class="navbar">
             <div class="logo-container">
@@ -190,6 +210,7 @@
                 <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
             <div class="nav-links">
+                <a href="#faq-seccion">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
@@ -200,6 +221,26 @@
             <p>Especialistas en digitalizar tu negocio local. Convierte a tus clientes satisfechos en tu mejor publicidad online.</p>
         </header>
 
+        <!-- Explicación Carteles -->
+        <section class="services">
+            <h2 class="section-title fade-up">Nuestras Soluciones</h2>
+            <div class="services-grid">
+                <div class="card fade-up">
+                    <h3>Soportes Inteligentes</h3>
+                    <p>Tus clientes solo tienen que acercar su teléfono para dejar una reseña al instante mediante NFC.</p>
+                </div>
+                <div class="card fade-up" style="transition-delay: 0.1s;">
+                    <h3>Menús Digitales</h3>
+                    <p>Diseño de cartas con QR modernas, responsivas y fáciles de actualizar para tu restaurante.</p>
+                </div>
+                <div class="card fade-up" style="transition-delay: 0.2s;">
+                    <h3>Cartelería a Medida</h3>
+                    <p>Promociones y horarios diseñados visualmente para destacar y captar la atención.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tienda Carteles -->
         <section class="product-showcase">
             <h2 class="section-title fade-up">Prepara tu pedido</h2>
             <div class="showcase-container">
@@ -233,10 +274,29 @@
                 </div>
             </div>
         </section>
+
+        <!-- FAQ Carteles -->
+        <section id="faq-seccion" class="faq-section">
+            <h2 class="section-title fade-up">Preguntas Frecuentes</h2>
+            <div class="faq-container fade-up">
+                <details class="faq-item">
+                    <summary>¿Necesito enchufar el cartel o lleva pilas?</summary>
+                    <p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El propio teléfono móvil de tu cliente emite la energía necesaria para leer el chip interno al acercarlo, por lo que el cartel dura años sin mantenimiento.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Tengo que pagar alguna cuota mensual?</summary>
+                    <p>No, es un único pago por el producto físico. No hay suscripciones, ni gastos ocultos. Tú lo compras, te lo configuramos, y ya es tuyo para siempre.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Cómo configuro el cartel para que enlace a mi negocio?</summary>
+                    <p>Nosotros lo hacemos por ti. Al pedirlo, nos pasas el enlace a tu perfil de Google My Business y lo grabamos antes de enviártelo.</p>
+                </details>
+            </div>
+        </section>
     </div>
 
 
-    <!-- 3. SECCIÓN RFID -->
+    <!-- ================= 3. SECCIÓN RFID (PORTALES) ================= -->
     <div id="rfid-section">
         <nav class="navbar">
             <div class="logo-container">
@@ -246,6 +306,7 @@
                 <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
             <div class="nav-links">
+                <a href="#rfid-faq">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
@@ -256,7 +317,27 @@
             <p>Sistemas RFID compatibles con la mayoría de portales. Discretos, resistentes y al mejor precio.</p>
         </header>
 
-        <section style="background: var(--bg-light); padding-bottom: 4rem;">
+        <!-- NUEVA ZONA: Explicación Portales -->
+        <section class="services" style="background: var(--white);">
+            <h2 class="section-title fade-up">¿Por qué elegir nuestros accesos RFID?</h2>
+            <div class="services-grid">
+                <div class="card fade-up">
+                    <h3 style="color: var(--google-blue);">Comodidad Absoluta</h3>
+                    <p>Olvídate de buscar las llaves en el fondo del bolso. Solo acerca la tarjeta o el llavero al lector y la puerta se abrirá de inmediato.</p>
+                </div>
+                <div class="card fade-up" style="transition-delay: 0.1s; border-top-color: var(--google-yellow);">
+                    <h3>Formatos Prácticos</h3>
+                    <p>Elige entre una tarjeta fina que cabe en cualquier cartera, o un llavero compacto y ultrarresistente para llevar junto a las llaves de casa.</p>
+                </div>
+                <div class="card fade-up" style="transition-delay: 0.2s; border-top-color: var(--google-green);">
+                    <h3>Alta Compatibilidad</h3>
+                    <p>Nuestros chips trabajan con las frecuencias estándar (125kHz y 13.56MHz) utilizadas por la inmensa mayoría de comunidades de vecinos actuales.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tienda RFID -->
+        <section style="background: var(--bg-light); padding-top: 4rem; padding-bottom: 4rem;">
             <div class="rfid-showcase">
                 <div class="rfid-product-card fade-up">
                     <img src="tarjeta_portal.jpg" alt="Tarjeta RFID">
@@ -297,28 +378,44 @@
                 <button onclick="enviarPedidoRFID()" class="btn-primary">Tramitar Pedido Seguro</button>
             </div>
         </section>
+
+        <!-- NUEVA ZONA: FAQ RFID -->
+        <section id="rfid-faq" class="faq-section">
+            <h2 class="section-title fade-up">Dudas sobre los accesos al Portal</h2>
+            <div class="faq-container fade-up">
+                <details class="faq-item">
+                    <summary>¿Son compatibles con el lector de mi edificio?</summary>
+                    <p>Sí, nuestros sistemas utilizan las dos frecuencias estándar del mercado (125kHz y 13.56MHz), lo que las hace compatibles con el 99% de los portales modernos. Si tu comunidad usa un sistema muy cerrado, consúltanos antes.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Llevan pilas o batería que haya que cambiar?</summary>
+                    <p>¡Para nada! Funcionan mediante tecnología pasiva (inducción). Al acercar la tarjeta o el llavero al panel del portal, este le proporciona la energía necesaria para leer el código. Durarán años sin requerir ningún mantenimiento.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>¿Cómo hago para que abran mi puerta concretamente?</summary>
+                    <p>Nosotros te entregamos las chapas y tarjetas listas para usar. Tienes dos opciones: si tienes una chapa antigua que funcione, nos la puedes enviar o traer para clonarla directamente. Si son nuevas, el administrador de tu finca o el presidente puede darlas de alta fácilmente pasándolas por el lector maestro del portal.</p>
+                </details>
+            </div>
+        </section>
     </div>
 
-    <!-- 4. SECCIÓN COMPARTIDA: CLIENTES / RESEÑAS -->
+
+    <!-- ================= 4. SECCIÓN COMPARTIDA: CLIENTES / RESEÑAS ================= -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
             
-            <!-- Grid de Reseñas -->
             <div class="reviews-grid" id="reviews-list">
-                <!-- Reseña 1 -->
                 <div class="review-card fade-up">
                     <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <p class="review-text">"Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal."</p>
-                    <p class="review-author">- Carlos M. (La Tagliatella)</p>
+                    <p class="review-text">"Compré los carteles para mi bar y las reseñas han subido un monton en un mes. Brutal."</p>
+                    <p class="review-author">- Dueña del bar El Escondite.</p>
                 </div>
-                <!-- Reseña 2 -->
                 <div class="review-card fade-up" style="transition-delay: 0.1s;">
                     <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     <p class="review-text">"Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10."</p>
                     <p class="review-author">- Comunidad de Vecinos Av. Sur</p>
                 </div>
-                <!-- Reseña 3 -->
                 <div class="review-card fade-up" style="transition-delay: 0.2s;">
                     <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
                     <p class="review-text">"Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental."</p>
@@ -326,7 +423,6 @@
                 </div>
             </div>
 
-            <!-- Formulario para dejar reseña -->
             <div class="add-review-box fade-up">
                 <h3>¡Deja tu valoración!</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
@@ -349,7 +445,7 @@
         </div>
     </section>
 
-    <!-- 5. FOOTER COMPARTIDO -->
+    <!-- ================= 5. FOOTER COMPARTIDO ================= -->
     <footer id="shared-footer" class="footer-cta">
         <h2 id="contacto">Impulsa tu negocio hoy</h2>
         <div class="footer-content-wrapper">
@@ -384,11 +480,9 @@
             "Sin prisa, pero con buenas notas 📈"
         ];
         
-        // Calculamos qué día es hoy para coger una frase fija por día
         const diaDelAño = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
         const fraseElegida = frasesMotivadoras[diaDelAño % frasesMotivadoras.length];
         
-        // La insertamos en todas las barras de navegación
         document.querySelectorAll('.quote-text').forEach(el => {
             el.innerText = fraseElegida;
         });
@@ -406,7 +500,6 @@
             
             window.scrollTo(0, 0);
             
-            // Re-ejecutar animaciones
             document.querySelectorAll('.fade-up').forEach(el => el.classList.remove('visible'));
             setTimeout(() => { document.querySelectorAll('.fade-up').forEach(el => observer.observe(el)); }, 100);
         }
@@ -503,39 +596,34 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        /* --- 5. LÓGICA DE RESEÑAS LOCAL (Simulada) --- */
+        /* --- 5. LÓGICA DE RESEÑAS LOCAL --- */
         function enviarResenaLocal(event) {
-            event.preventDefault(); // Evita que la página recargue
+            event.preventDefault(); 
             
-            // Recoger datos
             const nombre = document.getElementById('rev-name').value;
             const comentario = document.getElementById('rev-comment').value;
             const ratingInput = document.querySelector('input[name="rating"]:checked');
             const rating = ratingInput ? parseInt(ratingInput.value) : 5;
 
-            // Generar HTML de las estrellas
             let starsHTML = '';
             for(let i=0; i<5; i++) {
                 if(i < rating) starsHTML += '<i class="fa-solid fa-star"></i>';
-                else starsHTML += '<i class="fa-regular fa-star"></i>'; // Estrella vacía
+                else starsHTML += '<i class="fa-regular fa-star"></i>';
             }
 
-            // Crear el bloque HTML de la nueva reseña
             const nuevaResena = document.createElement('div');
-            nuevaResena.className = 'review-card fade-up visible'; // visible para que no haya que hacer scroll
+            nuevaResena.className = 'review-card fade-up visible'; 
             nuevaResena.innerHTML = `
                 <div class="review-stars">${starsHTML}</div>
                 <p class="review-text">"${comentario}"</p>
                 <p class="review-author">- ${nombre} (NUEVA)</p>
             `;
 
-            // Insertar al principio de la lista
             const lista = document.getElementById('reviews-list');
             lista.insertBefore(nuevaResena, lista.firstChild);
 
-            // Limpiar formulario y agradecer
             document.getElementById('review-form').reset();
-            alert("¡Muchas gracias por tu valoración! (Recuerda que en esta versión sin base de datos, los comentarios se borrarán al recargar la web).");
+            alert("¡Muchas gracias por tu valoración! (Recuerda que para que se guarde siempre necesitas conectarlo a Firebase o tu servidor SQL).");
         }
     </script>
 </body>
