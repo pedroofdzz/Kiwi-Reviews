@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiwi Review & Accesos RFID</title>
     
-    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome para los iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ================= VARIABLES ================= */
         :root {
             --bg-light: #F8F9FA;
             --text-dark: #202124;
@@ -26,79 +22,54 @@
             --white: #FFFFFF;
         }
 
-        /* ================= RESET Y BASE ================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
-        /* ================= ANIMACIONES GLOBALES ================= */
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= MENÚ DIVIDIDO (PREMIUM SPLIT SCREEN) ================= */
+        /* SPLIT SCREEN */
         #menu-container { display: flex; height: 100vh; width: 100vw; transition: opacity 0.5s ease; background: #111; }
-        
-        .split { 
-            flex: 1; display: flex; justify-content: center; align-items: center; 
-            position: relative; cursor: pointer; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            overflow: hidden; 
-        }
-        
+        .split { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; cursor: pointer; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); overflow: hidden; }
         .split:hover { flex: 1.3; }
-        
-        .split-content {
-            position: relative; z-index: 2; text-align: center; color: white;
-            transition: transform 0.5s ease;
-        }
-        
+        .split-content { position: relative; z-index: 2; text-align: center; color: white; transition: transform 0.5s ease; }
         .split:hover .split-content { transform: scale(1.05); }
-
         .split i.main-icon { font-size: 4.5rem; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3)); }
-        
         .split h1 { font-size: 3.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        
         .split p { font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; opacity: 0.9; margin-bottom: 30px; }
-
-        .enter-btn {
-            display: inline-flex; align-items: center; gap: 10px;
-            padding: 12px 30px; border-radius: 50px; font-weight: 600; font-size: 1.1rem;
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.5);
-            opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
-        }
-        
+        .enter-btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 30px; border-radius: 50px; font-weight: 600; font-size: 1.1rem; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.5); opacity: 0; transform: translateY(20px); transition: all 0.4s ease; }
         .split:hover .enter-btn { opacity: 1; transform: translateY(0); background: white; color: #111; }
-
-        .split::before { 
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
-            background-size: cover; background-position: center; z-index: 0;
-            transition: transform 0.8s ease, filter 0.8s ease; filter: brightness(0.6) saturate(0.8);
-        }
-        
+        .split::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-size: cover; background-position: center; z-index: 0; transition: transform 0.8s ease, filter 0.8s ease; filter: brightness(0.6) saturate(0.8); }
         .split:hover::before { transform: scale(1.1); filter: brightness(0.85) saturate(1.1); }
-
         .left-side::before { background-image: linear-gradient(135deg, rgba(66, 133, 244, 0.8), rgba(15, 52, 96, 0.9)); }
         .right-side::before { background-image: linear-gradient(135deg, rgba(52, 168, 83, 0.8), rgba(22, 105, 122, 0.9)); }
 
-        /* Vistas de sección ocultas inicialmente */
-        #kiwi-section, #rfid-section, #shared-footer { display: none; opacity: 0; animation: slideInUp 0.6s forwards; }
+        #kiwi-section, #rfid-section, #shared-reviews, #shared-footer { display: none; opacity: 0; animation: slideInUp 0.6s forwards; }
 
-        /* Botón de retorno global */
-        .btn-back-menu {
-            background-color: var(--text-dark); color: var(--white) !important; padding: 0.5rem 1rem; border-radius: 50px;
-            border: none; cursor: pointer; font-weight: 600; margin-right: 15px; display: flex; align-items: center; gap: 8px;
-            transition: background 0.3s, transform 0.2s; font-size: 0.9rem;
-        }
+        .btn-back-menu { background-color: var(--text-dark); color: var(--white) !important; padding: 0.5rem 1rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; margin-right: 15px; display: flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s; font-size: 0.9rem; }
         .btn-back-menu:hover { background-color: var(--google-red); transform: translateY(-2px); }
 
-        /* ================= COMPONENTES COMPARTIDOS (Navbar, Hero, Controles) ================= */
+        /* NAVBAR Y FRASE MOTIVADORA */
         .navbar { position: sticky; top: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .logo-container { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .logo-text { font-weight: 700; font-size: 1.5rem; color: var(--text-dark); letter-spacing: -0.5px; }
+        
+        .daily-quote {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000; font-size: 0.8rem; font-weight: 700;
+            padding: 4px 12px; border-radius: 20px;
+            box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3);
+            margin-left: 10px; animation: pulse-quote 2.5s infinite;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        @keyframes pulse-quote { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a { font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
         .nav-links a:hover { color: var(--google-blue); }
@@ -108,81 +79,88 @@
         .hero { text-align: center; padding: 8rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; }
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
-        
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; }
         
-        /* Controles de cantidad estilo Kiwi */
         .quantity-wrapper { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
         .quantity-controls { display: flex; align-items: center; border: 2px solid #ddd; border-radius: 50px; overflow: hidden; background: #fff; }
         .qty-btn { background: transparent; border: none; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; color: var(--text-dark); }
         .qty-btn:hover { background: #f0f0f0; }
-        .qty-input { width: 40px; text-align: center; border: none; font-weight: 600; font-size: 1.1rem; font-family: 'Poppins', sans-serif; background: transparent; color: var(--text-dark); -moz-appearance: textfield; pointer-events: none;}
-        .qty-input::-webkit-outer-spin-button, .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
+        .qty-input { width: 40px; text-align: center; border: none; font-weight: 600; font-size: 1.1rem; background: transparent; color: var(--text-dark); pointer-events: none;}
+        
         .price-container { display: flex; align-items: baseline; gap: 10px; margin-bottom: 1rem; }
         .price { font-size: 2.2rem; font-weight: 700; color: var(--google-blue); }
         .discount-badge { background: var(--google-green); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; display: inline-block; opacity: 0; transform: scale(0.8); transition: all 0.3s; }
         .discount-badge.show { opacity: 1; transform: scale(1); }
         .btn-primary { background-color: var(--google-blue); color: var(--white); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
-        .btn-primary:hover { background-color: #3367D6; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4); }
+        .btn-primary:hover { background-color: #3367D6; transform: translateY(-3px); }
 
-        /* ================= SECCIÓN KIWI REVIEW ORIGINAL ================= */
         .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
         .showcase-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5rem; align-items: center; max-width: 1000px; margin: 0 auto; }
         .product-image img { width: 100%; max-width: 350px; border-radius: 12px; animation: float 5s ease-in-out infinite; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); }
         .product-details { max-width: 400px; text-align: left; }
         .product-details h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-        
         .color-selector { display: flex; gap: 1.2rem; margin-bottom: 0.5rem; }
-        .color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: all 0.3s; }
         .color-btn.active { border: 3px solid var(--google-blue); transform: scale(1.2); }
 
-        /* ================= SECCIÓN RFID (REDISEÑADA ESTILO KIWI) ================= */
         .rfid-showcase { max-width: 1100px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; }
         .rfid-product-card { background: var(--white); padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 5px solid var(--google-green); transition: transform 0.4s; }
-        .rfid-product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 50px rgba(0,0,0,0.12); }
-        .rfid-product-card img { max-width: 250px; height: 250px; object-fit: contain; margin-bottom: 2rem; animation: float 6s ease-in-out infinite; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1)); }
-        
+        .rfid-product-card:hover { transform: translateY(-10px); }
+        .rfid-product-card img { max-width: 250px; height: 250px; object-fit: contain; margin-bottom: 2rem; animation: float 6s ease-in-out infinite; }
         .rfid-summary-box { max-width: 800px; margin: 4rem auto; background: var(--white); border-radius: 15px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
-        .rfid-summary-box h3 { font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-dark); }
         .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.8rem; font-weight: 700; color: var(--google-blue); margin-top: 1rem; margin-bottom: 2rem; }
 
-        /* ================= FOOTER / CONTACTO Y QR INSTAGRAM ================= */
+        /* ================= SECCIÓN DE RESEÑAS / CLIENTES ================= */
+        .reviews-section { padding: 5rem 2rem; background: var(--white); }
+        .reviews-container { max-width: 1000px; margin: 0 auto; }
+        
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+        .review-card { background: var(--bg-light); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; }
+        .review-card::before { content: "\f10d"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 20px; right: 20px; font-size: 2rem; color: rgba(66,133,244,0.1); }
+        .review-stars { color: var(--google-yellow); margin-bottom: 10px; font-size: 1.2rem; }
+        .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; }
+        .review-author { font-weight: 700; font-size: 0.95rem; }
+
+        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--bg-light); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
+        .add-review-box h3 { margin-bottom: 1rem; }
+        
+        .star-rating-input { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; margin-bottom: 20px; font-size: 2rem; }
+        .star-rating-input input { display: none; }
+        .star-rating-input label { color: #ccc; cursor: pointer; transition: color 0.2s; }
+        .star-rating-input input:checked ~ label, .star-rating-input label:hover, .star-rating-input label:hover ~ label { color: var(--google-yellow); }
+        
+        .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
+        textarea.form-control-review { resize: vertical; min-height: 100px; }
+
+        /* FOOTER COMPARTIDO */
         .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
         .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
         .form-container, .social-qr { flex: 1; min-width: 320px; background: rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 12px; backdrop-filter: blur(5px); }
         .form-group { margin-bottom: 1.5rem; text-align: left; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #ccc; }
-        .form-control { width: 100%; padding: 1rem; border: 1px solid #444; background: rgba(0,0,0,0.2); color: var(--white); border-radius: 6px; font-family: 'Poppins', sans-serif; transition: border-color 0.3s; }
-        .form-control:focus { outline: none; border-color: var(--google-blue); background: rgba(0,0,0,0.4); }
-        textarea.form-control { resize: vertical; min-height: 120px; }
-        .btn-submit { width: 100%; background-color: var(--google-green); color: var(--white); border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.3s, transform 0.2s; animation: pulse-green 2s infinite; }
-        .btn-submit:hover { background-color: #2b8b45; transform: translateY(-2px); animation: none; }
+        .form-control { width: 100%; padding: 1rem; border: 1px solid #444; background: rgba(0,0,0,0.2); color: var(--white); border-radius: 6px; font-family: inherit; }
+        .form-control:focus { outline: none; border-color: var(--google-blue); }
+        .btn-submit { width: 100%; background-color: var(--google-green); color: var(--white); border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.3s; }
+        .btn-submit:hover { background-color: #2b8b45; }
         
         .social-qr { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
-        .social-qr h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-        .qr-link { display: inline-block; transition: transform 0.3s ease; }
-        .qr-link:hover { transform: scale(1.05); }
         .social-qr img { width: 100%; max-width: 220px; border-radius: 12px; background-color: #fff; padding: 15px; margin-bottom: 1rem; }
-        .social-qr p { color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
-        .btn-instagram { display: inline-flex; align-items: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; }
-        .btn-instagram:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(220, 39, 67, 0.5); }
+        .btn-instagram { display: inline-flex; align-items: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600; text-decoration: none; }
 
         @media (max-width: 768px) {
             #menu-container { flex-direction: column; }
             .split h1 { font-size: 2.2rem; }
-            .rfid-showcase { grid-template-columns: 1fr; }
+            .daily-quote { display: none; /* Ocultamos la frase en móvil para que no rompa el diseño */ }
             .footer-content-wrapper { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ================= 1. PANTALLA INICIAL DIVIDIDA (ORIGINAL Y ATRACTIVA) ================= -->
+    <!-- 1. PANTALLA INICIAL DIVIDIDA -->
     <div id="menu-container">
-        <!-- Lado Izquierdo: Reseñas -->
         <div class="split left-side" onclick="abrirSeccion('kiwi-section')">
             <div class="split-content">
                 <i class="fa-brands fa-google main-icon"></i>
@@ -191,8 +169,6 @@
                 <span class="enter-btn">Descubrir <i class="fa-solid fa-arrow-right"></i></span>
             </div>
         </div>
-        
-        <!-- Lado Derecho: Portales RFID -->
         <div class="split right-side" onclick="abrirSeccion('rfid-section')">
             <div class="split-content">
                 <i class="fa-solid fa-house-signal main-icon"></i>
@@ -204,15 +180,17 @@
     </div>
 
 
-    <!-- ================= 2. SECCIÓN KIWI REVIEW (CARTELES) ================= -->
+    <!-- 2. SECCIÓN KIWI REVIEW -->
     <div id="kiwi-section">
         <nav class="navbar">
             <div class="logo-container">
                 <button class="btn-back-menu" onclick="volverMenu()"><i class="fas fa-arrow-left"></i> Volver</button>
                 <img src="logokw.jpeg" alt="Logo" class="logo-img">
                 <span class="logo-text">Kiwi Review</span>
+                <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
             <div class="nav-links">
+                <a href="#clientes-seccion">Clientes</a>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
         </nav>
@@ -258,15 +236,17 @@
     </div>
 
 
-    <!-- ================= 3. SECCIÓN RFID (PORTALES) ESTILO KIWI ================= -->
+    <!-- 3. SECCIÓN RFID -->
     <div id="rfid-section">
         <nav class="navbar">
             <div class="logo-container">
                 <button class="btn-back-menu" onclick="volverMenu()"><i class="fas fa-arrow-left"></i> Volver</button>
                 <i class="fa-solid fa-house-signal" style="font-size: 2rem; color: var(--google-blue);"></i>
                 <span class="logo-text">Accesos RFID</span>
+                <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
             <div class="nav-links">
+                <a href="#clientes-seccion">Clientes</a>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
         </nav>
@@ -278,17 +258,11 @@
 
         <section style="background: var(--bg-light); padding-bottom: 4rem;">
             <div class="rfid-showcase">
-                
-                <!-- PRODUCTO: TARJETA -->
                 <div class="rfid-product-card fade-up">
                     <img src="tarjeta_portal.jpg" alt="Tarjeta RFID">
                     <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Tarjeta de Acceso</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Blanca, discreta y programable. Ideal para llevar en la cartera junto a tus tarjetas.</p>
-                    
-                    <div class="price-container" style="justify-content: center;">
-                        <span class="price">8,00€</span>
-                    </div>
-                    
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Blanca, discreta y programable.</p>
+                    <div class="price-container" style="justify-content: center;"><span class="price">8,00€</span></div>
                     <div class="quantity-wrapper" style="justify-content: center; margin-top: 1rem;">
                         <div class="quantity-controls">
                             <button class="qty-btn" onclick="updateRFIDQty('tarjeta', -1)"><i class="fa-solid fa-minus"></i></button>
@@ -298,16 +272,11 @@
                     </div>
                 </div>
 
-                <!-- PRODUCTO: LLAVERO CHAPA -->
                 <div class="rfid-product-card fade-up" style="border-top-color: var(--google-blue);">
                     <img src="chapa_portal.jpg" alt="Llavero RFID">
                     <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Llavero Proximidad</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Chapa llavero compacta y resistente. Engánchala a tus llaves y no las busques más.</p>
-                    
-                    <div class="price-container" style="justify-content: center;">
-                        <span class="price">8,00€</span>
-                    </div>
-                    
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Chapa llavero compacta y resistente.</p>
+                    <div class="price-container" style="justify-content: center;"><span class="price">8,00€</span></div>
                     <div class="quantity-wrapper" style="justify-content: center; margin-top: 1rem;">
                         <div class="quantity-controls">
                             <button class="qty-btn" onclick="updateRFIDQty('llavero', -1)"><i class="fa-solid fa-minus"></i></button>
@@ -316,110 +285,137 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- RESUMEN DE COMPRA RFID ESTILO FORMULARIO -->
             <div class="rfid-summary-box fade-up">
                 <h3>Resumen de tu pedido RFID</h3>
-                
-                <div class="summary-line">
-                    <span>Artículos seleccionados:</span>
-                    <span id="rfid-total-items">0 unidades</span>
-                </div>
-                
-                <div class="summary-line">
-                    <span>Subtotal:</span>
-                    <span id="rfid-subtotal">0,00 €</span>
-                </div>
-
-                <div class="summary-line" style="color: var(--google-green); font-weight: 600;">
-                    <span>Descuento aplicado (Promo Pares):</span>
-                    <span id="rfid-discount">-0,00 €</span>
-                </div>
-
-                <div class="summary-total">
-                    <span>Total a pagar:</span>
-                    <span id="rfid-total-final">0,00 €</span>
-                </div>
-                
-                <div class="discount-badge show" style="margin-bottom: 2rem; background: var(--google-green);">
-                    ¡Promoción: 2€ de descuento por cada 2 unidades que combines!
-                </div>
-                
+                <div class="summary-line"><span>Artículos seleccionados:</span><span id="rfid-total-items">0 unidades</span></div>
+                <div class="summary-line"><span>Subtotal:</span><span id="rfid-subtotal">0,00 €</span></div>
+                <div class="summary-line" style="color: var(--google-green); font-weight: 600;"><span>Descuento aplicado (Promo Pares):</span><span id="rfid-discount">-0,00 €</span></div>
+                <div class="summary-total"><span>Total a pagar:</span><span id="rfid-total-final">0,00 €</span></div>
+                <div class="discount-badge show" style="margin-bottom: 2rem; background: var(--google-green);">¡Promoción: 2€ de descuento por cada 2 unidades!</div>
                 <button onclick="enviarPedidoRFID()" class="btn-primary">Tramitar Pedido Seguro</button>
             </div>
         </section>
     </div>
 
+    <!-- 4. SECCIÓN COMPARTIDA: CLIENTES / RESEÑAS -->
+    <section id="shared-reviews" class="reviews-section">
+        <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
+        <div class="reviews-container">
+            
+            <!-- Grid de Reseñas -->
+            <div class="reviews-grid" id="reviews-list">
+                <!-- Reseña 1 -->
+                <div class="review-card fade-up">
+                    <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="review-text">"Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal."</p>
+                    <p class="review-author">- Carlos M. (La Tagliatella)</p>
+                </div>
+                <!-- Reseña 2 -->
+                <div class="review-card fade-up" style="transition-delay: 0.1s;">
+                    <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="review-text">"Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10."</p>
+                    <p class="review-author">- Comunidad de Vecinos Av. Sur</p>
+                </div>
+                <!-- Reseña 3 -->
+                <div class="review-card fade-up" style="transition-delay: 0.2s;">
+                    <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+                    <p class="review-text">"Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental."</p>
+                    <p class="review-author">- Clínica Dental Sonrisas</p>
+                </div>
+            </div>
 
-    <!-- ================= 4. FOOTER COMPARTIDO (FORMULARIO E INSTAGRAM) ================= -->
+            <!-- Formulario para dejar reseña -->
+            <div class="add-review-box fade-up">
+                <h3>¡Deja tu valoración!</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
+                
+                <form id="review-form" onsubmit="enviarResenaLocal(event)">
+                    <div class="star-rating-input">
+                        <input type="radio" id="star5" name="rating" value="5" required><label for="star5"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2"><i class="fa-solid fa-star"></i></label>
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="fa-solid fa-star"></i></label>
+                    </div>
+                    
+                    <input type="text" id="rev-name" class="form-control-review" placeholder="Tu nombre o empresa" required>
+                    <textarea id="rev-comment" class="form-control-review" placeholder="Cuenta tu experiencia..." required></textarea>
+                    
+                    <button type="submit" class="btn-primary" style="background: var(--google-yellow); color: #000;">Publicar Reseña</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. FOOTER COMPARTIDO -->
     <footer id="shared-footer" class="footer-cta">
         <h2 id="contacto">Impulsa tu negocio hoy</h2>
         <div class="footer-content-wrapper">
-            <!-- Formulario -->
             <div class="form-container">
                 <form action="https://formspree.io/f/xzdnvggy" method="POST">
-                    <div class="form-group">
-                        <label for="name">Nombre</label>
-                        <input type="text" id="name" name="name" class="form-control" required placeholder="Tu nombre">
-                    </div>
-                    <div class="form-group">
-                        <label for="local">Local / Asunto</label>
-                        <input type="text" id="local" name="local" class="form-control" required placeholder="Negocio o asunto">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required placeholder="tu@correo.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Mensaje del pedido</label>
-                        <textarea id="message-box" name="message" class="form-control" required placeholder="Detalles de tu pedido..."></textarea>
-                    </div>
+                    <div class="form-group"><label>Nombre</label><input type="text" name="name" class="form-control" required placeholder="Tu nombre"></div>
+                    <div class="form-group"><label>Local / Asunto</label><input type="text" name="local" class="form-control" required placeholder="Negocio o asunto"></div>
+                    <div class="form-group"><label>Email</label><input type="email" name="email" class="form-control" required placeholder="tu@correo.com"></div>
+                    <div class="form-group"><label>Mensaje del pedido</label><textarea id="message-box" name="message" class="form-control" required placeholder="Detalles de tu pedido..."></textarea></div>
                     <button type="submit" class="btn-submit">Enviar Consulta Definitiva</button>
                 </form>
             </div>
-
-            <!-- Instagram -->
             <div class="social-qr">
                 <h3>Síguenos en Instagram</h3>
-                <a href="https://instagram.com/kiwi__review" target="_blank" class="qr-link">
-                    <!-- Tu QR original de Instagram -->
-                    <img src="image_ae67c6.png" alt="Código QR de nuestro Instagram">
-                </a>
-                <p>Escanea este código o haz clic abajo para ver nuestros últimos trabajos, novedades y ofertas especiales.</p>
-                <a href="https://instagram.com/kiwi__review" target="_blank" class="btn-instagram">
-                    <i class="fa-brands fa-instagram" style="margin-right: 8px;"></i> Ir a Instagram
-                </a>
+                <a href="https://instagram.com/kiwi__review" target="_blank" class="qr-link"><img src="image_ae67c6.png" alt="Instagram"></a>
+                <p>Escanea este código para ver nuestros últimos trabajos y ofertas especiales.</p>
+                <a href="https://instagram.com/kiwi__review" target="_blank" class="btn-instagram"><i class="fa-brands fa-instagram" style="margin-right: 8px;"></i> Ir a Instagram</a>
             </div>
         </div>
     </footer>
 
-
     <!-- ================= JAVASCRIPT ================= -->
     <script>
-        /* --- NAVEGACIÓN SPLIT SCREEN --- */
+        /* --- 1. LÓGICA DE FRASES DIARIAS --- */
+        const frasesMotivadoras = [
+            "¡A por todas! 🚀",
+            "Si la vida te da limones, ¡pídeles reseña! 🍋",
+            "Menos dramas y más NFC 😎",
+            "Hoy es un gran día para triunfar 🔥",
+            "Que el algoritmo te acompañe 🤖",
+            "Más reseñas que estrellas ✨",
+            "Sin prisa, pero con buenas notas 📈"
+        ];
+        
+        // Calculamos qué día es hoy para coger una frase fija por día
+        const diaDelAño = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+        const fraseElegida = frasesMotivadoras[diaDelAño % frasesMotivadoras.length];
+        
+        // La insertamos en todas las barras de navegación
+        document.querySelectorAll('.quote-text').forEach(el => {
+            el.innerText = fraseElegida;
+        });
+
+
+        /* --- 2. NAVEGACIÓN SPLIT SCREEN --- */
         function abrirSeccion(id) {
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
             
             document.getElementById(id).style.display = 'block';
+            document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
             
-            // Reiniciar scroll y animaciones
             window.scrollTo(0, 0);
+            
+            // Re-ejecutar animaciones
             document.querySelectorAll('.fade-up').forEach(el => el.classList.remove('visible'));
-            setTimeout(() => {
-                document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-            }, 100);
+            setTimeout(() => { document.querySelectorAll('.fade-up').forEach(el => observer.observe(el)); }, 100);
         }
 
         function volverMenu() {
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
+            document.getElementById('shared-reviews').style.display = 'none';
             document.getElementById('shared-footer').style.display = 'none';
-            
             document.getElementById('menu-container').style.display = 'flex';
         }
 
@@ -434,16 +430,13 @@
             });
         }, observerOptions);
 
-        /* --- LÓGICA KIWI REVIEW --- */
+        /* --- 3. FUNCIONES KIWI REVIEW --- */
         let colorElegido = "Blanco";
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const img = document.getElementById('main-product-img');
                 img.style.opacity = '0.5';
-                setTimeout(() => {
-                    img.src = this.getAttribute('data-img');
-                    img.style.opacity = '1';
-                }, 150);
+                setTimeout(() => { img.src = this.getAttribute('data-img'); img.style.opacity = '1'; }, 150);
                 colorElegido = this.getAttribute('data-color');
                 document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
@@ -453,10 +446,7 @@
         function updateKiwiQty(change) {
             const input = document.getElementById('kiwi-qty');
             let val = parseInt(input.value) + change;
-            if (val >= 1) {
-                input.value = val;
-                calcularKiwi();
-            }
+            if (val >= 1) { input.value = val; calcularKiwi(); }
         }
 
         function calcularKiwi() {
@@ -466,32 +456,24 @@
             
             let ahorro = (qty - 1) * 2;
             const badge = document.getElementById('kiwi-discount-badge');
-            if (ahorro > 0) {
-                badge.innerText = `¡Te ahorras ${ahorro}€!`;
-                badge.classList.add('show');
-            } else {
-                badge.classList.remove('show');
-            }
+            if (ahorro > 0) { badge.innerText = `¡Te ahorras ${ahorro}€!`; badge.classList.add('show'); } 
+            else { badge.classList.remove('show'); }
         }
 
         function enviarPedidoKiwi() {
             const qty = document.getElementById('kiwi-qty').value;
             const total = document.getElementById('kiwi-price-display').innerText;
             const msgBox = document.getElementById('message-box');
-            
             msgBox.value = `¡Hola! Me gustaría encargar:\n- ${qty} Cartel/es NFC Google Review\n- Color: ${colorElegido}\n- Total estimado: ${total}\n\n(Escribe aquí tus dudas adicionales): `;
             document.getElementById('shared-footer').scrollIntoView({behavior: 'smooth'});
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-blue)"; }, 800);
         }
 
-        /* --- LÓGICA RFID --- */
+        /* --- 4. FUNCIONES RFID --- */
         function updateRFIDQty(tipo, change) {
             const input = document.getElementById(`rfid-qty-${tipo}`);
             let val = parseInt(input.value) + change;
-            if (val >= 0) {
-                input.value = val;
-                calcularTotalesRFID();
-            }
+            if (val >= 0) { input.value = val; calcularTotalesRFID(); }
         }
 
         function calcularTotalesRFID() {
@@ -499,7 +481,6 @@
             const qL = parseInt(document.getElementById('rfid-qty-llavero').value);
             const totalItems = qT + qL;
             const subtotal = totalItems * 8;
-            
             const pairs = Math.floor(totalItems / 2);
             const discount = pairs * 2;
             const final = subtotal - discount;
@@ -514,14 +495,47 @@
             const qT = parseInt(document.getElementById('rfid-qty-tarjeta').value);
             const qL = parseInt(document.getElementById('rfid-qty-llavero').value);
             const total = document.getElementById('rfid-total-final').innerText;
-
             if(qT === 0 && qL === 0) { alert("Añade al menos 1 producto para comprar."); return; }
-
+            
             const msgBox = document.getElementById('message-box');
             msgBox.value = `¡Hola! Me gustaría encargar sistemas RFID:\n- ${qT} Tarjeta/s\n- ${qL} Llavero/s chapa\n\n- Total con promoción aplicada: ${total}\n\n(Dudas adicionales): `;
-            
             document.getElementById('shared-footer').scrollIntoView({behavior: 'smooth'});
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
+        }
+
+        /* --- 5. LÓGICA DE RESEÑAS LOCAL (Simulada) --- */
+        function enviarResenaLocal(event) {
+            event.preventDefault(); // Evita que la página recargue
+            
+            // Recoger datos
+            const nombre = document.getElementById('rev-name').value;
+            const comentario = document.getElementById('rev-comment').value;
+            const ratingInput = document.querySelector('input[name="rating"]:checked');
+            const rating = ratingInput ? parseInt(ratingInput.value) : 5;
+
+            // Generar HTML de las estrellas
+            let starsHTML = '';
+            for(let i=0; i<5; i++) {
+                if(i < rating) starsHTML += '<i class="fa-solid fa-star"></i>';
+                else starsHTML += '<i class="fa-regular fa-star"></i>'; // Estrella vacía
+            }
+
+            // Crear el bloque HTML de la nueva reseña
+            const nuevaResena = document.createElement('div');
+            nuevaResena.className = 'review-card fade-up visible'; // visible para que no haya que hacer scroll
+            nuevaResena.innerHTML = `
+                <div class="review-stars">${starsHTML}</div>
+                <p class="review-text">"${comentario}"</p>
+                <p class="review-author">- ${nombre} (NUEVA)</p>
+            `;
+
+            // Insertar al principio de la lista
+            const lista = document.getElementById('reviews-list');
+            lista.insertBefore(nuevaResena, lista.firstChild);
+
+            // Limpiar formulario y agradecer
+            document.getElementById('review-form').reset();
+            alert("¡Muchas gracias por tu valoración! (Recuerda que en esta versión sin base de datos, los comentarios se borrarán al recargar la web).");
         }
     </script>
 </body>
