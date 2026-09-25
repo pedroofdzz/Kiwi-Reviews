@@ -139,7 +139,7 @@
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
 
-        /* TRUST BADGES / SELLOS DE CONFIANZA */
+        /* SELLOS DE CONFIANZA SIN MENCIONES DE ENVÍO */
         .trust-strip { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto; padding: 0 1rem; }
         .trust-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .trust-item i { color: var(--google-green); font-size: 1.1rem; }
@@ -248,7 +248,6 @@
         .badge-admin { background: #ffe082; color: #b78103; }
         .badge-client { background: rgba(66, 133, 244, 0.15); color: var(--google-blue); }
 
-        /* FILAS DE CREADOR DE VARIANTES CON FOTO */
         .variant-row { display: grid; grid-template-columns: 1fr 1.2fr 45px; gap: 10px; align-items: center; margin-bottom: 10px; background: var(--bg-card); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); }
 
         .footer-cta { background-color: #111215; color: #FFFFFF; padding: 6rem 2rem; }
@@ -348,12 +347,11 @@
 
         <header class="hero fade-up">
             <h1>Multiplica tus reseñas de Google en segundos.</h1>
-            <p>Especialistas en digitalizar tu negocio local. Convierte a tus clientes satisfechos en tu mejor publicidad online.</p>
+            <p>Especialistas en digitalizar tu negocio. Convierte a tus clientes satisfechos en tu mejor publicidad online.</p>
             
-            <!-- TRUST BADGES -->
             <div class="trust-strip">
                 <div class="trust-item"><i class="fa-solid fa-bolt"></i> Sin pilas ni instalación</div>
-                <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> Envío rápido nacional</div>
+                <div class="trust-item"><i class="fa-solid fa-check-double"></i> Tecnología pasiva duradera</div>
                 <div class="trust-item"><i class="fa-solid fa-shield-check"></i> Configurado a medida</div>
             </div>
         </header>
@@ -367,7 +365,7 @@
             </div>
         </section>
 
-        <!-- CATÁLOGO DINÁMICO DE CARTELES CON FOTOS POR COLOR -->
+        <!-- CATÁLOGO DINÁMICO DE CARTELES -->
         <section class="product-showcase">
             <h2 class="section-title fade-up">Catálogo de Productos NFC</h2>
             <div class="product-grid" id="catalog-kiwi-container"></div>
@@ -378,7 +376,7 @@
             <div class="faq-container fade-up">
                 <details class="faq-item"><summary>¿Necesito enchufar el cartel o lleva pilas?</summary><p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El móvil del cliente la activa por inducción.</p></details>
                 <details class="faq-item"><summary>¿Tengo que pagar alguna cuota mensual?</summary><p>No, es un pago único por el producto físico terminado y configurado.</p></details>
-                <details class="faq-item"><summary>¿Cómo configuro el cartel para mi negocio?</summary><p>Nosotros te lo enviamos ya programado con tu ficha de Google Maps.</p></details>
+                <details class="faq-item"><summary>¿Cómo configuro el cartel para mi negocio?</summary><p>Lo preparamos directamente enlazado a tu perfil de Google My Business.</p></details>
             </div>
         </section>
     </div>
@@ -436,7 +434,7 @@
             <div class="faq-container fade-up">
                 <details class="faq-item"><summary>¿Son compatibles con el lector de mi edificio?</summary><p>Sí, cubren el 99% de los lectores de proximidad actuales.</p></details>
                 <details class="faq-item"><summary>¿Llevan pilas?</summary><p>No, funcionan por inducción electromagnética pasiva.</p></details>
-                <details class="faq-item"><summary>¿Cómo las doy de alta?</summary><p>Las clonamos con tu llave original o el presidente las registra en el panel maestro.</p></details>
+                <details class="faq-item"><summary>¿Cómo las doy de alta?</summary><p>Se clonaran a partir de una llave que funcione o se registran en el panel del portal.</p></details>
             </div>
         </section>
     </div>
@@ -613,7 +611,6 @@
                             </button>
                         </div>
                         <div id="variants-builder-list">
-                            <!-- Fila inicial -->
                             <div class="variant-row">
                                 <input type="text" class="form-control-review var-name" placeholder="Nombre color (Ej: Blanco)" required style="margin-bottom:0;">
                                 <input type="file" accept="image/*" class="form-control-review var-file" required style="margin-bottom:0;" onchange="procesarFotoVariante(event, 0)">
@@ -886,7 +883,6 @@
             });
         }
 
-        // Cambio inmediato de foto al elegir color
         function seleccionarVariante(idProd, nombreVariante, rutaImg, btnElem) {
             estadoProductos[idProd].varianteElegida = nombreVariante;
             estadoProductos[idProd].imgActual = rutaImg;
@@ -1013,7 +1009,6 @@
             const desc = document.getElementById('prod-desc').value.trim();
             const descuentoTipo = document.getElementById('prod-discount-type').value;
 
-            // Recoger todas las variantes con sus fotos individuales
             const filas = document.querySelectorAll('#variants-builder-list .variant-row');
             let variantes = [];
             filas.forEach((f, idx) => {
@@ -1083,7 +1078,7 @@
 
         const resenasFijas = [
             { id: "rev_1", autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", foto: "", estrellas: 5 },
-            { id: "rev_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", foto: "", estrellas: 5 },
+            { id: "rev_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el servicio fue impecable. 10/10.", foto: "", estrellas: 5 },
             { id: "rev_3", autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", foto: "", estrellas: 4 }
         ];
 
