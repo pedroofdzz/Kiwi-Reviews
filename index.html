@@ -17,9 +17,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
-        /* ================= 1. VARIABLES DINÁMICAS POR TEMA ================= */
+        /* ================= VARIABLES POR TEMA ================= */
         :root {
-            /* Tema 1: Google Clásico (Default) */
             --bg-light: #F8F9FA;
             --bg-card: #FFFFFF;
             --text-dark: #202124;
@@ -32,7 +31,6 @@
             --navbar-bg: rgba(255, 255, 255, 0.95);
         }
 
-        /* Tema 2: Cyber Dark */
         [data-theme="dark"] {
             --bg-light: #121316;
             --bg-card: #1A1D24;
@@ -46,7 +44,6 @@
             --navbar-bg: rgba(26, 29, 36, 0.95);
         }
 
-        /* Tema 3: Sunset Gold / Cálido */
         [data-theme="sunset"] {
             --bg-light: #FAF6F0;
             --bg-card: #FFFFFF;
@@ -60,7 +57,6 @@
             --navbar-bg: rgba(255, 255, 255, 0.95);
         }
 
-        /* Tema 4: Ocean Mint */
         [data-theme="mint"] {
             --bg-light: #EDF7F6;
             --bg-card: #FFFFFF;
@@ -84,7 +80,7 @@
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= SELECTOR DE TEMAS FLOTANTE ================= */
+        /* SELECTOR DE TEMAS FLOTANTE */
         .theme-widget-container { position: fixed; bottom: 25px; left: 25px; z-index: 3000; }
         .btn-theme-toggle { width: 50px; height: 50px; border-radius: 50%; background: var(--google-blue); color: white; border: none; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.25); transition: transform 0.3s ease, background 0.3s; }
         .btn-theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
@@ -276,7 +272,7 @@
 </head>
 <body>
 
-    <!-- ================= BOTÓN Y MENÚ CUADRADO DE TEMAS ================= -->
+    <!-- SELECTOR DE TEMAS -->
     <div class="theme-widget-container">
         <button class="btn-theme-toggle" onclick="toggleMenuTemas()" title="Cambiar tema de color">
             <i class="fa-solid fa-palette"></i>
@@ -546,7 +542,7 @@
         </section>
     </div>
 
-    <!-- SECCIÓN RESEÑAS CON FOTO Y BORRADO -->
+    <!-- SECCIÓN RESEÑAS -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
@@ -556,7 +552,7 @@
                 <h3 style="color: var(--text-dark);">¡Deja tu valoración!</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
                 
-                <form id="review-form" onsubmit="enviarResenaFirebase(event)">
+                <form id="review-form" onsubmit="enviarResena(event)">
                     <div class="star-rating-input">
                         <input type="radio" id="star5" name="rating" value="5" required><label for="star5"><i class="fa-solid fa-star"></i></label>
                         <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
@@ -713,15 +709,13 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT CON LÓGICA DE TEMAS Y MOTORES COMPLETOS -->
     <script>
-        // ================= 1. GESTIÓN DE TEMAS VISUALES =================
+        // ================= 1. GESTIÓN DE TEMAS =================
         function toggleMenuTemas() {
             const menu = document.getElementById('theme-menu-box');
             menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
         }
 
-        // Cerrar el menú si se hace clic fuera
         document.addEventListener('click', function(e) {
             const container = document.querySelector('.theme-widget-container');
             if (container && !container.contains(e.target)) {
@@ -735,19 +729,12 @@
             } else {
                 document.documentElement.setAttribute('data-theme', nombreTema);
             }
-            
             localStorage.setItem('kiwi_tema_preferido', nombreTema);
-
-            // Actualizar clase activa visual
             document.querySelectorAll('.theme-option').forEach(el => {
                 el.classList.toggle('active', el.getAttribute('data-theme-name') === nombreTema);
             });
-
-            // Cerrar menú tras elegir
             document.getElementById('theme-menu-box').style.display = 'none';
         }
-
-        // Cargar tema guardado al entrar a la web
         const temaGuardado = localStorage.getItem('kiwi_tema_preferido') || 'default';
         cambiarTema(temaGuardado);
 
@@ -769,7 +756,7 @@
             auth = firebase.auth();
             db = firebase.firestore();
         } catch (e) {
-            console.log("Iniciando con almacenamiento local:", e);
+            console.log("Firebase no inicializado:", e);
         }
 
         const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
@@ -793,7 +780,6 @@
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
-            
             document.getElementById(id).style.display = 'block';
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
@@ -884,18 +870,17 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        // 7. Fotos en Reseñas y Borrado Individual
+        // ================= 7. MOTOR DE RESEÑAS TOTALMENTE BLINDADO =================
         let fotoResenaBase64 = "";
+        let listaGlobalResenas = [];
 
         function previsualizarFotoResena(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             if (file.size > 2 * 1024 * 1024) {
                 alert("La imagen es muy pesada. Máximo 2 MB.");
                 return;
             }
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 fotoResenaBase64 = e.target.result;
@@ -917,35 +902,48 @@
             return emailSesion === EMAIL_ADMINISTRADOR || (auth && auth.currentUser && auth.currentUser.email === EMAIL_ADMINISTRADOR);
         }
 
+        // Carga unificada de reseñas
         function cargarResenas() {
             const contenedor = document.getElementById('reviews-list');
-            const esAdmin = esUsuarioAdmin();
+            const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
 
             if (db) {
                 db.collection("resenas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
-                    contenedor.innerHTML = "";
-                    if (snapshot.empty) {
-                        renderizarResenasArray(resenasIniciales, contenedor, esAdmin);
-                        return;
+                    if (!snapshot.empty) {
+                        const remotas = [];
+                        snapshot.forEach(doc => {
+                            remotas.push({ id: doc.id, ...doc.data() });
+                        });
+                        listaGlobalResenas = remotas;
+                    } else {
+                        listaGlobalResenas = locales;
                     }
-                    const lista = [];
-                    snapshot.forEach(doc => {
-                        lista.push({ id: doc.id, ...doc.data() });
-                    });
-                    renderizarResenasArray(lista, contenedor, esAdmin);
+                    renderizarResenasEnHTML();
+                    actualizarContadorPanelSiAbierto();
                 }, (err) => {
-                    const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-                    renderizarResenasArray(locales, contenedor, esAdmin);
+                    console.log("Cargando reseñas en modo local por aviso de Firestore:", err.message);
+                    listaGlobalResenas = locales;
+                    renderizarResenasEnHTML();
+                    actualizarContadorPanelSiAbierto();
                 });
             } else {
-                const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-                renderizarResenasArray(locales, contenedor, esAdmin);
+                listaGlobalResenas = locales;
+                renderizarResenasEnHTML();
+                actualizarContadorPanelSiAbierto();
             }
         }
 
-        function renderizarResenasArray(lista, contenedor, esAdmin) {
+        function renderizarResenasEnHTML() {
+            const contenedor = document.getElementById('reviews-list');
+            const esAdmin = esUsuarioAdmin();
             contenedor.innerHTML = "";
-            lista.forEach(d => {
+
+            if (!listaGlobalResenas || listaGlobalResenas.length === 0) {
+                contenedor.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:var(--text-muted);'>No hay reseñas publicadas aún.</p>";
+                return;
+            }
+
+            listaGlobalResenas.forEach(d => {
                 let stars = '';
                 for (let i = 0; i < 5; i++) {
                     stars += i < d.estrellas ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
@@ -953,11 +951,12 @@
 
                 const card = document.createElement('div');
                 card.className = 'review-card fade-up visible';
+                card.id = `card-review-${d.id}`;
                 card.innerHTML = `
-                    ${esAdmin ? `<button class="btn-delete-review" style="display:inline-flex;" onclick="eliminarResenaIndividual('${d.id}')" title="Eliminar solo esta reseña"><i class="fa-solid fa-trash"></i> Borrar</button>` : ''}
+                    ${esAdmin ? `<button class="btn-delete-review" style="display:inline-flex;" onclick="eliminarResena('${d.id}')" title="Eliminar solo esta reseña"><i class="fa-solid fa-trash"></i> Borrar</button>` : ''}
                     <div class="review-stars">${stars}</div>
                     <p class="review-text">"${d.texto}"</p>
-                    ${d.foto ? `<img class="review-img-attached" src="${d.foto}" alt="Foto del cliente" onclick="window.open('${d.foto}')">` : ''}
+                    ${d.foto ? `<img class="review-img-attached" src="${d.foto}" alt="Foto del producto" onclick="window.open('${d.foto}')">` : ''}
                     <p class="review-author">- ${d.autor}</p>
                 `;
                 contenedor.appendChild(card);
@@ -965,15 +964,18 @@
         }
         cargarResenas();
 
-        async function enviarResenaFirebase(e) {
+        // Enviar nueva reseña
+        async function enviarResena(e) {
             e.preventDefault();
             const autor = document.getElementById('rev-name').value.trim();
             const texto = document.getElementById('rev-comment').value.trim();
             const starsInput = document.querySelector('input[name="rating"]:checked');
             const estrellas = starsInput ? parseInt(starsInput.value) : 5;
             const foto = fotoResenaBase64;
+            const idGenerado = "res_" + Date.now();
 
             const nuevaResena = {
+                id: idGenerado,
                 autor: autor,
                 texto: texto,
                 estrellas: estrellas,
@@ -981,58 +983,75 @@
                 fecha: new Date().toISOString()
             };
 
+            // 1. Guardar siempre en local para inmediatez
+            let locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+            locales.unshift(nuevaResena);
+            localStorage.setItem('kiwi_resenas', JSON.stringify(locales));
+
+            // 2. Intentar guardar en Firestore
             if (db) {
                 try {
-                    await db.collection("resenas").add({
-                        ...nuevaResena,
+                    const docRef = await db.collection("resenas").add({
+                        autor: autor,
+                        texto: texto,
+                        estrellas: estrellas,
+                        foto: foto,
                         fecha: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    alert("¡Reseña con foto publicada exitosamente!");
+                    nuevaResena.id = docRef.id;
                 } catch(err) {
-                    console.error("Error al guardar en Firestore:", err);
-                    guardarResenaEnLocal(nuevaResena);
+                    console.log("Guardado solo local:", err.message);
                 }
-            } else {
-                guardarResenaEnLocal(nuevaResena);
             }
 
+            alert("¡Reseña publicada con éxito!");
             document.getElementById('review-form').reset();
             document.getElementById('review-photo-preview').style.display = 'none';
             fotoResenaBase64 = "";
             cargarResenas();
         }
 
-        function guardarResenaEnLocal(resena) {
-            const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-            const idUnico = "local_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
-            locales.unshift({ id: idUnico, ...resena });
-            localStorage.setItem('kiwi_resenas', JSON.stringify(locales));
-            alert("¡Reseña guardada!");
-        }
-
-        async function eliminarResenaIndividual(idResena) {
+        // BORRADO INFALIBLE: Solo borra la seleccionada
+        async function eliminarResena(idBorrar) {
             if (!confirm("¿Seguro que deseas eliminar ÚNICAMENTE esta reseña?")) return;
 
-            if (db && !idResena.startsWith("init_") && !idResena.startsWith("local_")) {
+            // 1. Borrar de Firestore si existe allí
+            if (db && !idBorrar.startsWith("init_") && !idBorrar.startsWith("res_")) {
                 try {
-                    await db.collection("resenas").doc(idResena).delete();
-                } catch(err) {
-                    console.error("Error borrando en Firestore:", err);
+                    await db.collection("resenas").doc(idBorrar).delete();
+                } catch (err) {
+                    console.warn("Aviso Firestore al borrar:", err.message);
                 }
             }
 
+            // 2. Borrar del array global en memoria
+            listaGlobalResenas = listaGlobalResenas.filter(r => String(r.id) !== String(idBorrar));
+
+            // 3. Borrar del LocalStorage
             let locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-            locales = locales.filter(r => String(r.id) !== String(idResena));
+            locales = locales.filter(r => String(r.id) !== String(idBorrar));
             localStorage.setItem('kiwi_resenas', JSON.stringify(locales));
 
+            // 4. Eliminar visualmente del HTML al instante
+            const tarjetaDOM = document.getElementById(`card-review-${idBorrar}`);
+            if (tarjetaDOM) tarjetaDOM.remove();
+
+            // 5. Refrescar el Panel de Admin si está abierto
+            if (document.getElementById('admin-modal').style.display === 'flex') {
+                renderizarDatosAdmin();
+            }
+
+            renderizarResenasEnHTML();
             alert("Reseña eliminada correctamente.");
-            cargarResenas();
+        }
+
+        function actualizarContadorPanelSiAbierto() {
             if (document.getElementById('admin-modal').style.display === 'flex') {
                 renderizarDatosAdmin();
             }
         }
 
-        // 8. Autenticación y Perfil
+        // ================= 8. AUTENTICACIÓN Y SESIÓN =================
         function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
         function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
         let modoAuth = 'login';
@@ -1087,6 +1106,7 @@
                 }
             }
 
+            // Fallback de contingencia local
             const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
             if (modoAuth === 'register') {
                 if (usuarios[email]) {
@@ -1237,7 +1257,7 @@
         }
         actualizarEstadoSesion();
 
-        // 9. Panel de Administrador
+        // ================= 9. PANEL DE ADMINISTRADOR CORREGIDO =================
         function abrirModalAdmin() {
             if (!esUsuarioAdmin()) {
                 alert("Acceso reservado para el propietario.");
@@ -1252,62 +1272,69 @@
         }
 
         async function renderizarDatosAdmin() {
+            // 1. Obtener lista de usuarios
             let listaUsuarios = [];
-            let listaResenas = [];
-
             if (db) {
                 try {
                     const uSnap = await db.collection("usuarios").get();
                     uSnap.forEach(d => listaUsuarios.push(d.data()));
-                    const rSnap = await db.collection("resenas").get();
-                    rSnap.forEach(d => listaResenas.push({ id: d.id, ...d.data() }));
                 } catch(e) {}
             }
-
             if (listaUsuarios.length === 0) {
                 const uLocal = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
                 listaUsuarios = Object.values(uLocal);
             }
-            if (listaResenas.length === 0) {
-                listaResenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-            }
 
+            // 2. Obtener lista real de reseñas (usa la lista activa que está en pantalla)
+            const totalResenas = listaGlobalResenas ? listaGlobalResenas.length : 0;
+
+            // 3. Actualizar contadores numéricos
             document.getElementById('stat-total-users').innerText = listaUsuarios.length;
-            document.getElementById('stat-total-reviews').innerText = listaResenas.length;
+            document.getElementById('stat-total-reviews').innerText = totalResenas;
 
+            // 4. Renderizar tabla de usuarios
             const tbodyUsers = document.getElementById('admin-users-tbody');
             tbodyUsers.innerHTML = "";
-            listaUsuarios.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <img class="table-avatar" src="${u.foto || 'https://placehold.co/40x40?text=U'}" alt="Foto">
-                        <strong>${u.apodo || 'Cliente'}</strong>
-                    </td>
-                    <td>${u.apodo || '-'}</td>
-                    <td>${u.email}</td>
-                    <td><span class="badge-role ${u.email === EMAIL_ADMINISTRADOR ? 'badge-admin' : 'badge-client'}">${u.email === EMAIL_ADMINISTRADOR ? 'ADMIN' : 'CLIENTE'}</span></td>
-                `;
-                tbodyUsers.appendChild(tr);
-            });
+            if (listaUsuarios.length === 0) {
+                tbodyUsers.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No hay clientes registrados aún.</td></tr>`;
+            } else {
+                listaUsuarios.forEach(u => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <img class="table-avatar" src="${u.foto || 'https://placehold.co/40x40?text=U'}" alt="Foto">
+                            <strong>${u.apodo || 'Cliente'}</strong>
+                        </td>
+                        <td>${u.apodo || '-'}</td>
+                        <td>${u.email}</td>
+                        <td><span class="badge-role ${u.email === EMAIL_ADMINISTRADOR ? 'badge-admin' : 'badge-client'}">${u.email === EMAIL_ADMINISTRADOR ? 'ADMIN' : 'CLIENTE'}</span></td>
+                    `;
+                    tbodyUsers.appendChild(tr);
+                });
+            }
 
+            // 5. Renderizar tabla de moderación de reseñas con el conteo real
             const tbodyReviews = document.getElementById('admin-reviews-tbody');
             tbodyReviews.innerHTML = "";
-            listaResenas.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${r.autor}</strong></td>
-                    <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${r.texto}</td>
-                    <td>${r.foto ? `<img src="${r.foto}" style="width:35px;height:35px;object-fit:cover;border-radius:4px;">` : 'Sin foto'}</td>
-                    <td style="color: var(--google-yellow);">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</td>
-                    <td>
-                        <button onclick="eliminarResenaIndividual('${r.id}')" style="background:var(--google-red); color:white; border:none; padding:4px 8px; border-radius:5px; cursor:pointer;">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </td>
-                `;
-                tbodyReviews.appendChild(tr);
-            });
+            if (!listaGlobalResenas || listaGlobalResenas.length === 0) {
+                tbodyReviews.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay reseñas publicadas.</td></tr>`;
+            } else {
+                listaGlobalResenas.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${r.autor}</strong></td>
+                        <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${r.texto}</td>
+                        <td>${r.foto ? `<img src="${r.foto}" style="width:35px;height:35px;object-fit:cover;border-radius:4px;cursor:pointer;" onclick="window.open('${r.foto}')">` : '<span style="color:#888;">Sin foto</span>'}</td>
+                        <td style="color: var(--google-yellow);">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</td>
+                        <td>
+                            <button onclick="eliminarResena('${r.id}')" style="background:var(--google-red); color:white; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-weight:600;">
+                                <i class="fa-solid fa-trash"></i> Eliminar
+                            </button>
+                        </td>
+                    `;
+                    tbodyReviews.appendChild(tr);
+                });
+            }
         }
     </script>
 </body>
