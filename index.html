@@ -17,7 +17,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
-        /* ================= VARIABLES DINÁMICAS POR TEMA ================= */
         :root {
             --bg-light: #F8F9FA;
             --bg-card: #FFFFFF;
@@ -135,10 +134,15 @@
         .btn-auth:hover { background: var(--google-blue); color: white; }
         .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--google-blue); display: none; }
 
-        .hero { text-align: center; padding: 8rem 2rem; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hero { text-align: center; padding: 8rem 2rem 5rem 2rem; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; color: var(--text-dark); }
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
+
+        /* TRUST BADGES / SELLOS DE CONFIANZA */
+        .trust-strip { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto; padding: 0 1rem; }
+        .trust-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .trust-item i { color: var(--google-green); font-size: 1.1rem; }
 
         .services { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
         .services-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
@@ -161,7 +165,7 @@
         .faq-item[open] summary::after { transform: rotate(180deg); }
         .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; line-height: 1.7; }
 
-        /* ================= ESTILOS DE PRODUCTOS Y SELECTORES ================= */
+        /* PRODUCTOS */
         .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 3rem; max-width: 1150px; margin: 0 auto; }
         .product-card { background: var(--bg-card); border-radius: 20px; padding: 2.5rem 2rem; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -177,7 +181,7 @@
         .variant-selector-wrap { margin-bottom: 1.2rem; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
         .variant-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
         .variant-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .btn-variant { background: var(--bg-light); border: 2px solid var(--border-color); color: var(--text-dark); padding: 5px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-variant { background: var(--bg-light); border: 2px solid var(--border-color); color: var(--text-dark); padding: 6px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
         .btn-variant:hover { border-color: var(--google-blue); }
         .btn-variant.active { background: var(--google-blue); color: white; border-color: var(--google-blue); transform: scale(1.05); }
 
@@ -244,6 +248,9 @@
         .badge-admin { background: #ffe082; color: #b78103; }
         .badge-client { background: rgba(66, 133, 244, 0.15); color: var(--google-blue); }
 
+        /* FILAS DE CREADOR DE VARIANTES CON FOTO */
+        .variant-row { display: grid; grid-template-columns: 1fr 1.2fr 45px; gap: 10px; align-items: center; margin-bottom: 10px; background: var(--bg-card); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+
         .footer-cta { background-color: #111215; color: #FFFFFF; padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
         .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
@@ -265,6 +272,7 @@
             .footer-content-wrapper { flex-direction: column; }
             .admin-stats { flex-direction: column; }
             .theme-widget-container { bottom: 15px; left: 15px; }
+            .variant-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -341,6 +349,13 @@
         <header class="hero fade-up">
             <h1>Multiplica tus reseñas de Google en segundos.</h1>
             <p>Especialistas en digitalizar tu negocio local. Convierte a tus clientes satisfechos en tu mejor publicidad online.</p>
+            
+            <!-- TRUST BADGES -->
+            <div class="trust-strip">
+                <div class="trust-item"><i class="fa-solid fa-bolt"></i> Sin pilas ni instalación</div>
+                <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> Envío rápido nacional</div>
+                <div class="trust-item"><i class="fa-solid fa-shield-check"></i> Configurado a medida</div>
+            </div>
         </header>
 
         <section class="services">
@@ -352,7 +367,7 @@
             </div>
         </section>
 
-        <!-- CATÁLOGO DINÁMICO DE CARTELES -->
+        <!-- CATÁLOGO DINÁMICO DE CARTELES CON FOTOS POR COLOR -->
         <section class="product-showcase">
             <h2 class="section-title fade-up">Catálogo de Productos NFC</h2>
             <div class="product-grid" id="catalog-kiwi-container"></div>
@@ -393,6 +408,12 @@
         <header class="hero fade-up">
             <h1>¡Abre tu portal con total facilidad!</h1>
             <p>Sistemas RFID compatibles con la mayoría de portales. Discretos, resistentes y al mejor precio.</p>
+            
+            <div class="trust-strip">
+                <div class="trust-item"><i class="fa-solid fa-key"></i> Copia rápida y precisa</div>
+                <div class="trust-item"><i class="fa-solid fa-water"></i> Resistente al agua y golpes</div>
+                <div class="trust-item"><i class="fa-solid fa-percent"></i> Descuentos por parejas</div>
+            </div>
         </header>
 
         <section class="services">
@@ -465,7 +486,7 @@
                     <div class="form-group"><label>Nombre</label><input type="text" id="order-customer-name" name="name" class="form-control" required placeholder="Tu nombre"></div>
                     <div class="form-group"><label>Local / Asunto</label><input type="text" name="local" class="form-control" required placeholder="Nombre de tu negocio o dirección"></div>
                     <div class="form-group"><label>Email</label><input type="email" id="order-customer-email" name="email" class="form-control" required placeholder="tu@correo.com"></div>
-                    <div class="form-group"><label>Detalles del pedido (Autocompletado)</label><textarea id="message-box" name="message" class="form-control" style="min-height: 160px;" required placeholder="Selecciona productos arriba o escribe aquí lo que necesitas..."></textarea></div>
+                    <div class="form-group"><label>Detalles del pedido (Autocompletado al pulsar "Añadir al Pedido")</label><textarea id="message-box" name="message" class="form-control" style="min-height: 160px;" required placeholder="Selecciona productos arriba o escribe aquí lo que necesitas..."></textarea></div>
                     <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Enviar Pedido a Kiwi Review</button>
                 </form>
             </div>
@@ -552,18 +573,18 @@
                 </div>
             </div>
 
-            <!-- 1. CASILLA PARA AÑADIR NUEVO PRODUCTO -->
+            <!-- 1. CASILLA PARA AÑADIR NUEVO PRODUCTO CON FOTOS INDIVIDUALES POR COLOR -->
             <div class="admin-section-box">
-                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-plus-circle" style="color:var(--google-green);"></i> Añadir Nuevo Producto a la Tienda</h3>
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-plus-circle" style="color:var(--google-green);"></i> Añadir Producto con Colores y Fotos</h3>
                 <form id="new-product-form" onsubmit="crearNuevoProducto(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         <div>
                             <label style="font-size:0.85rem; color:var(--text-muted);">Título del Producto</label>
-                            <input type="text" id="prod-title" class="form-control-review" required placeholder="Ej: Soporte Metacrilato Mini">
+                            <input type="text" id="prod-title" class="form-control-review" required placeholder="Ej: Cartel Madera Premium">
                         </div>
                         <div>
-                            <label style="font-size:0.85rem; color:var(--text-muted);">Precio (€)</label>
-                            <input type="number" step="0.5" id="prod-price" class="form-control-review" required placeholder="Ej: 12.00">
+                            <label style="font-size:0.85rem; color:var(--text-muted);">Precio Base (€)</label>
+                            <input type="number" step="0.5" id="prod-price" class="form-control-review" required placeholder="Ej: 19.00">
                         </div>
                         <div>
                             <label style="font-size:0.85rem; color:var(--text-muted);">Sección de la Tienda</label>
@@ -574,35 +595,43 @@
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
-                        <div>
-                            <label style="font-size:0.85rem; color:var(--text-muted);">Colores o Modelos (Separados por coma)</label>
-                            <input type="text" id="prod-variants" class="form-control-review" placeholder="Ej: Blanco, Negro, Dorado">
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size:0.85rem; color:var(--text-muted);">Regla de Descuento Dinámico</label>
+                        <select id="prod-discount-type" class="form-control-review">
+                            <option value="none">Sin descuento</option>
+                            <option value="pairs">2€ de descuento por cada 2 unidades (Pares)</option>
+                            <option value="extra">2€ de descuento por cada unidad extra a partir de la 2ª</option>
+                        </select>
+                    </div>
+
+                    <!-- Constructor de Variantes / Colores con fotos específicas -->
+                    <div style="margin-bottom: 15px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <label style="font-size:0.9rem; font-weight:600; color:var(--text-dark);">🎨 Colores / Modelos con Foto Específica:</label>
+                            <button type="button" onclick="agregarFilaVariante()" class="btn-primary" style="width:auto; padding:4px 12px; font-size:0.8rem; background:var(--google-blue);">
+                                <i class="fa-solid fa-plus"></i> Añadir Otro Color
+                            </button>
                         </div>
-                        <div>
-                            <label style="font-size:0.85rem; color:var(--text-muted);">Regla de Descuento Dinámico</label>
-                            <select id="prod-discount-type" class="form-control-review">
-                                <option value="none">Sin descuento</option>
-                                <option value="pairs">2€ de descuento por cada 2 unidades (Pares)</option>
-                                <option value="extra">2€ de descuento por cada unidad extra a partir de la 2ª</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size:0.85rem; color:var(--text-muted);">Foto del Producto</label>
-                            <input type="file" id="prod-photo-file" accept="image/*" class="form-control-review" onchange="procesarFotoProducto(event)">
+                        <div id="variants-builder-list">
+                            <!-- Fila inicial -->
+                            <div class="variant-row">
+                                <input type="text" class="form-control-review var-name" placeholder="Nombre color (Ej: Blanco)" required style="margin-bottom:0;">
+                                <input type="file" accept="image/*" class="form-control-review var-file" required style="margin-bottom:0;" onchange="procesarFotoVariante(event, 0)">
+                                <div></div>
+                            </div>
                         </div>
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label style="font-size:0.85rem; color:var(--text-muted);">Descripción</label>
+                        <label style="font-size:0.85rem; color:var(--text-muted);">Descripción Corta</label>
                         <textarea id="prod-desc" class="form-control-review" style="min-height: 70px;" required placeholder="Explica detalles del producto..."></textarea>
                     </div>
 
-                    <button type="submit" class="btn-primary" style="background: var(--google-green);"><i class="fa-solid fa-save"></i> Guardar y Publicar Producto</button>
+                    <button type="submit" class="btn-primary" style="background: var(--google-green);"><i class="fa-solid fa-save"></i> Publicar Producto con sus Colores</button>
                 </form>
             </div>
 
-            <!-- 2. GESTIÓN Y ELIMINACIÓN DE PRODUCTOS ACTIVOS -->
+            <!-- 2. GESTIÓN Y ELIMINACIÓN DE PRODUCTOS -->
             <div class="admin-section-box">
                 <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-boxes-stacked" style="color:var(--google-blue);"></i> Gestionar / Eliminar Productos de la Tienda</h3>
                 <div style="overflow-x: auto;">
@@ -612,7 +641,7 @@
                                 <th>Producto</th>
                                 <th>Sección</th>
                                 <th>Precio Base</th>
-                                <th>Variantes</th>
+                                <th>Colores / Variantes</th>
                                 <th>Acción</th>
                             </tr>
                         </thead>
@@ -728,7 +757,7 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
-        // ================= 5. CATÁLOGO CON ELIMINACIÓN Y VARIANTES =================
+        // ================= 5. CATÁLOGO CON FOTOS POR COLOR Y OFERTA DINÁMICA =================
         const productosBase = [
             {
                 id: "prod_nfc_placa",
@@ -773,7 +802,6 @@
         function obtenerProductos() {
             return JSON.parse(localStorage.getItem('kiwi_catalogo_productos')) || productosBase;
         }
-
         function guardarProductos(lista) {
             localStorage.setItem('kiwi_catalogo_productos', JSON.stringify(lista));
         }
@@ -812,7 +840,7 @@
                 if (p.variantes && p.variantes.length > 1) {
                     variantesHTML = `
                         <div class="variant-selector-wrap">
-                            <span class="variant-title">Color / Modelo:</span>
+                            <span class="variant-title">Selecciona Color / Acabado:</span>
                             <div class="variant-buttons">
                                 ${p.variantes.map((v, idx) => `
                                     <button type="button" class="btn-variant ${idx === 0 ? 'active' : ''}" onclick="seleccionarVariante('${p.id}', '${v.nombre}', '${v.img || p.foto}', this)">
@@ -858,13 +886,14 @@
             });
         }
 
+        // Cambio inmediato de foto al elegir color
         function seleccionarVariante(idProd, nombreVariante, rutaImg, btnElem) {
             estadoProductos[idProd].varianteElegida = nombreVariante;
             estadoProductos[idProd].imgActual = rutaImg;
 
             const imgElem = document.getElementById(`img-${idProd}`);
             if (imgElem && rutaImg) {
-                imgElem.style.opacity = '0.4';
+                imgElem.style.opacity = '0.3';
                 setTimeout(() => {
                     imgElem.src = rutaImg;
                     imgElem.style.opacity = '1';
@@ -950,14 +979,28 @@
             }, 600);
         }
 
-        // ================= 6. AÑADIR Y ELIMINAR PRODUCTOS (ADMIN) =================
-        let fotoNuevoProductoBase64 = "";
-        function procesarFotoProducto(event) {
+        // ================= 6. CREADOR DE PRODUCTOS CON FOTOS POR COLOR (ADMIN) =================
+        let fotosVariantesTemporales = {};
+
+        function agregarFilaVariante() {
+            const list = document.getElementById('variants-builder-list');
+            const index = list.children.length;
+            const div = document.createElement('div');
+            div.className = "variant-row";
+            div.innerHTML = `
+                <input type="text" class="form-control-review var-name" placeholder="Nombre color (Ej: Negro)" required style="margin-bottom:0;">
+                <input type="file" accept="image/*" class="form-control-review var-file" required style="margin-bottom:0;" onchange="procesarFotoVariante(event, ${index})">
+                <button type="button" onclick="this.parentElement.remove()" style="background:var(--google-red); color:white; border:none; border-radius:6px; height:38px; cursor:pointer;" title="Eliminar este color"><i class="fa-solid fa-trash"></i></button>
+            `;
+            list.appendChild(div);
+        }
+
+        function procesarFotoVariante(event, index) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                fotoNuevoProductoBase64 = e.target.result;
+                fotosVariantesTemporales[index] = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -969,14 +1012,20 @@
             const categoria = document.getElementById('prod-category').value;
             const desc = document.getElementById('prod-desc').value.trim();
             const descuentoTipo = document.getElementById('prod-discount-type').value;
-            const variantesTexto = document.getElementById('prod-variants').value.trim();
 
-            let arrayVariantes = [];
-            if (variantesTexto) {
-                arrayVariantes = variantesTexto.split(',').map(v => ({
-                    nombre: v.trim(),
-                    img: fotoNuevoProductoBase64 || "https://placehold.co/230x230?text=" + encodeURIComponent(v.trim())
-                })).filter(v => v.nombre.length > 0);
+            // Recoger todas las variantes con sus fotos individuales
+            const filas = document.querySelectorAll('#variants-builder-list .variant-row');
+            let variantes = [];
+            filas.forEach((f, idx) => {
+                const nombre = f.querySelector('.var-name').value.trim();
+                const fotoBase64 = fotosVariantesTemporales[idx] || "https://placehold.co/230x230?text=" + encodeURIComponent(nombre);
+                if (nombre) {
+                    variantes.push({ nombre, img: fotoBase64 });
+                }
+            });
+
+            if (variantes.length === 0) {
+                variantes.push({ nombre: "Estándar", img: "https://placehold.co/230x230?text=" + encodeURIComponent(titulo) });
             }
 
             const nuevoProd = {
@@ -986,22 +1035,21 @@
                 precioBase: precio,
                 desc: desc,
                 descuentoTipo: descuentoTipo,
-                variantes: arrayVariantes,
-                foto: fotoNuevoProductoBase64 || "https://placehold.co/230x230?text=" + encodeURIComponent(titulo)
+                variantes: variantes,
+                foto: variantes[0].img
             };
 
             const productos = obtenerProductos();
             productos.push(nuevoProd);
             guardarProductos(productos);
 
-            alert("¡Nuevo producto añadido con éxito!");
+            alert("¡Nuevo producto con fotos por color publicado con éxito!");
             document.getElementById('new-product-form').reset();
-            fotoNuevoProductoBase64 = "";
+            fotosVariantesTemporales = {};
             renderizarCatalogos();
             renderizarDatosAdmin();
         }
 
-        // FUNCIÓN PARA ELIMINAR PRODUCTOS DESDE EL PANEL ADMIN
         function eliminarProductoAdmin(idProducto) {
             const prods = obtenerProductos();
             const prodAEliminar = prods.find(p => String(p.id) === String(idProducto));
@@ -1047,7 +1095,6 @@
             }
             return JSON.parse(guardadas);
         }
-
         function guardarResenas(lista) {
             localStorage.setItem('kiwi_resenas_unificadas', JSON.stringify(lista));
         }
@@ -1303,7 +1350,7 @@
             document.getElementById('stat-total-reviews').innerText = resenas.length;
             document.getElementById('stat-total-products').innerText = productos.length;
 
-            // 1. Tabla de Productos Activos (con botón de eliminar)
+            // 1. Tabla de Productos Activos
             const tbodyProducts = document.getElementById('admin-products-tbody');
             tbodyProducts.innerHTML = "";
             if (productos.length === 0) {
