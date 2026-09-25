@@ -31,6 +31,7 @@
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* SPLIT SCREEN */
@@ -62,13 +63,16 @@
         
         .daily-quote { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3); margin-left: 10px; display: inline-flex; align-items: center; gap: 5px; }
 
-        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links { display: flex; gap: 1.2rem; align-items: center; }
         .nav-links a { font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
         .nav-links a:hover { color: var(--google-blue); }
         .btn-nav { background-color: var(--google-blue); color: var(--white) !important; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; transition: background-color 0.3s, transform 0.2s; }
         .btn-nav:hover { background-color: #3367D6; transform: translateY(-2px); }
 
-        /* Botón de cuenta personalizado con avatar */
+        /* Botón Admin Exclusivo */
+        .btn-admin-nav { display: none; background: linear-gradient(45deg, #FFB300, #F57C00); color: white !important; padding: 0.4rem 0.9rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; border: none; cursor: pointer; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(245, 124, 0, 0.3); transition: transform 0.2s; }
+        .btn-admin-nav:hover { transform: scale(1.05); }
+
         .btn-auth { background: transparent; border: 2px solid var(--google-blue); color: var(--google-blue); padding: 0.35rem 0.9rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.9rem; transition: all 0.3s; }
         .btn-auth:hover { background: var(--google-blue); color: white; }
         .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--google-blue); display: none; }
@@ -129,14 +133,16 @@
         .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.8rem; font-weight: 700; color: var(--google-blue); margin-top: 1rem; margin-bottom: 2rem; }
 
+        /* RESEÑAS CON BOTÓN DE BORRADO */
         .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid #eee; }
         .reviews-container { max-width: 1000px; margin: 0 auto; }
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
         .review-card { background: var(--white); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
-        .review-card::before { content: "\f10d"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 20px; right: 20px; font-size: 2rem; color: rgba(66,133,244,0.1); }
         .review-stars { color: var(--google-yellow); margin-bottom: 10px; font-size: 1.2rem; }
         .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; }
         .review-author { font-weight: 700; font-size: 0.95rem; }
+        .btn-delete-review { position: absolute; top: 15px; right: 15px; background: rgba(234, 67, 53, 0.1); color: var(--google-red); border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; gap: 5px; transition: background 0.2s; }
+        .btn-delete-review:hover { background: var(--google-red); color: white; }
 
         .add-review-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
         .star-rating-input { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; margin-bottom: 20px; font-size: 2rem; }
@@ -146,20 +152,34 @@
         .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
 
-        /* MODAL REGISTRO / LOGIN / PERFIL */
+        /* MODALES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-card { background: white; padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 440px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal-card-large { max-width: 850px; max-height: 90vh; overflow-y: auto; }
         .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
         .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
         .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
 
-        /* Estilos del editor de foto y perfil */
         .avatar-uploader { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
         .avatar-preview-wrap { position: relative; width: 90px; height: 90px; margin-bottom: 10px; }
         .avatar-preview-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--google-blue); }
         .avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--google-blue); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
         .avatar-input-hidden { display: none; }
+
+        /* ESTILOS DEL PANEL DE ADMINISTRACIÓN */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
+        .admin-stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { flex: 1; background: var(--bg-light); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--google-blue); text-align: center; }
+        .stat-card h4 { font-size: 1.8rem; color: var(--google-blue); margin-bottom: 5px; }
+        .stat-card p { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+        .admin-table { width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 2rem; font-size: 0.9rem; }
+        .admin-table th, .admin-table td { padding: 12px 14px; border-bottom: 1px solid #eee; }
+        .admin-table th { background: #f1f3f4; color: var(--text-dark); }
+        .table-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
+        .badge-role { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-admin { background: #ffe082; color: #b78103; }
+        .badge-client { background: #e8f0fe; color: var(--google-blue); }
 
         .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
@@ -180,6 +200,7 @@
             .split h1 { font-size: 2.2rem; }
             .daily-quote { display: none; }
             .footer-content-wrapper { flex-direction: column; }
+            .admin-stats { flex-direction: column; }
         }
     </style>
 </head>
@@ -217,6 +238,7 @@
             <div class="nav-links">
                 <a href="#faq-seccion">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
+                <button id="btn-admin-kiwi" class="btn-admin-nav" onclick="abrirModalAdmin()"><i class="fa-solid fa-crown"></i> Panel Admin</button>
                 <button class="btn-auth" onclick="abrirModalAuth()">
                     <img class="nav-avatar" src="" alt="Avatar">
                     <i class="fa-regular fa-user nav-default-icon"></i> 
@@ -314,6 +336,7 @@
             <div class="nav-links">
                 <a href="#rfid-faq">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
+                <button id="btn-admin-rfid" class="btn-admin-nav" onclick="abrirModalAdmin()"><i class="fa-solid fa-crown"></i> Panel Admin</button>
                 <button class="btn-auth" onclick="abrirModalAuth()">
                     <img class="nav-avatar" src="" alt="Avatar">
                     <i class="fa-regular fa-user nav-default-icon"></i> 
@@ -426,7 +449,7 @@
                         <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="fa-solid fa-star"></i></label>
                     </div>
                     
-                    <input type="text" id="rev-name" class="form-control-review" placeholder="Tu nombre o empresa" required>
+                    <input type="text" id="rev-name" class="form-control-review" placeholder="Tu nombre o apodo" required>
                     <textarea id="rev-comment" class="form-control-review" placeholder="Cuenta tu experiencia..." required></textarea>
                     
                     <button type="submit" class="btn-primary" style="background: var(--google-yellow); color: #000;">Publicar Reseña</button>
@@ -457,7 +480,7 @@
         </div>
     </footer>
 
-    <!-- MODAL REGISTRO / LOGIN / PERFIL (ACTUALIZADO CON PASO A) -->
+    <!-- MODAL PERFIL / REGISTRO / LOGIN -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="btn-close-modal" onclick="cerrarModalAuth()">&times;</button>
@@ -467,11 +490,10 @@
                 <div id="tab-register" class="auth-tab" onclick="cambiarPestanaAuth('register')">Registrarse</div>
             </div>
 
-            <!-- Formulario Login / Registro -->
             <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
                 <div id="group-apodo" style="margin-bottom: 1rem; display: none;">
                     <label style="font-size:0.85rem; color:#666;">Tu Apodo / Nombre público</label>
-                    <input type="text" id="auth-apodo" class="form-control-review" placeholder="Ej: PedroElCrack">
+                    <input type="text" id="auth-apodo" class="form-control-review" placeholder="Ej: Pedro">
                 </div>
                 <div style="margin-bottom: 1rem;">
                     <label style="font-size:0.85rem; color:#666;">Correo Electrónico</label>
@@ -484,11 +506,8 @@
                 <button type="submit" id="auth-submit-btn" class="btn-primary">Entrar a mi Cuenta</button>
             </form>
 
-            <!-- Panel de Perfil de Usuario Logueado (PASO A) -->
             <div id="user-logged-info" style="display:none; text-align:center;">
                 <h3 style="margin-bottom: 15px; color: var(--text-dark);">Mi Perfil</h3>
-                
-                <!-- Uploader de Foto de Perfil -->
                 <div class="avatar-uploader">
                     <div class="avatar-preview-wrap">
                         <img id="profile-avatar-img" class="avatar-preview-img" src="https://placehold.co/100x100?text=Foto" alt="Avatar">
@@ -516,8 +535,67 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT CON MOTOR LOCAL COMPLETO Y PASO A -->
+    <!-- MODAL PANEL DE ADMINISTRACIÓN -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-card modal-card-large">
+            <button class="btn-close-modal" onclick="cerrarModalAdmin()">&times;</button>
+            
+            <div class="admin-header">
+                <h2><i class="fa-solid fa-shield-halved" style="color:var(--google-blue);"></i> Panel de Administrador</h2>
+                <span class="badge-role badge-admin">Acceso Propietario</span>
+            </div>
+
+            <!-- Métricas -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <h4 id="stat-total-users">0</h4>
+                    <p>CLIENTES REGISTRADOS</p>
+                </div>
+                <div class="stat-card" style="border-left-color: var(--google-yellow);">
+                    <h4 id="stat-total-reviews" style="color: var(--google-yellow);">0</h4>
+                    <p>RESEÑAS ACTIVAS</p>
+                </div>
+            </div>
+
+            <!-- Tabla de Clientes -->
+            <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes Registrados</h3>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario / Foto</th>
+                            <th>Apodo</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Moderación de Reseñas -->
+            <h3 style="margin-bottom: 1rem; margin-top: 1.5rem;"><i class="fa-solid fa-comments"></i> Moderación de Reseñas</h3>
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Autor</th>
+                            <th>Comentario</th>
+                            <th>Puntuación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-reviews-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT CON EL CORREO ADMINISTRADOR OFICIAL -->
     <script>
+        // CONFIGURACIÓN DE TU CORREO OFICIAL DE ADMINISTRADOR
+        const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
+
         // 1. Frases Diarias
         const frasesMotivadoras = [
             "¡A por todas! 🚀",
@@ -537,7 +615,6 @@
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
-            
             document.getElementById(id).style.display = 'block';
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
@@ -628,17 +705,19 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        // 5. Motor de Reseñas
+        // 5. Motor de Reseñas y Moderación
         const resenasIniciales = [
-            { autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", estrellas: 5 },
-            { autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", estrellas: 5 },
-            { autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", estrellas: 4 }
+            { id: 1, autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", estrellas: 5 },
+            { id: 2, autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", estrellas: 5 },
+            { id: 3, autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", estrellas: 4 }
         ];
 
         function cargarResenas() {
             const guardadas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
             const contenedor = document.getElementById('reviews-list');
+            const esAdmin = esUsuarioAdmin();
             contenedor.innerHTML = "";
+
             guardadas.forEach(d => {
                 let stars = '';
                 for(let i=0; i<5; i++) {
@@ -647,6 +726,7 @@
                 const card = document.createElement('div');
                 card.className = 'review-card fade-up visible';
                 card.innerHTML = `
+                    ${esAdmin ? `<button class="btn-delete-review" style="display:inline-flex;" onclick="eliminarResena(${d.id})" title="Eliminar como administrador"><i class="fa-solid fa-trash"></i> Borrar</button>` : ''}
                     <div class="review-stars">${stars}</div>
                     <p class="review-text">"${d.texto}"</p>
                     <p class="review-author">- ${d.autor}</p>
@@ -658,13 +738,13 @@
 
         function enviarResena(e) {
             e.preventDefault();
-            const autor = document.getElementById('rev-name').value;
-            const texto = document.getElementById('rev-comment').value;
+            const autor = document.getElementById('rev-name').value.trim();
+            const texto = document.getElementById('rev-comment').value.trim();
             const starsInput = document.querySelector('input[name="rating"]:checked');
             const estrellas = starsInput ? parseInt(starsInput.value) : 5;
 
             const resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-            resenas.unshift({ autor, texto, estrellas });
+            resenas.unshift({ id: Date.now(), autor, texto, estrellas });
             localStorage.setItem('kiwi_resenas', JSON.stringify(resenas));
 
             alert("¡Reseña publicada con éxito!");
@@ -672,7 +752,26 @@
             cargarResenas();
         }
 
-        // 6. Sistema de Cuentas, Apodos y Fotos (PASO A)
+        function eliminarResena(idResena) {
+            if (!confirm("¿Seguro que quieres eliminar esta reseña permanentemente?")) return;
+
+            let resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+            resenas = resenas.filter(r => r.id !== idResena);
+            localStorage.setItem('kiwi_resenas', JSON.stringify(resenas));
+
+            alert("Reseña eliminada.");
+            cargarResenas();
+            if (document.getElementById('admin-modal').style.display === 'flex') {
+                renderizarDatosAdmin();
+            }
+        }
+
+        // 6. Sistema de Cuentas y Comprobación de Admin
+        function esUsuarioAdmin() {
+            const emailSesion = localStorage.getItem('kiwi_sesion');
+            return emailSesion === EMAIL_ADMINISTRADOR;
+        }
+
         function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
         function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
         let modoAuth = 'login';
@@ -703,37 +802,42 @@
                     alert("Este correo ya está registrado.");
                     return;
                 }
-                const apodoFinal = apodo || email.split('@')[0];
+                const apodoFinal = apodo || (email === EMAIL_ADMINISTRADOR ? "Admin Kiwi" : email.split('@')[0]);
                 usuarios[email] = { 
                     email: email, 
                     pass: pass, 
                     apodo: apodoFinal, 
                     foto: "https://placehold.co/100x100?text=" + encodeURIComponent(apodoFinal.charAt(0).toUpperCase()),
-                    rol: (email === "admin@kiwi.com") ? "admin" : "cliente" // Configuración inicial de rol
+                    rol: (email === EMAIL_ADMINISTRADOR) ? "admin" : "cliente"
                 };
                 localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
                 localStorage.setItem('kiwi_sesion', email);
                 alert("¡Cuenta creada exitosamente, " + apodoFinal + "!");
             } else {
+                // Auto-inicializar la cuenta del admin si entra por primera vez
+                if (email === EMAIL_ADMINISTRADOR && !usuarios[email]) {
+                    usuarios[email] = { email, pass, apodo: "Admin Kiwi", foto: "https://placehold.co/100x100?text=ADMIN", rol: "admin" };
+                    localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
+                }
+
                 if (!usuarios[email] || usuarios[email].pass !== pass) {
                     alert("Correo o contraseña incorrectos.");
                     return;
                 }
                 localStorage.setItem('kiwi_sesion', email);
-                const usuario = usuarios[email];
-                alert("¡Bienvenido de nuevo, " + (usuario.apodo || usuario.email) + "!");
+                alert("¡Bienvenido!");
             }
             actualizarEstadoSesion();
             cerrarModalAuth();
+            cargarResenas();
         }
 
-        // Subir foto de perfil (Convertir a Base64)
         function subirFotoPerfil(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             if (file.size > 2 * 1024 * 1024) {
-                alert("La foto es demasiado grande. Por favor, elige una imagen de menos de 2 MB.");
+                alert("La foto es demasiado grande (máx 2 MB).");
                 return;
             }
 
@@ -742,20 +846,18 @@
                 const fotoBase64 = e.target.result;
                 document.getElementById('profile-avatar-img').src = fotoBase64;
                 
-                // Guardar en la sesión del usuario actual
                 const emailSesion = localStorage.getItem('kiwi_sesion');
                 const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
                 if (usuarios[emailSesion]) {
                     usuarios[emailSesion].foto = fotoBase64;
                     localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
                     actualizarEstadoSesion();
-                    alert("¡Foto de perfil actualizada!");
+                    alert("¡Foto actualizada!");
                 }
             };
             reader.readAsDataURL(file);
         }
 
-        // Guardar cambios en el apodo
         function guardarDatosPerfil() {
             const nuevoApodo = document.getElementById('profile-apodo-input').value.trim();
             if (!nuevoApodo) {
@@ -768,7 +870,7 @@
                 usuarios[emailSesion].apodo = nuevoApodo;
                 localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
                 actualizarEstadoSesion();
-                alert("¡Perfil actualizado con éxito!");
+                alert("¡Perfil guardado!");
                 cerrarModalAuth();
             }
         }
@@ -777,6 +879,7 @@
             localStorage.removeItem('kiwi_sesion');
             actualizarEstadoSesion();
             cerrarModalAuth();
+            cargarResenas();
         }
 
         function actualizarEstadoSesion() {
@@ -787,16 +890,15 @@
             const labels = document.querySelectorAll('.auth-btn-label');
             const navAvatars = document.querySelectorAll('.nav-avatar');
             const navIcons = document.querySelectorAll('.nav-default-icon');
+            const btnAdminKiwi = document.getElementById('btn-admin-kiwi');
+            const btnAdminRfid = document.getElementById('btn-admin-rfid');
 
             if (emailSesion) {
                 const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
                 const usuario = usuarios[emailSesion] || { email: emailSesion, apodo: emailSesion.split('@')[0], foto: '' };
                 const apodo = usuario.apodo || usuario.email.split('@')[0];
 
-                // Actualizar textos en la navbar
                 labels.forEach(l => l.innerText = apodo);
-                
-                // Mostrar avatar o icono en la navbar
                 if (usuario.foto) {
                     navAvatars.forEach(av => { av.src = usuario.foto; av.style.display = 'inline-block'; });
                     navIcons.forEach(ic => ic.style.display = 'none');
@@ -805,22 +907,21 @@
                     navIcons.forEach(ic => ic.style.display = 'inline-block');
                 }
 
-                // Ajustar modal
                 form.style.display = 'none';
                 tabs.style.display = 'none';
                 loggedInfo.style.display = 'block';
 
-                // Llenar campos del modal de perfil
                 document.getElementById('profile-email-input').value = usuario.email;
                 document.getElementById('profile-apodo-input').value = apodo;
-                if (usuario.foto) {
-                    document.getElementById('profile-avatar-img').src = usuario.foto;
-                }
+                if (usuario.foto) document.getElementById('profile-avatar-img').src = usuario.foto;
 
-                // Si va a dejar una reseña, autorellenar su nombre con su apodo
-                const revNameInput = document.getElementById('rev-name');
-                if (revNameInput && !revNameInput.value) {
-                    revNameInput.value = apodo;
+                // Solo si el correo es kiwireview2026@gmail.com mostramos los accesos de administración
+                if (esUsuarioAdmin()) {
+                    btnAdminKiwi.style.display = 'inline-flex';
+                    btnAdminRfid.style.display = 'inline-flex';
+                } else {
+                    btnAdminKiwi.style.display = 'none';
+                    btnAdminRfid.style.display = 'none';
                 }
 
             } else {
@@ -830,9 +931,77 @@
                 form.style.display = 'block';
                 tabs.style.display = 'flex';
                 loggedInfo.style.display = 'none';
+                btnAdminKiwi.style.display = 'none';
+                btnAdminRfid.style.display = 'none';
             }
         }
         actualizarEstadoSesion();
+
+        // 7. Lógica del Panel de Administrador
+        function abrirModalAdmin() {
+            if (!esUsuarioAdmin()) {
+                alert("Acceso denegado: solo el administrador puede entrar.");
+                return;
+            }
+            renderizarDatosAdmin();
+            document.getElementById('admin-modal').style.display = 'flex';
+        }
+
+        function cerrarModalAdmin() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function renderizarDatosAdmin() {
+            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+            const resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+
+            const listaUsuarios = Object.values(usuarios);
+            document.getElementById('stat-total-users').innerText = listaUsuarios.length;
+            document.getElementById('stat-total-reviews').innerText = resenas.length;
+
+            // Renderizar tabla de usuarios
+            const tbodyUsers = document.getElementById('admin-users-tbody');
+            tbodyUsers.innerHTML = "";
+            if (listaUsuarios.length === 0) {
+                tbodyUsers.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No hay clientes registrados aún.</td></tr>`;
+            } else {
+                listaUsuarios.forEach(u => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <img class="table-avatar" src="${u.foto || 'https://placehold.co/40x40?text=U'}" alt="Foto">
+                            <strong>${u.apodo || 'Sin apodo'}</strong>
+                        </td>
+                        <td>${u.apodo || '-'}</td>
+                        <td>${u.email}</td>
+                        <td><span class="badge-role ${u.email === EMAIL_ADMINISTRADOR ? 'badge-admin' : 'badge-client'}">${u.email === EMAIL_ADMINISTRADOR ? 'ADMIN' : 'CLIENTE'}</span></td>
+                    `;
+                    tbodyUsers.appendChild(tr);
+                });
+            }
+
+            // Renderizar tabla de reseñas en el panel
+            const tbodyReviews = document.getElementById('admin-reviews-tbody');
+            tbodyReviews.innerHTML = "";
+            if (resenas.length === 0) {
+                tbodyReviews.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No hay reseñas publicadas.</td></tr>`;
+            } else {
+                resenas.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${r.autor}</strong></td>
+                        <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${r.texto}</td>
+                        <td style="color: var(--google-yellow);">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</td>
+                        <td>
+                            <button onclick="eliminarResena(${r.id})" style="background:var(--google-red); color:white; border:none; padding:4px 8px; border-radius:5px; cursor:pointer;">
+                                <i class="fa-solid fa-trash"></i> Eliminar
+                            </button>
+                        </td>
+                    `;
+                    tbodyReviews.appendChild(tr);
+                });
+            }
+        }
     </script>
 </body>
 </html>
