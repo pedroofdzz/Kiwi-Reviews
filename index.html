@@ -11,6 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- SDKs de Firebase Compatibles -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --bg-light: #F8F9FA;
@@ -31,7 +36,6 @@
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* SPLIT SCREEN */
@@ -69,7 +73,6 @@
         .btn-nav { background-color: var(--google-blue); color: var(--white) !important; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; transition: background-color 0.3s, transform 0.2s; }
         .btn-nav:hover { background-color: #3367D6; transform: translateY(-2px); }
 
-        /* Botón Admin Exclusivo */
         .btn-admin-nav { display: none; background: linear-gradient(45deg, #FFB300, #F57C00); color: white !important; padding: 0.4rem 0.9rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; border: none; cursor: pointer; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(245, 124, 0, 0.3); transition: transform 0.2s; }
         .btn-admin-nav:hover { transform: scale(1.05); }
 
@@ -133,15 +136,19 @@
         .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.8rem; font-weight: 700; color: var(--google-blue); margin-top: 1rem; margin-bottom: 2rem; }
 
-        /* RESEÑAS CON BOTÓN DE BORRADO */
+        /* RESEÑAS CON FOTO Y BORRADO */
         .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid #eee; }
         .reviews-container { max-width: 1000px; margin: 0 auto; }
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
-        .review-card { background: var(--white); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .review-card { background: var(--white); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
         .review-stars { color: var(--google-yellow); margin-bottom: 10px; font-size: 1.2rem; }
-        .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; }
-        .review-author { font-weight: 700; font-size: 0.95rem; }
-        .btn-delete-review { position: absolute; top: 15px; right: 15px; background: rgba(234, 67, 53, 0.1); color: var(--google-red); border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; gap: 5px; transition: background 0.2s; }
+        .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
+        .review-author { font-weight: 700; font-size: 0.95rem; margin-top: 10px; }
+        
+        .review-img-attached { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin-top: 12px; margin-bottom: 8px; border: 1px solid #eee; cursor: pointer; transition: transform 0.2s; }
+        .review-img-attached:hover { transform: scale(1.02); }
+
+        .btn-delete-review { position: absolute; top: 15px; right: 15px; background: rgba(234, 67, 53, 0.1); color: var(--google-red); border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; gap: 5px; font-weight: 600; transition: background 0.2s; z-index: 10; }
         .btn-delete-review:hover { background: var(--google-red); color: white; }
 
         .add-review-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
@@ -151,6 +158,10 @@
         .star-rating-input input:checked ~ label, .star-rating-input label:hover, .star-rating-input label:hover ~ label { color: var(--google-yellow); }
         .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
+
+        .review-photo-btn { display: inline-flex; align-items: center; gap: 8px; background: #e8f0fe; color: var(--google-blue); padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: background 0.2s; border: 1px solid #c2dbfe; }
+        .review-photo-btn:hover { background: #d2e3fc; }
+        #review-photo-preview { display: none; max-width: 120px; max-height: 120px; border-radius: 10px; margin: 0 auto 15px auto; object-fit: cover; border: 2px solid var(--google-blue); }
 
         /* MODALES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
@@ -167,7 +178,6 @@
         .avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--google-blue); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
         .avatar-input-hidden { display: none; }
 
-        /* ESTILOS DEL PANEL DE ADMINISTRACIÓN */
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
         .admin-stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
         .stat-card { flex: 1; background: var(--bg-light); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--google-blue); text-align: center; }
@@ -430,7 +440,7 @@
         </section>
     </div>
 
-    <!-- SECCIÓN RESEÑAS -->
+    <!-- SECCIÓN RESEÑAS CON SOPORTE DE FOTOS Y BORRADO SEGURO -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
@@ -440,7 +450,7 @@
                 <h3>¡Deja tu valoración!</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
                 
-                <form id="review-form" onsubmit="enviarResena(event)">
+                <form id="review-form" onsubmit="enviarResenaFirebase(event)">
                     <div class="star-rating-input">
                         <input type="radio" id="star5" name="rating" value="5" required><label for="star5"><i class="fa-solid fa-star"></i></label>
                         <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
@@ -451,6 +461,15 @@
                     
                     <input type="text" id="rev-name" class="form-control-review" placeholder="Tu nombre o apodo" required>
                     <textarea id="rev-comment" class="form-control-review" placeholder="Cuenta tu experiencia..." required></textarea>
+
+                    <!-- Selector de Foto para la Reseña -->
+                    <div>
+                        <label for="rev-photo-file" class="review-photo-btn">
+                            <i class="fa-solid fa-camera"></i> Añadir foto de tu producto
+                        </label>
+                        <input type="file" id="rev-photo-file" accept="image/*" style="display:none;" onchange="previsualizarFotoResena(event)">
+                        <img id="review-photo-preview" src="" alt="Previsualización de foto">
+                    </div>
                     
                     <button type="submit" class="btn-primary" style="background: var(--google-yellow); color: #000;">Publicar Reseña</button>
                 </form>
@@ -530,7 +549,7 @@
                 </div>
 
                 <button onclick="guardarDatosPerfil()" class="btn-primary" style="margin-bottom: 10px; background: var(--google-green);">Guardar Cambios</button>
-                <button onclick="cerrarSesion()" class="btn-primary" style="background:var(--google-red);">Cerrar Sesión</button>
+                <button onclick="cerrarSesionFirebase()" class="btn-primary" style="background:var(--google-red);">Cerrar Sesión</button>
             </div>
         </div>
     </div>
@@ -545,7 +564,6 @@
                 <span class="badge-role badge-admin">Acceso Propietario</span>
             </div>
 
-            <!-- Métricas -->
             <div class="admin-stats">
                 <div class="stat-card">
                     <h4 id="stat-total-users">0</h4>
@@ -557,7 +575,6 @@
                 </div>
             </div>
 
-            <!-- Tabla de Clientes -->
             <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes Registrados</h3>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
@@ -573,7 +590,6 @@
                 </table>
             </div>
 
-            <!-- Moderación de Reseñas -->
             <h3 style="margin-bottom: 1rem; margin-top: 1.5rem;"><i class="fa-solid fa-comments"></i> Moderación de Reseñas</h3>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
@@ -581,6 +597,7 @@
                         <tr>
                             <th>Autor</th>
                             <th>Comentario</th>
+                            <th>Foto</th>
                             <th>Puntuación</th>
                             <th>Acción</th>
                         </tr>
@@ -591,9 +608,28 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT CON EL CORREO ADMINISTRADOR OFICIAL -->
     <script>
-        // CONFIGURACIÓN DE TU CORREO OFICIAL DE ADMINISTRADOR
+        // CONFIGURACIÓN DE TU PROYECTO FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMahzacMfac",
+            authDomain: "kiwi-review.firebaseapp.com",
+            projectId: "kiwi-review",
+            storageBucket: "kiwi-review.firebasestorage.app",
+            messagingSenderId: "476930462174",
+            appId: "1:476930462174:web:7a58580ea2b5735922cd4f",
+            measurementId: "G-05HR2HQ6X9"
+        };
+
+        let db = null;
+        let auth = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+        } catch (e) {
+            console.log("Iniciando con almacenamiento local:", e);
+        }
+
         const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
 
         // 1. Frases Diarias
@@ -615,6 +651,7 @@
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
+            
             document.getElementById(id).style.display = 'block';
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
@@ -705,30 +742,80 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        // 5. Motor de Reseñas y Moderación
+        // 5. Gestión de Reseñas: Fotos y Borrado Individual
+        let fotoResenaBase64 = "";
+
+        function previsualizarFotoResena(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("La imagen es muy pesada. Máximo 2 MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                fotoResenaBase64 = e.target.result;
+                const prev = document.getElementById('review-photo-preview');
+                prev.src = fotoResenaBase64;
+                prev.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
         const resenasIniciales = [
-            { id: 1, autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", estrellas: 5 },
-            { id: 2, autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", estrellas: 5 },
-            { id: 3, autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", estrellas: 4 }
+            { id: "init_1", autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", foto: "", estrellas: 5 },
+            { id: "init_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", foto: "", estrellas: 5 },
+            { id: "init_3", autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", foto: "", estrellas: 4 }
         ];
 
+        function esUsuarioAdmin() {
+            const emailSesion = localStorage.getItem('kiwi_sesion');
+            return emailSesion === EMAIL_ADMINISTRADOR || (auth && auth.currentUser && auth.currentUser.email === EMAIL_ADMINISTRADOR);
+        }
+
         function cargarResenas() {
-            const guardadas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
             const contenedor = document.getElementById('reviews-list');
             const esAdmin = esUsuarioAdmin();
-            contenedor.innerHTML = "";
 
-            guardadas.forEach(d => {
+            if (db) {
+                db.collection("resenas").orderBy("fecha", "desc").onSnapshot((snapshot) => {
+                    contenedor.innerHTML = "";
+                    if (snapshot.empty) {
+                        renderizarResenasArray(resenasIniciales, contenedor, esAdmin);
+                        return;
+                    }
+                    const lista = [];
+                    snapshot.forEach(doc => {
+                        lista.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderizarResenasArray(lista, contenedor, esAdmin);
+                }, (err) => {
+                    const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+                    renderizarResenasArray(locales, contenedor, esAdmin);
+                });
+            } else {
+                const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+                renderizarResenasArray(locales, contenedor, esAdmin);
+            }
+        }
+
+        function renderizarResenasArray(lista, contenedor, esAdmin) {
+            contenedor.innerHTML = "";
+            lista.forEach(d => {
                 let stars = '';
-                for(let i=0; i<5; i++) {
+                for (let i = 0; i < 5; i++) {
                     stars += i < d.estrellas ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
                 }
+
                 const card = document.createElement('div');
                 card.className = 'review-card fade-up visible';
                 card.innerHTML = `
-                    ${esAdmin ? `<button class="btn-delete-review" style="display:inline-flex;" onclick="eliminarResena(${d.id})" title="Eliminar como administrador"><i class="fa-solid fa-trash"></i> Borrar</button>` : ''}
+                    ${esAdmin ? `<button class="btn-delete-review" style="display:inline-flex;" onclick="eliminarResenaIndividual('${d.id}')" title="Eliminar solo esta reseña"><i class="fa-solid fa-trash"></i> Borrar</button>` : ''}
                     <div class="review-stars">${stars}</div>
                     <p class="review-text">"${d.texto}"</p>
+                    ${d.foto ? `<img class="review-img-attached" src="${d.foto}" alt="Foto del cliente" onclick="window.open('${d.foto}')">` : ''}
                     <p class="review-author">- ${d.autor}</p>
                 `;
                 contenedor.appendChild(card);
@@ -736,42 +823,77 @@
         }
         cargarResenas();
 
-        function enviarResena(e) {
+        async function enviarResenaFirebase(e) {
             e.preventDefault();
             const autor = document.getElementById('rev-name').value.trim();
             const texto = document.getElementById('rev-comment').value.trim();
             const starsInput = document.querySelector('input[name="rating"]:checked');
             const estrellas = starsInput ? parseInt(starsInput.value) : 5;
+            const foto = fotoResenaBase64;
 
-            const resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-            resenas.unshift({ id: Date.now(), autor, texto, estrellas });
-            localStorage.setItem('kiwi_resenas', JSON.stringify(resenas));
+            const nuevaResena = {
+                autor: autor,
+                texto: texto,
+                estrellas: estrellas,
+                foto: foto,
+                fecha: new Date().toISOString()
+            };
 
-            alert("¡Reseña publicada con éxito!");
+            if (db) {
+                try {
+                    await db.collection("resenas").add({
+                        ...nuevaResena,
+                        fecha: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    alert("¡Reseña con foto publicada exitosamente!");
+                } catch(err) {
+                    console.error("Error al guardar en Firestore:", err);
+                    guardarResenaEnLocal(nuevaResena);
+                }
+            } else {
+                guardarResenaEnLocal(nuevaResena);
+            }
+
             document.getElementById('review-form').reset();
+            document.getElementById('review-photo-preview').style.display = 'none';
+            fotoResenaBase64 = "";
             cargarResenas();
         }
 
-        function eliminarResena(idResena) {
-            if (!confirm("¿Seguro que quieres eliminar esta reseña permanentemente?")) return;
+        function guardarResenaEnLocal(resena) {
+            const locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+            const idUnico = "local_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+            locales.unshift({ id: idUnico, ...resena });
+            localStorage.setItem('kiwi_resenas', JSON.stringify(locales));
+            alert("¡Reseña guardada!");
+        }
 
-            let resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
-            resenas = resenas.filter(r => r.id !== idResena);
-            localStorage.setItem('kiwi_resenas', JSON.stringify(resenas));
+        // ELIMINACIÓN INDIVIDUAL SEGURA (NO BORRA TODAS)
+        async function eliminarResenaIndividual(idResena) {
+            if (!confirm("¿Seguro que deseas eliminar ÚNICAMENTE esta reseña?")) return;
 
-            alert("Reseña eliminada.");
+            if (db && !idResena.startsWith("init_") && !idResena.startsWith("local_")) {
+                try {
+                    await db.collection("resenas").doc(idResena).delete();
+                    alert("Reseña eliminada de Firebase.");
+                } catch(err) {
+                    console.error("Error borrando en Firestore:", err);
+                }
+            }
+
+            // Filtrar también en el almacenamiento local por ID estricto
+            let locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+            locales = locales.filter(r => String(r.id) !== String(idResena));
+            localStorage.setItem('kiwi_resenas', JSON.stringify(locales));
+
+            alert("Reseña eliminada correctamente.");
             cargarResenas();
             if (document.getElementById('admin-modal').style.display === 'flex') {
                 renderizarDatosAdmin();
             }
         }
 
-        // 6. Sistema de Cuentas y Comprobación de Admin
-        function esUsuarioAdmin() {
-            const emailSesion = localStorage.getItem('kiwi_sesion');
-            return emailSesion === EMAIL_ADMINISTRADOR;
-        }
-
+        // 6. Autenticación, Perfil y Roles
         function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
         function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
         let modoAuth = 'login';
@@ -784,7 +906,7 @@
             document.getElementById('group-apodo').style.display = modo === 'register' ? 'block' : 'none';
         }
 
-        function gestionarAutenticacion(e) {
+        async function gestionarAutenticacion(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value;
@@ -795,31 +917,58 @@
                 return;
             }
 
-            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+            if (auth) {
+                try {
+                    if (modoAuth === 'register') {
+                        const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                        const apodoFinal = apodo || (email === EMAIL_ADMINISTRADOR ? "Admin Kiwi" : email.split('@')[0]);
+                        const fotoInicial = "https://placehold.co/100x100?text=" + encodeURIComponent(apodoFinal.charAt(0).toUpperCase());
 
+                        if (db) {
+                            await db.collection("usuarios").doc(cred.user.uid).set({
+                                email: email,
+                                apodo: apodoFinal,
+                                foto: fotoInicial,
+                                rol: email === EMAIL_ADMINISTRADOR ? "admin" : "cliente",
+                                fechaRegistro: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        }
+                        alert("¡Cuenta registrada con éxito!");
+                    } else {
+                        await auth.signInWithEmailAndPassword(email, pass);
+                        alert("¡Bienvenido de nuevo!");
+                    }
+                    localStorage.setItem('kiwi_sesion', email);
+                    cerrarModalAuth();
+                    actualizarEstadoSesion();
+                    cargarResenas();
+                    return;
+                } catch(err) {
+                    console.log("Aviso de Firebase Auth:", err.message);
+                }
+            }
+
+            // Fallback de contingencia local
+            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
             if (modoAuth === 'register') {
                 if (usuarios[email]) {
                     alert("Este correo ya está registrado.");
                     return;
                 }
                 const apodoFinal = apodo || (email === EMAIL_ADMINISTRADOR ? "Admin Kiwi" : email.split('@')[0]);
-                usuarios[email] = { 
-                    email: email, 
-                    pass: pass, 
-                    apodo: apodoFinal, 
+                usuarios[email] = {
+                    email, pass, apodo: apodoFinal,
                     foto: "https://placehold.co/100x100?text=" + encodeURIComponent(apodoFinal.charAt(0).toUpperCase()),
-                    rol: (email === EMAIL_ADMINISTRADOR) ? "admin" : "cliente"
+                    rol: email === EMAIL_ADMINISTRADOR ? "admin" : "cliente"
                 };
                 localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
                 localStorage.setItem('kiwi_sesion', email);
-                alert("¡Cuenta creada exitosamente, " + apodoFinal + "!");
+                alert("¡Cuenta creada exitosamente!");
             } else {
-                // Auto-inicializar la cuenta del admin si entra por primera vez
                 if (email === EMAIL_ADMINISTRADOR && !usuarios[email]) {
                     usuarios[email] = { email, pass, apodo: "Admin Kiwi", foto: "https://placehold.co/100x100?text=ADMIN", rol: "admin" };
                     localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
                 }
-
                 if (!usuarios[email] || usuarios[email].pass !== pass) {
                     alert("Correo o contraseña incorrectos.");
                     return;
@@ -835,25 +984,30 @@
         function subirFotoPerfil(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             if (file.size > 2 * 1024 * 1024) {
-                alert("La foto es demasiado grande (máx 2 MB).");
+                alert("La foto no puede pesar más de 2 MB.");
                 return;
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const fotoBase64 = e.target.result;
                 document.getElementById('profile-avatar-img').src = fotoBase64;
-                
+
+                if (auth && auth.currentUser && db) {
+                    try {
+                        await db.collection("usuarios").doc(auth.currentUser.uid).update({ foto: fotoBase64 });
+                    } catch(err) { console.error(err); }
+                }
+
                 const emailSesion = localStorage.getItem('kiwi_sesion');
                 const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
                 if (usuarios[emailSesion]) {
                     usuarios[emailSesion].foto = fotoBase64;
                     localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
-                    actualizarEstadoSesion();
-                    alert("¡Foto actualizada!");
                 }
+                actualizarEstadoSesion();
+                alert("¡Foto de perfil actualizada!");
             };
             reader.readAsDataURL(file);
         }
@@ -864,22 +1018,29 @@
                 alert("El apodo no puede estar vacío.");
                 return;
             }
+
+            if (auth && auth.currentUser && db) {
+                db.collection("usuarios").doc(auth.currentUser.uid).update({ apodo: nuevoApodo }).catch(console.error);
+            }
+
             const emailSesion = localStorage.getItem('kiwi_sesion');
             const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
             if (usuarios[emailSesion]) {
                 usuarios[emailSesion].apodo = nuevoApodo;
                 localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
-                actualizarEstadoSesion();
-                alert("¡Perfil guardado!");
-                cerrarModalAuth();
             }
+            actualizarEstadoSesion();
+            alert("¡Perfil guardado!");
+            cerrarModalAuth();
         }
 
-        function cerrarSesion() {
+        async function cerrarSesionFirebase() {
+            if (auth) { try { await auth.signOut(); } catch(e){} }
             localStorage.removeItem('kiwi_sesion');
             actualizarEstadoSesion();
             cerrarModalAuth();
             cargarResenas();
+            alert("Has cerrado sesión.");
         }
 
         function actualizarEstadoSesion() {
@@ -902,6 +1063,7 @@
                 if (usuario.foto) {
                     navAvatars.forEach(av => { av.src = usuario.foto; av.style.display = 'inline-block'; });
                     navIcons.forEach(ic => ic.style.display = 'none');
+                    document.getElementById('profile-avatar-img').src = usuario.foto;
                 } else {
                     navAvatars.forEach(av => av.style.display = 'none');
                     navIcons.forEach(ic => ic.style.display = 'inline-block');
@@ -913,9 +1075,10 @@
 
                 document.getElementById('profile-email-input').value = usuario.email;
                 document.getElementById('profile-apodo-input').value = apodo;
-                if (usuario.foto) document.getElementById('profile-avatar-img').src = usuario.foto;
 
-                // Solo si el correo es kiwireview2026@gmail.com mostramos los accesos de administración
+                const revName = document.getElementById('rev-name');
+                if (revName && !revName.value) revName.value = apodo;
+
                 if (esUsuarioAdmin()) {
                     btnAdminKiwi.style.display = 'inline-flex';
                     btnAdminRfid.style.display = 'inline-flex';
@@ -923,7 +1086,6 @@
                     btnAdminKiwi.style.display = 'none';
                     btnAdminRfid.style.display = 'none';
                 }
-
             } else {
                 labels.forEach(l => l.innerText = "Mi Cuenta");
                 navAvatars.forEach(av => av.style.display = 'none');
@@ -937,10 +1099,10 @@
         }
         actualizarEstadoSesion();
 
-        // 7. Lógica del Panel de Administrador
+        // 7. Panel de Administrador
         function abrirModalAdmin() {
             if (!esUsuarioAdmin()) {
-                alert("Acceso denegado: solo el administrador puede entrar.");
+                alert("Acceso reservado para el propietario.");
                 return;
             }
             renderizarDatosAdmin();
@@ -951,56 +1113,63 @@
             document.getElementById('admin-modal').style.display = 'none';
         }
 
-        function renderizarDatosAdmin() {
-            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
-            const resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+        async function renderizarDatosAdmin() {
+            let listaUsuarios = [];
+            let listaResenas = [];
 
-            const listaUsuarios = Object.values(usuarios);
+            if (db) {
+                try {
+                    const uSnap = await db.collection("usuarios").get();
+                    uSnap.forEach(d => listaUsuarios.push(d.data()));
+                    const rSnap = await db.collection("resenas").get();
+                    rSnap.forEach(d => listaResenas.push({ id: d.id, ...d.data() }));
+                } catch(e) {}
+            }
+
+            if (listaUsuarios.length === 0) {
+                const uLocal = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+                listaUsuarios = Object.values(uLocal);
+            }
+            if (listaResenas.length === 0) {
+                listaResenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+            }
+
             document.getElementById('stat-total-users').innerText = listaUsuarios.length;
-            document.getElementById('stat-total-reviews').innerText = resenas.length;
+            document.getElementById('stat-total-reviews').innerText = listaResenas.length;
 
-            // Renderizar tabla de usuarios
             const tbodyUsers = document.getElementById('admin-users-tbody');
             tbodyUsers.innerHTML = "";
-            if (listaUsuarios.length === 0) {
-                tbodyUsers.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No hay clientes registrados aún.</td></tr>`;
-            } else {
-                listaUsuarios.forEach(u => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            <img class="table-avatar" src="${u.foto || 'https://placehold.co/40x40?text=U'}" alt="Foto">
-                            <strong>${u.apodo || 'Sin apodo'}</strong>
-                        </td>
-                        <td>${u.apodo || '-'}</td>
-                        <td>${u.email}</td>
-                        <td><span class="badge-role ${u.email === EMAIL_ADMINISTRADOR ? 'badge-admin' : 'badge-client'}">${u.email === EMAIL_ADMINISTRADOR ? 'ADMIN' : 'CLIENTE'}</span></td>
-                    `;
-                    tbodyUsers.appendChild(tr);
-                });
-            }
+            listaUsuarios.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <img class="table-avatar" src="${u.foto || 'https://placehold.co/40x40?text=U'}" alt="Foto">
+                        <strong>${u.apodo || 'Cliente'}</strong>
+                    </td>
+                    <td>${u.apodo || '-'}</td>
+                    <td>${u.email}</td>
+                    <td><span class="badge-role ${u.email === EMAIL_ADMINISTRADOR ? 'badge-admin' : 'badge-client'}">${u.email === EMAIL_ADMINISTRADOR ? 'ADMIN' : 'CLIENTE'}</span></td>
+                `;
+                tbodyUsers.appendChild(tr);
+            });
 
-            // Renderizar tabla de reseñas en el panel
             const tbodyReviews = document.getElementById('admin-reviews-tbody');
             tbodyReviews.innerHTML = "";
-            if (resenas.length === 0) {
-                tbodyReviews.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No hay reseñas publicadas.</td></tr>`;
-            } else {
-                resenas.forEach(r => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${r.autor}</strong></td>
-                        <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${r.texto}</td>
-                        <td style="color: var(--google-yellow);">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</td>
-                        <td>
-                            <button onclick="eliminarResena(${r.id})" style="background:var(--google-red); color:white; border:none; padding:4px 8px; border-radius:5px; cursor:pointer;">
-                                <i class="fa-solid fa-trash"></i> Eliminar
-                            </button>
-                        </td>
-                    `;
-                    tbodyReviews.appendChild(tr);
-                });
-            }
+            listaResenas.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${r.autor}</strong></td>
+                    <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${r.texto}</td>
+                    <td>${r.foto ? `<img src="${r.foto}" style="width:35px;height:35px;object-fit:cover;border-radius:4px;">` : 'Sin foto'}</td>
+                    <td style="color: var(--google-yellow);">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</td>
+                    <td>
+                        <button onclick="eliminarResenaIndividual('${r.id}')" style="background:var(--google-red); color:white; border:none; padding:4px 8px; border-radius:5px; cursor:pointer;">
+                            <i class="fa-solid fa-trash"></i> Eliminar
+                        </button>
+                    </td>
+                `;
+                tbodyReviews.appendChild(tr);
+            });
         }
     </script>
 </body>
