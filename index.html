@@ -17,7 +17,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
-        /* ================= 1. VARIABLES DINÁMICAS POR TEMA ================= */
+        /* ================= VARIABLES DINÁMICAS POR TEMA ================= */
         :root {
             --bg-light: #F8F9FA;
             --bg-card: #FFFFFF;
@@ -139,19 +139,6 @@
         .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; color: var(--text-dark); }
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
-        
-        .quantity-wrapper { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .quantity-controls { display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 50px; overflow: hidden; background: var(--bg-card); }
-        .qty-btn { background: transparent; border: none; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; color: var(--text-dark); }
-        .qty-btn:hover { background: var(--bg-light); }
-        .qty-input { width: 40px; text-align: center; border: none; font-weight: 600; font-size: 1.1rem; background: transparent; color: var(--text-dark); pointer-events: none;}
-        
-        .price-container { display: flex; align-items: baseline; gap: 10px; margin-bottom: 1rem; }
-        .price { font-size: 2.2rem; font-weight: 700; color: var(--google-blue); }
-        .discount-badge { background: var(--google-green); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; display: inline-block; opacity: 0; transform: scale(0.8); transition: all 0.3s; }
-        .discount-badge.show { opacity: 1; transform: scale(1); }
-        .btn-primary { background-color: var(--google-blue); color: white; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
-        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-3px); }
 
         .services { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
         .services-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
@@ -174,14 +161,36 @@
         .faq-item[open] summary::after { transform: rotate(180deg); }
         .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; line-height: 1.7; }
 
-        /* CATÁLOGO DE PRODUCTOS */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem; max-width: 1100px; margin: 0 auto; }
-        .product-card { background: var(--bg-card); border-radius: 20px; padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .product-card img { width: 220px; height: 220px; object-fit: contain; margin-bottom: 1.5rem; border-radius: 12px; }
-        .product-card h3 { font-size: 1.5rem; color: var(--text-dark); margin-bottom: 0.5rem; }
-        .product-card p.prod-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; flex-grow: 1; }
+        /* ================= ESTILOS DE PRODUCTOS Y SELECTORES ================= */
+        .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 3rem; max-width: 1150px; margin: 0 auto; }
+        .product-card { background: var(--bg-card); border-radius: 20px; padding: 2.5rem 2rem; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .product-card img.prod-img { width: 230px; height: 230px; object-fit: contain; margin-bottom: 1.5rem; border-radius: 12px; animation: float 5s ease-in-out infinite; }
+        .product-card h3 { font-size: 1.6rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .product-card p.prod-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.2rem; flex-grow: 1; }
 
-        /* RESEÑAS (SIN BOTONES PÚBLICOS DE BORRADO) */
+        .price-container { display: flex; align-items: baseline; gap: 8px; margin-bottom: 0.6rem; }
+        .price { font-size: 2.2rem; font-weight: 700; color: var(--google-blue); }
+        .discount-badge { background: var(--google-green); color: white; padding: 0.35rem 0.9rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.2rem; display: inline-block; opacity: 0; transform: scale(0.85); transition: all 0.3s; }
+        .discount-badge.show { opacity: 1; transform: scale(1); }
+
+        .variant-selector-wrap { margin-bottom: 1.2rem; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+        .variant-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .variant-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .btn-variant { background: var(--bg-light); border: 2px solid var(--border-color); color: var(--text-dark); padding: 5px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-variant:hover { border-color: var(--google-blue); }
+        .btn-variant.active { background: var(--google-blue); color: white; border-color: var(--google-blue); transform: scale(1.05); }
+
+        .quantity-wrapper { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .quantity-controls { display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 50px; overflow: hidden; background: var(--bg-card); }
+        .qty-btn { background: transparent; border: none; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; color: var(--text-dark); }
+        .qty-btn:hover { background: var(--bg-light); }
+        .qty-input { width: 45px; text-align: center; border: none; font-weight: 600; font-size: 1.1rem; background: transparent; color: var(--text-dark); pointer-events: none;}
+
+        .btn-primary { background-color: var(--google-blue); color: white; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-3px); }
+
+        /* RESEÑAS PÚBLICAS */
         .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid var(--border-color); }
         .reviews-container { max-width: 1000px; margin: 0 auto; }
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
@@ -207,7 +216,7 @@
         /* MODALES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 4000; justify-content: center; align-items: center; }
         .modal-card { background: var(--bg-card); color: var(--text-dark); padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 440px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
-        .modal-card-large { max-width: 900px; max-height: 90vh; overflow-y: auto; }
+        .modal-card-large { max-width: 950px; max-height: 90vh; overflow-y: auto; }
         .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
         .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
@@ -263,7 +272,7 @@
 
     <!-- SELECTOR DE TEMAS FLOTANTE -->
     <div class="theme-widget-container">
-        <button class="btn-theme-toggle" onclick="toggleMenuTemas()" title="Cambiar tema">
+        <button class="btn-theme-toggle" onclick="toggleMenuTemas()" title="Cambiar tema de color">
             <i class="fa-solid fa-palette"></i>
         </button>
         <div id="theme-menu-box" class="theme-popover">
@@ -287,7 +296,7 @@
         </div>
     </div>
 
-    <!-- MENÚ PRINCIPAL -->
+    <!-- MENÚ PRINCIPAL SPLIT -->
     <div id="menu-container">
         <div class="split left-side" onclick="abrirSeccion('kiwi-section')">
             <div class="split-content">
@@ -411,7 +420,7 @@
         </section>
     </div>
 
-    <!-- SECCIÓN RESEÑAS PÚBLICAS (SIN BOTONES DE BORRADO VISIBLES) -->
+    <!-- SECCIÓN RESEÑAS PÚBLICAS -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
@@ -447,7 +456,7 @@
         </div>
     </section>
 
-    <!-- FOOTER Y FORMULARIO DE PEDIDO / CONTACTO -->
+    <!-- FOOTER Y FORMULARIO DE PEDIDO -->
     <footer id="shared-footer" class="footer-cta">
         <h2 id="contacto">Tramitar Pedido / Contacto</h2>
         <div class="footer-content-wrapper">
@@ -550,11 +559,11 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         <div>
                             <label style="font-size:0.85rem; color:var(--text-muted);">Título del Producto</label>
-                            <input type="text" id="prod-title" class="form-control-review" required placeholder="Ej: Placa NFC XXL">
+                            <input type="text" id="prod-title" class="form-control-review" required placeholder="Ej: Soporte Metacrilato Mini">
                         </div>
                         <div>
                             <label style="font-size:0.85rem; color:var(--text-muted);">Precio (€)</label>
-                            <input type="number" step="0.5" id="prod-price" class="form-control-review" required placeholder="Ej: 19.99">
+                            <input type="number" step="0.5" id="prod-price" class="form-control-review" required placeholder="Ej: 12.00">
                         </div>
                         <div>
                             <label style="font-size:0.85rem; color:var(--text-muted);">Sección de la Tienda</label>
@@ -567,8 +576,16 @@
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         <div>
-                            <label style="font-size:0.85rem; color:var(--text-muted);">Texto de Descuento / Promo (Opcional)</label>
-                            <input type="text" id="prod-discount" class="form-control-review" placeholder="Ej: ¡2€ de dto por cada unidad extra!">
+                            <label style="font-size:0.85rem; color:var(--text-muted);">Colores o Modelos (Separados por coma)</label>
+                            <input type="text" id="prod-variants" class="form-control-review" placeholder="Ej: Blanco, Negro, Dorado">
+                        </div>
+                        <div>
+                            <label style="font-size:0.85rem; color:var(--text-muted);">Regla de Descuento Dinámico</label>
+                            <select id="prod-discount-type" class="form-control-review">
+                                <option value="none">Sin descuento</option>
+                                <option value="pairs">2€ de descuento por cada 2 unidades (Pares)</option>
+                                <option value="extra">2€ de descuento por cada unidad extra a partir de la 2ª</option>
+                            </select>
                         </div>
                         <div>
                             <label style="font-size:0.85rem; color:var(--text-muted);">Foto del Producto</label>
@@ -577,15 +594,34 @@
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label style="font-size:0.85rem; color:var(--text-muted);">Descripción Corta</label>
-                        <textarea id="prod-desc" class="form-control-review" style="min-height: 70px;" required placeholder="Explica las características de este producto..."></textarea>
+                        <label style="font-size:0.85rem; color:var(--text-muted);">Descripción</label>
+                        <textarea id="prod-desc" class="form-control-review" style="min-height: 70px;" required placeholder="Explica detalles del producto..."></textarea>
                     </div>
 
                     <button type="submit" class="btn-primary" style="background: var(--google-green);"><i class="fa-solid fa-save"></i> Guardar y Publicar Producto</button>
                 </form>
             </div>
 
-            <!-- 2. TABLA DE CLIENTES REGISTRADOS -->
+            <!-- 2. GESTIÓN Y ELIMINACIÓN DE PRODUCTOS ACTIVOS -->
+            <div class="admin-section-box">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-boxes-stacked" style="color:var(--google-blue);"></i> Gestionar / Eliminar Productos de la Tienda</h3>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Sección</th>
+                                <th>Precio Base</th>
+                                <th>Variantes</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-products-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. TABLA DE CLIENTES REGISTRADOS -->
             <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes Registrados</h3>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
@@ -601,7 +637,7 @@
                 </table>
             </div>
 
-            <!-- 3. MODERACIÓN EXCLUSIVA DE RESEÑAS -->
+            <!-- 4. MODERACIÓN PRIVADA DE RESEÑAS -->
             <h3 style="margin-bottom: 1rem; margin-top: 1.5rem;"><i class="fa-solid fa-comments"></i> Moderación de Reseñas (Borrado Exclusivo)</h3>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
@@ -692,33 +728,44 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
-        // ================= 5. CATÁLOGO Y GESTIÓN DE PRODUCTOS =================
+        // ================= 5. CATÁLOGO CON ELIMINACIÓN Y VARIANTES =================
         const productosBase = [
             {
-                id: "prod_1",
+                id: "prod_nfc_placa",
                 categoria: "kiwi",
                 titulo: "Placa NFC Google Review",
-                precio: 15.00,
+                precioBase: 15.00,
                 desc: "Soporte de metacrilato de alta calidad con chip NFC inteligente integrado y QR grabado para multiplicar tus valoraciones de Google al instante.",
-                descuento: "¡Ahorras 2€ por cada unidad extra!",
+                descuentoTipo: "extra",
+                variantes: [
+                    { nombre: "Blanco", img: "cartel blanco.png" },
+                    { nombre: "Negro", img: "cartel negro.png" }
+                ],
                 foto: "cartel blanco.png"
             },
             {
-                id: "prod_2",
+                id: "prod_rfid_tarjeta",
                 categoria: "rfid",
                 titulo: "Tarjeta de Acceso Portal",
-                precio: 8.00,
+                precioBase: 8.00,
                 desc: "Tarjeta de proximidad RFID fina y resistente, compatible con el 99% de porteros automáticos comunitarios.",
-                descuento: "Promo: 2€ de dto por cada 2 unidades",
+                descuentoTipo: "pairs",
+                variantes: [
+                    { nombre: "Blanco Estándar", img: "tarjeta_portal.jpg" }
+                ],
                 foto: "tarjeta_portal.jpg"
             },
             {
-                id: "prod_3",
+                id: "prod_rfid_llavero",
                 categoria: "rfid",
                 titulo: "Llavero Chapa Proximidad",
-                precio: 8.00,
+                precioBase: 8.00,
                 desc: "Chapa llavero compacta, ligera y ultra protegida contra golpes o agua para abrir tu portal sin esfuerzo.",
-                descuento: "Promo: 2€ de dto por cada 2 unidades",
+                descuentoTipo: "pairs",
+                variantes: [
+                    { nombre: "Azul Clásico", img: "chapa_portal.jpg" },
+                    { nombre: "Negro Mate", img: "chapa_portal.jpg" }
+                ],
                 foto: "chapa_portal.jpg"
             }
         ];
@@ -731,6 +778,179 @@
             localStorage.setItem('kiwi_catalogo_productos', JSON.stringify(lista));
         }
 
+        const estadoProductos = {};
+
+        function renderizarCatalogos() {
+            const prods = obtenerProductos();
+            const contKiwi = document.getElementById('catalog-kiwi-container');
+            const contRFID = document.getElementById('catalog-rfid-container');
+
+            contKiwi.innerHTML = "";
+            contRFID.innerHTML = "";
+
+            if (prods.filter(p => p.categoria === 'kiwi').length === 0) {
+                contKiwi.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:var(--text-muted);'>No hay productos NFC disponibles en este momento.</p>";
+            }
+            if (prods.filter(p => p.categoria === 'rfid').length === 0) {
+                contRFID.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:var(--text-muted);'>No hay productos RFID disponibles en este momento.</p>";
+            }
+
+            prods.forEach(p => {
+                if (!estadoProductos[p.id]) {
+                    estadoProductos[p.id] = {
+                        cantidad: 1,
+                        varianteElegida: (p.variantes && p.variantes.length > 0) ? p.variantes[0].nombre : "Estándar",
+                        imgActual: (p.variantes && p.variantes.length > 0) ? p.variantes[0].img : p.foto
+                    };
+                }
+
+                const card = document.createElement('div');
+                card.className = "product-card fade-up visible";
+                card.id = `card-product-${p.id}`;
+
+                let variantesHTML = "";
+                if (p.variantes && p.variantes.length > 1) {
+                    variantesHTML = `
+                        <div class="variant-selector-wrap">
+                            <span class="variant-title">Color / Modelo:</span>
+                            <div class="variant-buttons">
+                                ${p.variantes.map((v, idx) => `
+                                    <button type="button" class="btn-variant ${idx === 0 ? 'active' : ''}" onclick="seleccionarVariante('${p.id}', '${v.nombre}', '${v.img || p.foto}', this)">
+                                        ${v.nombre}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <img id="img-${p.id}" class="prod-img" src="${estadoProductos[p.id].imgActual}" alt="${p.titulo}" onerror="this.src='https://placehold.co/230x230?text=Producto'">
+                    <h3>${p.titulo}</h3>
+                    <p class="prod-desc">${p.desc}</p>
+                    
+                    <div class="price-container">
+                        <span class="price" id="price-display-${p.id}">0,00€</span>
+                        <span style="color:var(--text-muted); font-size:0.85rem;">IVA inc.</span>
+                    </div>
+
+                    <div class="discount-badge" id="discount-badge-${p.id}"></div>
+
+                    ${variantesHTML}
+
+                    <div class="quantity-wrapper">
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="cambiarCantidadProducto('${p.id}', -1)"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="qty-input-${p.id}" class="qty-input" value="1" readonly>
+                            <button class="qty-btn" onclick="cambiarCantidadProducto('${p.id}', 1)"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <button onclick="agregarAlPedido('${p.id}')" class="btn-primary" style="gap:8px; display:inline-flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-cart-shopping"></i> Añadir al Pedido
+                    </button>
+                `;
+
+                if (p.categoria === 'kiwi') contKiwi.appendChild(card);
+                else contRFID.appendChild(card);
+
+                calcularPrecioDinamico(p.id);
+            });
+        }
+
+        function seleccionarVariante(idProd, nombreVariante, rutaImg, btnElem) {
+            estadoProductos[idProd].varianteElegida = nombreVariante;
+            estadoProductos[idProd].imgActual = rutaImg;
+
+            const imgElem = document.getElementById(`img-${idProd}`);
+            if (imgElem && rutaImg) {
+                imgElem.style.opacity = '0.4';
+                setTimeout(() => {
+                    imgElem.src = rutaImg;
+                    imgElem.style.opacity = '1';
+                }, 150);
+            }
+
+            const parent = btnElem.parentElement;
+            parent.querySelectorAll('.btn-variant').forEach(b => b.classList.remove('active'));
+            btnElem.classList.add('active');
+        }
+
+        function cambiarCantidadProducto(idProd, delta) {
+            let actual = estadoProductos[idProd].cantidad;
+            actual += delta;
+            if (actual >= 1) {
+                estadoProductos[idProd].cantidad = actual;
+                const input = document.getElementById(`qty-input-${idProd}`);
+                if (input) input.value = actual;
+                calcularPrecioDinamico(idProd);
+            }
+        }
+
+        function calcularPrecioDinamico(idProd) {
+            const prods = obtenerProductos();
+            const producto = prods.find(p => String(p.id) === String(idProd));
+            if (!producto) return;
+
+            const qty = estadoProductos[idProd].cantidad;
+            const precioBase = producto.precioBase || producto.precio || 0;
+            let total = 0;
+            let ahorro = 0;
+
+            if (producto.descuentoTipo === "extra") {
+                total = (qty * precioBase) - ((qty - 1) * 2);
+                ahorro = (qty - 1) * 2;
+            } else if (producto.descuentoTipo === "pairs") {
+                const subtotal = qty * precioBase;
+                const pares = Math.floor(qty / 2);
+                ahorro = pares * 2;
+                total = subtotal - ahorro;
+            } else {
+                total = qty * precioBase;
+                ahorro = 0;
+            }
+
+            const priceDisplay = document.getElementById(`price-display-${idProd}`);
+            if (priceDisplay) priceDisplay.innerText = total.toFixed(2).replace('.', ',') + "€";
+
+            const badge = document.getElementById(`discount-badge-${idProd}`);
+            if (badge) {
+                if (ahorro > 0) {
+                    badge.innerText = `¡Te ahorras ${ahorro.toFixed(2).replace('.', ',')}€!`;
+                    badge.classList.add('show');
+                } else {
+                    badge.classList.remove('show');
+                }
+            }
+        }
+
+        function agregarAlPedido(idProd) {
+            const prods = obtenerProductos();
+            const producto = prods.find(p => String(p.id) === String(idProd));
+            if (!producto) return;
+
+            const estado = estadoProductos[idProd];
+            const qty = estado.cantidad;
+            const variante = estado.varianteElegida;
+            const priceText = document.getElementById(`price-display-${idProd}`).innerText;
+
+            const msgBox = document.getElementById('message-box');
+            let linea = `- ${qty}x ${producto.titulo} [Color/Modelo: ${variante}] -> Total con dto: ${priceText}\n`;
+
+            if (!msgBox.value.includes("¡Hola Kiwi Review! Me gustaría realizar este encargo:")) {
+                msgBox.value = `¡Hola Kiwi Review! Me gustaría realizar este encargo:\n\n` + linea;
+            } else {
+                msgBox.value += linea;
+            }
+
+            document.getElementById('shared-footer').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                msgBox.focus();
+                msgBox.style.borderColor = "var(--google-blue)";
+            }, 600);
+        }
+
+        // ================= 6. AÑADIR Y ELIMINAR PRODUCTOS (ADMIN) =================
         let fotoNuevoProductoBase64 = "";
         function procesarFotoProducto(event) {
             const file = event.target.files[0];
@@ -748,101 +968,57 @@
             const precio = parseFloat(document.getElementById('prod-price').value);
             const categoria = document.getElementById('prod-category').value;
             const desc = document.getElementById('prod-desc').value.trim();
-            const descuento = document.getElementById('prod-discount').value.trim();
+            const descuentoTipo = document.getElementById('prod-discount-type').value;
+            const variantesTexto = document.getElementById('prod-variants').value.trim();
+
+            let arrayVariantes = [];
+            if (variantesTexto) {
+                arrayVariantes = variantesTexto.split(',').map(v => ({
+                    nombre: v.trim(),
+                    img: fotoNuevoProductoBase64 || "https://placehold.co/230x230?text=" + encodeURIComponent(v.trim())
+                })).filter(v => v.nombre.length > 0);
+            }
 
             const nuevoProd = {
                 id: "prod_" + Date.now(),
                 categoria: categoria,
                 titulo: titulo,
-                precio: precio,
+                precioBase: precio,
                 desc: desc,
-                descuento: descuento,
-                foto: fotoNuevoProductoBase64 || "https://placehold.co/250x250?text=" + encodeURIComponent(titulo)
+                descuentoTipo: descuentoTipo,
+                variantes: arrayVariantes,
+                foto: fotoNuevoProductoBase64 || "https://placehold.co/230x230?text=" + encodeURIComponent(titulo)
             };
 
             const productos = obtenerProductos();
             productos.push(nuevoProd);
             guardarProductos(productos);
 
-            alert("¡Nuevo producto publicado con éxito en la tienda!");
+            alert("¡Nuevo producto añadido con éxito!");
             document.getElementById('new-product-form').reset();
             fotoNuevoProductoBase64 = "";
             renderizarCatalogos();
             renderizarDatosAdmin();
         }
 
-        function renderizarCatalogos() {
+        // FUNCIÓN PARA ELIMINAR PRODUCTOS DESDE EL PANEL ADMIN
+        function eliminarProductoAdmin(idProducto) {
             const prods = obtenerProductos();
-            const contKiwi = document.getElementById('catalog-kiwi-container');
-            const contRFID = document.getElementById('catalog-rfid-container');
+            const prodAEliminar = prods.find(p => String(p.id) === String(idProducto));
+            const nombre = prodAEliminar ? prodAEliminar.titulo : "este producto";
 
-            contKiwi.innerHTML = "";
-            contRFID.innerHTML = "";
+            if (!confirm(`¿Seguro que deseas eliminar definitivamente "${nombre}" de la tienda?`)) return;
 
-            prods.forEach(p => {
-                const card = document.createElement('div');
-                card.className = "product-card fade-up visible";
-                card.innerHTML = `
-                    <img src="${p.foto}" alt="${p.titulo}" onerror="this.src='https://placehold.co/250x250?text=Kiwi+Product'">
-                    <h3>${p.titulo}</h3>
-                    <p class="prod-desc">${p.desc}</p>
-                    <div class="price-container"><span class="price">${p.precio.toFixed(2)}€</span></div>
-                    ${p.descuento ? `<div class="discount-badge show" style="margin-bottom:1rem;">${p.descuento}</div>` : ''}
-                    
-                    <div class="quantity-wrapper" style="margin-bottom:1rem;">
-                        <div class="quantity-controls">
-                            <button class="qty-btn" onclick="ajustarCantidad('${p.id}', -1)"><i class="fa-solid fa-minus"></i></button>
-                            <input type="number" id="qty-${p.id}" class="qty-input" value="1" readonly>
-                            <button class="qty-btn" onclick="ajustarCantidad('${p.id}', 1)"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                    </div>
-                    
-                    <button onclick="agregarAlPedido('${p.id}')" class="btn-primary" style="gap:8px; display:inline-flex; align-items:center; justify-content:center;">
-                        <i class="fa-solid fa-cart-shopping"></i> Añadir al Pedido
-                    </button>
-                `;
+            const nuevaLista = prods.filter(p => String(p.id) !== String(idProducto));
+            guardarProductos(nuevaLista);
+            delete estadoProductos[idProducto];
 
-                if (p.categoria === 'kiwi') contKiwi.appendChild(card);
-                else contRFID.appendChild(card);
-            });
-        }
-        renderizarCatalogos();
-
-        function ajustarCantidad(id, delta) {
-            const input = document.getElementById(`qty-${id}`);
-            if (!input) return;
-            let val = parseInt(input.value) + delta;
-            if (val >= 1) input.value = val;
+            alert("Producto eliminado de la tienda.");
+            renderizarCatalogos();
+            renderizarDatosAdmin();
         }
 
-        // ================= 6. AUTOCOMPLETADO DEL CARRITO / FORMULARIO =================
-        function agregarAlPedido(idProducto) {
-            const prods = obtenerProductos();
-            const producto = prods.find(p => String(p.id) === String(idProducto));
-            if (!producto) return;
-
-            const qtyInput = document.getElementById(`qty-${idProducto}`);
-            const unidades = qtyInput ? parseInt(qtyInput.value) : 1;
-            const subtotal = (producto.precio * unidades).toFixed(2);
-
-            const msgBox = document.getElementById('message-box');
-            let lineaPedido = `- ${unidades}x ${producto.titulo} (Total: ${subtotal}€)\n`;
-
-            if (!msgBox.value.includes("¡Hola Kiwi Review! Me gustaría realizar este encargo:")) {
-                msgBox.value = `¡Hola Kiwi Review! Me gustaría realizar este encargo:\n\n` + lineaPedido;
-            } else {
-                msgBox.value += lineaPedido;
-            }
-
-            // Scroll suave hacia el formulario de contacto
-            document.getElementById('shared-footer').scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-                msgBox.focus();
-                msgBox.style.borderColor = "var(--google-blue)";
-            }, 700);
-        }
-
-        // ================= 7. MOTOR DE RESEÑAS (SIN BORRADO ACCIDENTAL) =================
+        // ================= 7. MOTOR DE RESEÑAS SEGURO =================
         let fotoResenaBase64 = "";
         function previsualizarFotoResena(event) {
             const file = event.target.files[0];
@@ -858,9 +1034,9 @@
         }
 
         const resenasFijas = [
-            { id: "rev_seed_1", autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", foto: "", estrellas: 5 },
-            { id: "rev_seed_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", foto: "", estrellas: 5 },
-            { id: "rev_seed_3", autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", foto: "", estrellas: 4 }
+            { id: "rev_1", autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", foto: "", estrellas: 5 },
+            { id: "rev_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", foto: "", estrellas: 5 },
+            { id: "rev_3", autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", foto: "", estrellas: 4 }
         ];
 
         function obtenerResenas() {
@@ -897,7 +1073,7 @@
                 card.innerHTML = `
                     <div class="review-stars">${stars}</div>
                     <p class="review-text">"${r.texto}"</p>
-                    ${r.foto ? `<img class="review-img-attached" src="${r.foto}" alt="Foto reseña" onclick="window.open('${r.foto}')">` : ''}
+                    ${r.foto ? `<img class="review-img-attached" src="${r.foto}" alt="Foto de reseña" onclick="window.open('${r.foto}')">` : ''}
                     <p class="review-author">- ${r.autor}</p>
                 `;
                 contenedor.appendChild(card);
@@ -936,33 +1112,23 @@
             renderizarDatosAdmin();
         }
 
-        // ================= 8. MODERACIÓN INDIVIDUAL SEGURA (SOLO EN ADMIN) =================
         function eliminarResenaAdmin(idExacto) {
-            if (!confirm("¿Deseas eliminar definitivamente esta reseña específica?")) return;
+            if (!confirm("¿Deseas eliminar definitivamente solo esta reseña?")) return;
 
             let lista = obtenerResenas();
-            // Filtrar ÚNICAMENTE la reseña con ese ID
-            const antes = lista.length;
             lista = lista.filter(item => String(item.id) !== String(idExacto));
-
-            if (lista.length === antes) {
-                alert("No se encontró la reseña a eliminar.");
-                return;
-            }
-
             guardarResenas(lista);
 
-            // Eliminar de Firestore si existe
             if (db) {
-                db.collection("resenas").doc(idExacto).delete().catch(e => console.log("Local delete:", e));
+                db.collection("resenas").doc(idExacto).delete().catch(console.error);
             }
 
-            alert("Reseña eliminada con éxito.");
+            alert("Reseña eliminada correctamente.");
             renderizarResenasWeb();
             renderizarDatosAdmin();
         }
 
-        // ================= 9. SESIÓN Y ROLES =================
+        // ================= 8. SESIÓN Y ROLES =================
         function esUsuarioAdmin() {
             const sesion = localStorage.getItem('kiwi_sesion');
             return sesion === EMAIL_ADMINISTRADOR;
@@ -1115,7 +1281,7 @@
         }
         actualizarEstadoSesion();
 
-        // ================= 10. PANEL DE ADMINISTRADOR =================
+        // ================= 9. PANEL DE ADMINISTRADOR =================
         function abrirModalAdmin() {
             if (!esUsuarioAdmin()) {
                 alert("Acceso reservado a la cuenta de propietario.");
@@ -1137,7 +1303,37 @@
             document.getElementById('stat-total-reviews').innerText = resenas.length;
             document.getElementById('stat-total-products').innerText = productos.length;
 
-            // Tabla de Clientes
+            // 1. Tabla de Productos Activos (con botón de eliminar)
+            const tbodyProducts = document.getElementById('admin-products-tbody');
+            tbodyProducts.innerHTML = "";
+            if (productos.length === 0) {
+                tbodyProducts.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay productos en la tienda actualmente.</td></tr>`;
+            } else {
+                productos.forEach(p => {
+                    const tr = document.createElement('tr');
+                    const variantesStr = (p.variantes && p.variantes.length > 0) ? p.variantes.map(v => v.nombre).join(', ') : 'Estándar';
+                    const categoriaStr = p.categoria === 'kiwi' ? 'Reseñas NFC' : 'Accesos RFID';
+                    const precioStr = (p.precioBase || p.precio || 0).toFixed(2) + '€';
+
+                    tr.innerHTML = `
+                        <td>
+                            <img class="table-avatar" src="${p.foto}" alt="${p.titulo}" onerror="this.src='https://placehold.co/40x40?text=P'">
+                            <strong>${p.titulo}</strong>
+                        </td>
+                        <td><span class="badge-role badge-client">${categoriaStr}</span></td>
+                        <td><strong>${precioStr}</strong></td>
+                        <td style="max-width:180px; font-size:0.8rem; color:var(--text-muted);">${variantesStr}</td>
+                        <td>
+                            <button onclick="eliminarProductoAdmin('${p.id}')" style="background:var(--google-red); color:white; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-weight:600;">
+                                <i class="fa-solid fa-trash"></i> Eliminar
+                            </button>
+                        </td>
+                    `;
+                    tbodyProducts.appendChild(tr);
+                });
+            }
+
+            // 2. Tabla de Clientes
             const tbodyUsers = document.getElementById('admin-users-tbody');
             tbodyUsers.innerHTML = "";
             if (usuarios.length === 0) {
@@ -1155,7 +1351,7 @@
                 });
             }
 
-            // Tabla de Moderación de Reseñas
+            // 3. Tabla de Moderación de Reseñas
             const tbodyReviews = document.getElementById('admin-reviews-tbody');
             tbodyReviews.innerHTML = "";
             if (resenas.length === 0) {
@@ -1178,6 +1374,8 @@
                 });
             }
         }
+
+        renderizarCatalogos();
     </script>
 </body>
 </html>
