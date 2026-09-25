@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiwi Review & Accesos RFID</title>
     
-    <!-- Google Fonts -->
+    <!-- Fuentes e Iconos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ================= VARIABLES ================= */
         :root {
             --bg-light: #F8F9FA;
             --text-dark: #202124;
@@ -25,20 +23,18 @@
             --white: #FFFFFF;
         }
 
-        /* ================= RESET Y BASE ================= */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
-        /* ================= ANIMACIONES GLOBALES ================= */
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= PANTALLA INICIAL (SPLIT SCREEN) ================= */
+        /* SPLIT SCREEN MENU */
         #menu-container { display: flex; height: 100vh; width: 100vw; transition: opacity 0.5s ease; background: #111; }
         .split { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; cursor: pointer; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); overflow: hidden; }
         .split:hover { flex: 1.3; }
@@ -56,7 +52,7 @@
 
         #kiwi-section, #rfid-section, #shared-reviews, #shared-footer { display: none; opacity: 0; animation: slideInUp 0.6s forwards; }
 
-        /* ================= NAVBAR Y COMPONENTES COMPARTIDOS ================= */
+        /* NAVBAR */
         .btn-back-menu { background-color: var(--text-dark); color: var(--white) !important; padding: 0.5rem 1rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; margin-right: 15px; display: flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s; font-size: 0.9rem; }
         .btn-back-menu:hover { background-color: var(--google-red); transform: translateY(-2px); }
 
@@ -68,11 +64,14 @@
         .daily-quote { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3); margin-left: 10px; animation: pulse-quote 2.5s infinite; display: inline-flex; align-items: center; gap: 5px; }
         @keyframes pulse-quote { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
         .nav-links a:hover { color: var(--google-blue); }
         .btn-nav { background-color: var(--google-blue); color: var(--white) !important; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; transition: background-color 0.3s, transform 0.2s; }
         .btn-nav:hover { background-color: #3367D6; transform: translateY(-2px); }
+
+        .btn-auth { background: transparent; border: 2px solid var(--google-blue); color: var(--google-blue); padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.9rem; transition: all 0.3s; }
+        .btn-auth:hover { background: var(--google-blue); color: white; }
 
         .hero { text-align: center; padding: 8rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; }
@@ -92,7 +91,6 @@
         .btn-primary { background-color: var(--google-blue); color: var(--white); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
         .btn-primary:hover { background-color: #3367D6; transform: translateY(-3px); }
 
-        /* ================= COMPONENTES REUTILIZABLES (SERVICIOS Y FAQ) ================= */
         .services { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
         .services-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
         @media (min-width: 769px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -112,10 +110,8 @@
         .faq-item summary::-webkit-details-marker { display: none; }
         .faq-item summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--google-blue); transition: transform 0.4s ease; }
         .faq-item[open] summary::after { transform: rotate(180deg); }
-        .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid #ddd; padding-top: 1rem; line-height: 1.7; animation: slideDown 0.4s ease-out; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid #ddd; padding-top: 1rem; line-height: 1.7; }
 
-        /* ================= TIENDA KIWI ================= */
         .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
         .showcase-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5rem; align-items: center; max-width: 1000px; margin: 0 auto; }
         .product-image img { width: 100%; max-width: 350px; border-radius: 12px; animation: float 5s ease-in-out infinite; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); }
@@ -125,7 +121,6 @@
         .color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: all 0.3s; }
         .color-btn.active { border: 3px solid var(--google-blue); transform: scale(1.2); }
 
-        /* ================= TIENDA RFID ================= */
         .rfid-showcase { max-width: 1100px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; }
         .rfid-product-card { background: var(--white); padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 5px solid var(--google-green); transition: transform 0.4s; }
         .rfid-product-card:hover { transform: translateY(-10px); }
@@ -134,7 +129,6 @@
         .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd; }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.8rem; font-weight: 700; color: var(--google-blue); margin-top: 1rem; margin-bottom: 2rem; }
 
-        /* ================= SECCIÓN DE RESEÑAS ================= */
         .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid #eee; }
         .reviews-container { max-width: 1000px; margin: 0 auto; }
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
@@ -145,7 +139,6 @@
         .review-author { font-weight: 700; font-size: 0.95rem; }
 
         .add-review-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
-        .add-review-box h3 { margin-bottom: 1rem; }
         .star-rating-input { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; margin-bottom: 20px; font-size: 2rem; }
         .star-rating-input input { display: none; }
         .star-rating-input label { color: #ccc; cursor: pointer; transition: color 0.2s; }
@@ -153,18 +146,25 @@
         .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
 
-        /* ================= FOOTER COMPARTIDO ================= */
+        /* MODAL LOGIN / REGISTRO */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-card { background: white; padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
+        .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
+        .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
+        .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
+
+        /* FOOTER */
         .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
         .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
-        .form-container, .social-qr { flex: 1; min-width: 320px; background: rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 12px; backdrop-filter: blur(5px); }
+        .form-container, .social-qr { flex: 1; min-width: 320px; background: rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 12px; }
         .form-group { margin-bottom: 1.5rem; text-align: left; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #ccc; }
         .form-control { width: 100%; padding: 1rem; border: 1px solid #444; background: rgba(0,0,0,0.2); color: var(--white); border-radius: 6px; font-family: inherit; }
         .form-control:focus { outline: none; border-color: var(--google-blue); }
-        .btn-submit { width: 100%; background-color: var(--google-green); color: var(--white); border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.3s; }
+        .btn-submit { width: 100%; background-color: var(--google-green); color: var(--white); border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
         .btn-submit:hover { background-color: #2b8b45; }
-        
         .social-qr { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
         .social-qr img { width: 100%; max-width: 220px; border-radius: 12px; background-color: #fff; padding: 15px; margin-bottom: 1rem; }
         .btn-instagram { display: inline-flex; align-items: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600; text-decoration: none; }
@@ -200,7 +200,7 @@
     </div>
 
 
-    <!-- ================= 2. SECCIÓN KIWI REVIEW (CARTELES) ================= -->
+    <!-- 2. SECCIÓN KIWI REVIEW -->
     <div id="kiwi-section">
         <nav class="navbar">
             <div class="logo-container">
@@ -212,6 +212,7 @@
             <div class="nav-links">
                 <a href="#faq-seccion">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
+                <button class="btn-auth" onclick="abrirModalAuth()"><i class="fa-regular fa-user"></i> <span class="auth-btn-label">Mi Cuenta</span></button>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
         </nav>
@@ -221,7 +222,6 @@
             <p>Especialistas en digitalizar tu negocio local. Convierte a tus clientes satisfechos en tu mejor publicidad online.</p>
         </header>
 
-        <!-- Explicación Carteles -->
         <section class="services">
             <h2 class="section-title fade-up">Nuestras Soluciones</h2>
             <div class="services-grid">
@@ -240,7 +240,6 @@
             </div>
         </section>
 
-        <!-- Tienda Carteles -->
         <section class="product-showcase">
             <h2 class="section-title fade-up">Prepara tu pedido</h2>
             <div class="showcase-container">
@@ -275,13 +274,12 @@
             </div>
         </section>
 
-        <!-- FAQ Carteles -->
         <section id="faq-seccion" class="faq-section">
             <h2 class="section-title fade-up">Preguntas Frecuentes</h2>
             <div class="faq-container fade-up">
                 <details class="faq-item">
                     <summary>¿Necesito enchufar el cartel o lleva pilas?</summary>
-                    <p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El propio teléfono móvil de tu cliente emite la energía necesaria para leer el chip interno al acercarlo, por lo que el cartel dura años sin mantenimiento.</p>
+                    <p>No, la tecnología NFC funciona sin batería ni corriente eléctrica. El propio teléfono móvil de tu cliente emite la energía necesaria para leer el chip interno al acercarlo.</p>
                 </details>
                 <details class="faq-item">
                     <summary>¿Tengo que pagar alguna cuota mensual?</summary>
@@ -296,7 +294,7 @@
     </div>
 
 
-    <!-- ================= 3. SECCIÓN RFID (PORTALES) ================= -->
+    <!-- 3. SECCIÓN RFID -->
     <div id="rfid-section">
         <nav class="navbar">
             <div class="logo-container">
@@ -308,6 +306,7 @@
             <div class="nav-links">
                 <a href="#rfid-faq">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
+                <button class="btn-auth" onclick="abrirModalAuth()"><i class="fa-regular fa-user"></i> <span class="auth-btn-label">Mi Cuenta</span></button>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
         </nav>
@@ -317,26 +316,24 @@
             <p>Sistemas RFID compatibles con la mayoría de portales. Discretos, resistentes y al mejor precio.</p>
         </header>
 
-        <!-- NUEVA ZONA: Explicación Portales -->
         <section class="services" style="background: var(--white);">
             <h2 class="section-title fade-up">¿Por qué elegir nuestros accesos RFID?</h2>
             <div class="services-grid">
                 <div class="card fade-up">
                     <h3 style="color: var(--google-blue);">Comodidad Absoluta</h3>
-                    <p>Olvídate de buscar las llaves en el fondo del bolso. Solo acerca la tarjeta o el llavero al lector y la puerta se abrirá de inmediato.</p>
+                    <p>Olvídate de buscar las llaves. Solo acerca la tarjeta o el llavero al lector y la puerta se abrirá al instante.</p>
                 </div>
                 <div class="card fade-up" style="transition-delay: 0.1s; border-top-color: var(--google-yellow);">
                     <h3>Formatos Prácticos</h3>
-                    <p>Elige entre una tarjeta fina que cabe en cualquier cartera, o un llavero compacto y ultrarresistente para llevar junto a las llaves de casa.</p>
+                    <p>Elige entre una tarjeta fina para tu cartera o un llavero compacto y ultrarresistente para llevar junto a tus llaves.</p>
                 </div>
                 <div class="card fade-up" style="transition-delay: 0.2s; border-top-color: var(--google-green);">
                     <h3>Alta Compatibilidad</h3>
-                    <p>Nuestros chips trabajan con las frecuencias estándar (125kHz y 13.56MHz) utilizadas por la inmensa mayoría de comunidades de vecinos actuales.</p>
+                    <p>Compatibles con las frecuencias 125kHz y 13.56MHz usadas en la gran mayoría de comunidades de vecinos actuales.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Tienda RFID -->
         <section style="background: var(--bg-light); padding-top: 4rem; padding-bottom: 4rem;">
             <div class="rfid-showcase">
                 <div class="rfid-product-card fade-up">
@@ -379,55 +376,39 @@
             </div>
         </section>
 
-        <!-- NUEVA ZONA: FAQ RFID -->
         <section id="rfid-faq" class="faq-section">
             <h2 class="section-title fade-up">Dudas sobre los accesos al Portal</h2>
             <div class="faq-container fade-up">
                 <details class="faq-item">
                     <summary>¿Son compatibles con el lector de mi edificio?</summary>
-                    <p>Sí, nuestros sistemas utilizan las dos frecuencias estándar del mercado (125kHz y 13.56MHz), lo que las hace compatibles con el 99% de los portales modernos. Si tu comunidad usa un sistema muy cerrado, consúltanos antes.</p>
+                    <p>Sí, nuestros sistemas utilizan las frecuencias estándar (125kHz y 13.56MHz), lo que las hace compatibles con el 99% de los portales modernos.</p>
                 </details>
                 <details class="faq-item">
                     <summary>¿Llevan pilas o batería que haya que cambiar?</summary>
-                    <p>¡Para nada! Funcionan mediante tecnología pasiva (inducción). Al acercar la tarjeta o el llavero al panel del portal, este le proporciona la energía necesaria para leer el código. Durarán años sin requerir ningún mantenimiento.</p>
+                    <p>¡Para nada! Funcionan mediante tecnología pasiva (inducción). Al acercarlo al lector se activa solo.</p>
                 </details>
                 <details class="faq-item">
-                    <summary>¿Cómo hago para que abran mi puerta concretamente?</summary>
-                    <p>Nosotros te entregamos las chapas y tarjetas listas para usar. Tienes dos opciones: si tienes una chapa antigua que funcione, nos la puedes enviar o traer para clonarla directamente. Si son nuevas, el administrador de tu finca o el presidente puede darlas de alta fácilmente pasándolas por el lector maestro del portal.</p>
+                    <summary>¿Cómo hago para que abran mi puerta?</summary>
+                    <p>Si tienes una chapa antigua te la clonamos directamente. Si son nuevas, el administrador o presidente de tu finca puede darlas de alta en el panel del portal.</p>
                 </details>
             </div>
         </section>
     </div>
 
 
-    <!-- ================= 4. SECCIÓN COMPARTIDA: CLIENTES / RESEÑAS ================= -->
+    <!-- 4. SECCIÓN COMPARTIDA: CLIENTES / RESEÑAS -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
-            
             <div class="reviews-grid" id="reviews-list">
-                <div class="review-card fade-up">
-                    <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <p class="review-text">"Compré los carteles para mi bar y las reseñas han subido un monton en un mes. Brutal."</p>
-                    <p class="review-author">- Dueña del bar El Escondite.</p>
-                </div>
-                <div class="review-card fade-up" style="transition-delay: 0.1s;">
-                    <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <p class="review-text">"Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10."</p>
-                    <p class="review-author">- Comunidad de Vecinos Av. Sur</p>
-                </div>
-                <div class="review-card fade-up" style="transition-delay: 0.2s;">
-                    <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                    <p class="review-text">"Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental."</p>
-                    <p class="review-author">- Clínica Dental Sonrisas</p>
-                </div>
+                <!-- Se cargará automáticamente desde tu Firestore -->
             </div>
 
             <div class="add-review-box fade-up">
                 <h3>¡Deja tu valoración!</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
                 
-                <form id="review-form" onsubmit="enviarResenaLocal(event)">
+                <form id="review-form" onsubmit="enviarResenaFirebase(event)">
                     <div class="star-rating-input">
                         <input type="radio" id="star5" name="rating" value="5" required><label for="star5"><i class="fa-solid fa-star"></i></label>
                         <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
@@ -445,7 +426,7 @@
         </div>
     </section>
 
-    <!-- ================= 5. FOOTER COMPARTIDO ================= -->
+    <!-- 5. FOOTER COMPARTIDO -->
     <footer id="shared-footer" class="footer-cta">
         <h2 id="contacto">Impulsa tu negocio hoy</h2>
         <div class="footer-content-wrapper">
@@ -467,9 +448,36 @@
         </div>
     </footer>
 
-    <!-- ================= JAVASCRIPT ================= -->
+    <!-- MODAL REGISTRO / LOGIN -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="btn-close-modal" onclick="cerrarModalAuth()">&times;</button>
+            <div class="auth-toggle">
+                <div id="tab-login" class="auth-tab active" onclick="cambiarPestanaAuth('login')">Iniciar Sesión</div>
+                <div id="tab-register" class="auth-tab" onclick="cambiarPestanaAuth('register')">Registrarse</div>
+            </div>
+
+            <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-size:0.85rem; color:#666;">Correo Electrónico</label>
+                    <input type="email" id="auth-email" class="form-control-review" required placeholder="tu@correo.com">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="font-size:0.85rem; color:#666;">Contraseña</label>
+                    <input type="password" id="auth-password" class="form-control-review" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <button type="submit" id="auth-submit-btn" class="btn-primary">Entrar a mi Cuenta</button>
+            </form>
+            <div id="user-logged-info" style="display:none; text-align:center;">
+                <p style="margin-bottom:15px; font-weight:600;">Sesión iniciada como: <span id="logged-email" style="color:var(--google-blue);"></span></p>
+                <button onclick="cerrarSesionFirebase()" class="btn-primary" style="background:var(--google-red);">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT LOCAL ================= -->
     <script>
-        /* --- 1. LÓGICA DE FRASES DIARIAS --- */
         const frasesMotivadoras = [
             "¡A por todas! 🚀",
             "Si la vida te da limones, ¡pídeles reseña! 🍋",
@@ -479,29 +487,18 @@
             "Más reseñas que estrellas ✨",
             "Sin prisa, pero con buenas notas 📈"
         ];
-        
         const diaDelAño = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
         const fraseElegida = frasesMotivadoras[diaDelAño % frasesMotivadoras.length];
-        
-        document.querySelectorAll('.quote-text').forEach(el => {
-            el.innerText = fraseElegida;
-        });
+        document.querySelectorAll('.quote-text').forEach(el => el.innerText = fraseElegida);
 
-
-        /* --- 2. NAVEGACIÓN SPLIT SCREEN --- */
         function abrirSeccion(id) {
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
-            
             document.getElementById(id).style.display = 'block';
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
-            
             window.scrollTo(0, 0);
-            
-            document.querySelectorAll('.fade-up').forEach(el => el.classList.remove('visible'));
-            setTimeout(() => { document.querySelectorAll('.fade-up').forEach(el => observer.observe(el)); }, 100);
         }
 
         function volverMenu() {
@@ -512,18 +509,6 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
-        /* --- ANIMACIONES SCROLL --- */
-        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        /* --- 3. FUNCIONES KIWI REVIEW --- */
         let colorElegido = "Blanco";
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -546,7 +531,6 @@
             let qty = parseInt(document.getElementById('kiwi-qty').value);
             let total = (qty * 15) - ((qty - 1) * 2);
             document.getElementById('kiwi-price-display').innerText = total + ",00€";
-            
             let ahorro = (qty - 1) * 2;
             const badge = document.getElementById('kiwi-discount-badge');
             if (ahorro > 0) { badge.innerText = `¡Te ahorras ${ahorro}€!`; badge.classList.add('show'); } 
@@ -557,12 +541,11 @@
             const qty = document.getElementById('kiwi-qty').value;
             const total = document.getElementById('kiwi-price-display').innerText;
             const msgBox = document.getElementById('message-box');
-            msgBox.value = `¡Hola! Me gustaría encargar:\n- ${qty} Cartel/es NFC Google Review\n- Color: ${colorElegido}\n- Total estimado: ${total}\n\n(Escribe aquí tus dudas adicionales): `;
+            msgBox.value = `¡Hola! Me gustaría encargar:\n- ${qty} Cartel/es NFC Google Review\n- Color: ${colorElegido}\n- Total estimado: ${total}\n\n(Dudas adicionales): `;
             document.getElementById('shared-footer').scrollIntoView({behavior: 'smooth'});
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-blue)"; }, 800);
         }
 
-        /* --- 4. FUNCIONES RFID --- */
         function updateRFIDQty(tipo, change) {
             const input = document.getElementById(`rfid-qty-${tipo}`);
             let val = parseInt(input.value) + change;
@@ -596,35 +579,134 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        /* --- 5. LÓGICA DE RESEÑAS LOCAL --- */
-        function enviarResenaLocal(event) {
-            event.preventDefault(); 
-            
-            const nombre = document.getElementById('rev-name').value;
-            const comentario = document.getElementById('rev-comment').value;
-            const ratingInput = document.querySelector('input[name="rating"]:checked');
-            const rating = ratingInput ? parseInt(ratingInput.value) : 5;
-
-            let starsHTML = '';
-            for(let i=0; i<5; i++) {
-                if(i < rating) starsHTML += '<i class="fa-solid fa-star"></i>';
-                else starsHTML += '<i class="fa-regular fa-star"></i>';
-            }
-
-            const nuevaResena = document.createElement('div');
-            nuevaResena.className = 'review-card fade-up visible'; 
-            nuevaResena.innerHTML = `
-                <div class="review-stars">${starsHTML}</div>
-                <p class="review-text">"${comentario}"</p>
-                <p class="review-author">- ${nombre} (NUEVA)</p>
-            `;
-
-            const lista = document.getElementById('reviews-list');
-            lista.insertBefore(nuevaResena, lista.firstChild);
-
-            document.getElementById('review-form').reset();
-            alert("¡Muchas gracias por tu valoración! (Recuerda que para que se guarde siempre necesitas conectarlo a Firebase o tu servidor SQL).");
+        function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
+        let modoAuth = 'login';
+        function cambiarPestanaAuth(modo) {
+            modoAuth = modo;
+            document.getElementById('tab-login').classList.toggle('active', modo === 'login');
+            document.getElementById('tab-register').classList.toggle('active', modo === 'register');
+            document.getElementById('auth-submit-btn').innerText = modo === 'login' ? 'Entrar a mi Cuenta' : 'Crear Cuenta Nueva';
         }
+    </script>
+
+
+    <!-- ================= CONEXIÓN REAL CON TU FIREBASE ================= -->
+    <script type="module">
+        // Importamos directamente desde las librerías oficiales de Google
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        // TUS CLAVES EXACTAS DE KIWI REVIEW
+        const firebaseConfig = {
+            apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMahzacMfac",
+            authDomain: "kiwi-review.firebaseapp.com",
+            projectId: "kiwi-review",
+            storageBucket: "kiwi-review.firebasestorage.app",
+            messagingSenderId: "476930462174",
+            appId: "1:476930462174:web:7a58580ea2b5735922cd4f",
+            measurementId: "G-05HR2HQ6X9"
+        };
+
+        // Arrancamos el motor
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // 1. CARGAR RESEÑAS DESDE FIRESTORE
+        async function cargarResenasFirebase() {
+            const contenedor = document.getElementById('reviews-list');
+            try {
+                const q = query(collection(db, "resenas"), orderBy("fecha", "desc"));
+                const res = await getDocs(q);
+                if (!res.empty) {
+                    contenedor.innerHTML = "";
+                    res.forEach(doc => {
+                        const d = doc.data();
+                        let stars = '';
+                        for(let i=0; i<5; i++) {
+                            stars += i < d.estrellas ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+                        }
+                        const card = document.createElement('div');
+                        card.className = 'review-card fade-up visible';
+                        card.innerHTML = `
+                            <div class="review-stars">${stars}</div>
+                            <p class="review-text">"${d.texto}"</p>
+                            <p class="review-author">- ${d.autor}</p>
+                        `;
+                        contenedor.appendChild(card);
+                    });
+                }
+            } catch(e) { console.error("Error al leer reseñas de Firebase: ", e); }
+        }
+        cargarResenasFirebase();
+
+        // 2. GUARDAR RESEÑAS EN FIRESTORE
+        window.enviarResenaFirebase = async function(e) {
+            e.preventDefault();
+            const autor = document.getElementById('rev-name').value;
+            const texto = document.getElementById('rev-comment').value;
+            const starsInput = document.querySelector('input[name="rating"]:checked');
+            const estrellas = starsInput ? parseInt(starsInput.value) : 5;
+
+            try {
+                await addDoc(collection(db, "resenas"), {
+                    autor, texto, estrellas, fecha: serverTimestamp()
+                });
+                alert("¡Reseña publicada con éxito en la nube de Firebase!");
+                document.getElementById('review-form').reset();
+                cargarResenasFirebase();
+            } catch(err) {
+                console.error(err);
+                alert("Error al enviar la reseña.");
+            }
+        };
+
+        // 3. REGISTRO E INICIO DE SESIÓN
+        window.gestionarAutenticacion = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+
+            try {
+                if (modoAuth === 'register') {
+                    await createUserWithEmailAndPassword(auth, email, pass);
+                    alert("¡Cuenta creada con éxito! Ya has iniciado sesión.");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                    alert("¡Bienvenido de nuevo!");
+                }
+                cerrarModalAuth();
+            } catch(err) {
+                alert("Error: " + err.message);
+            }
+        };
+
+        // 4. CERRAR SESIÓN
+        window.cerrarSesionFirebase = async function() {
+            await signOut(auth);
+            alert("Has cerrado sesión.");
+            cerrarModalAuth();
+        };
+
+        // 5. ESTADO DE USUARIO EN TIEMPO REAL
+        onAuthStateChanged(auth, (user) => {
+            const form = document.getElementById('auth-form');
+            const loggedInfo = document.getElementById('user-logged-info');
+            const labels = document.querySelectorAll('.auth-btn-label');
+
+            if (user) {
+                labels.forEach(l => l.innerText = user.email.split('@')[0]);
+                form.style.display = 'none';
+                loggedInfo.style.display = 'block';
+                document.getElementById('logged-email').innerText = user.email;
+            } else {
+                labels.forEach(l => l.innerText = "Mi Cuenta");
+                form.style.display = 'block';
+                loggedInfo.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
