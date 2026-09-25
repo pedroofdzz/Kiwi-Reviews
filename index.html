@@ -31,10 +31,9 @@
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(52, 168, 83, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* SPLIT SCREEN MENU */
+        /* SPLIT SCREEN */
         #menu-container { display: flex; height: 100vh; width: 100vw; transition: opacity 0.5s ease; background: #111; }
         .split { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; cursor: pointer; transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); overflow: hidden; }
         .split:hover { flex: 1.3; }
@@ -61,8 +60,7 @@
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .logo-text { font-weight: 700; font-size: 1.5rem; color: var(--text-dark); letter-spacing: -0.5px; }
         
-        .daily-quote { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3); margin-left: 10px; animation: pulse-quote 2.5s infinite; display: inline-flex; align-items: center; gap: 5px; }
-        @keyframes pulse-quote { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .daily-quote { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3); margin-left: 10px; display: inline-flex; align-items: center; gap: 5px; }
 
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
@@ -146,7 +144,6 @@
         .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
 
-        /* MODAL LOGIN / REGISTRO */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
         .modal-card { background: white; padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
@@ -154,7 +151,6 @@
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
         .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
 
-        /* FOOTER */
         .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
         .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
@@ -179,7 +175,7 @@
 </head>
 <body>
 
-    <!-- 1. PANTALLA INICIAL DIVIDIDA -->
+    <!-- MENÚ PRINCIPAL -->
     <div id="menu-container">
         <div class="split left-side" onclick="abrirSeccion('kiwi-section')">
             <div class="split-content">
@@ -199,13 +195,12 @@
         </div>
     </div>
 
-
-    <!-- 2. SECCIÓN KIWI REVIEW -->
+    <!-- SECCIÓN CARTELES NFC GOOGLE -->
     <div id="kiwi-section">
         <nav class="navbar">
             <div class="logo-container">
                 <button class="btn-back-menu" onclick="volverMenu()"><i class="fas fa-arrow-left"></i> Volver</button>
-                <img src="logokw.jpeg" alt="Logo" class="logo-img">
+                <img src="logokw.jpeg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
                 <span class="logo-text">Kiwi Review</span>
                 <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
@@ -244,7 +239,7 @@
             <h2 class="section-title fade-up">Prepara tu pedido</h2>
             <div class="showcase-container">
                 <div class="product-image fade-up">
-                    <img id="main-product-img" src="cartel blanco.png" alt="Cartel NFC Google Review">
+                    <img id="main-product-img" src="cartel blanco.png" alt="Cartel NFC Google Review" onerror="this.src='https://placehold.co/350x450?text=Cartel+NFC'">
                 </div>
                 <div class="product-details fade-up">
                     <h3>Placa NFC Inteligente Google</h3>
@@ -293,8 +288,7 @@
         </section>
     </div>
 
-
-    <!-- 3. SECCIÓN RFID -->
+    <!-- SECCIÓN ACCESOS RFID -->
     <div id="rfid-section">
         <nav class="navbar">
             <div class="logo-container">
@@ -337,7 +331,7 @@
         <section style="background: var(--bg-light); padding-top: 4rem; padding-bottom: 4rem;">
             <div class="rfid-showcase">
                 <div class="rfid-product-card fade-up">
-                    <img src="tarjeta_portal.jpg" alt="Tarjeta RFID">
+                    <img src="tarjeta_portal.jpg" alt="Tarjeta RFID" onerror="this.src='https://placehold.co/250x250?text=Tarjeta+RFID'">
                     <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Tarjeta de Acceso</h3>
                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Blanca, discreta y programable.</p>
                     <div class="price-container" style="justify-content: center;"><span class="price">8,00€</span></div>
@@ -351,7 +345,7 @@
                 </div>
 
                 <div class="rfid-product-card fade-up" style="border-top-color: var(--google-blue);">
-                    <img src="chapa_portal.jpg" alt="Llavero RFID">
+                    <img src="chapa_portal.jpg" alt="Llavero RFID" onerror="this.src='https://placehold.co/250x250?text=Llavero+RFID'">
                     <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Llavero Proximidad</h3>
                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Chapa llavero compacta y resistente.</p>
                     <div class="price-container" style="justify-content: center;"><span class="price">8,00€</span></div>
@@ -395,20 +389,17 @@
         </section>
     </div>
 
-
-    <!-- 4. SECCIÓN COMPARTIDA: CLIENTES / RESEÑAS -->
+    <!-- SECCIÓN RESEÑAS -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
-            <div class="reviews-grid" id="reviews-list">
-                <!-- Se cargará automáticamente desde tu Firestore -->
-            </div>
+            <div class="reviews-grid" id="reviews-list"></div>
 
             <div class="add-review-box fade-up">
                 <h3>¡Deja tu valoración!</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
                 
-                <form id="review-form" onsubmit="enviarResenaFirebase(event)">
+                <form id="review-form" onsubmit="enviarResena(event)">
                     <div class="star-rating-input">
                         <input type="radio" id="star5" name="rating" value="5" required><label for="star5"><i class="fa-solid fa-star"></i></label>
                         <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
@@ -426,7 +417,7 @@
         </div>
     </section>
 
-    <!-- 5. FOOTER COMPARTIDO -->
+    <!-- FOOTER Y CONTACTO -->
     <footer id="shared-footer" class="footer-cta">
         <h2 id="contacto">Impulsa tu negocio hoy</h2>
         <div class="footer-content-wrapper">
@@ -441,7 +432,7 @@
             </div>
             <div class="social-qr">
                 <h3>Síguenos en Instagram</h3>
-                <a href="https://instagram.com/kiwi__review" target="_blank" class="qr-link"><img src="image_ae67c6.png" alt="Instagram"></a>
+                <a href="https://instagram.com/kiwi__review" target="_blank" class="qr-link"><img src="image_ae67c6.png" alt="Instagram" onerror="this.src='https://placehold.co/220x220?text=Instagram+QR'"></a>
                 <p>Escanea este código para ver nuestros últimos trabajos y ofertas especiales.</p>
                 <a href="https://instagram.com/kiwi__review" target="_blank" class="btn-instagram"><i class="fa-brands fa-instagram" style="margin-right: 8px;"></i> Ir a Instagram</a>
             </div>
@@ -470,14 +461,14 @@
             </form>
             <div id="user-logged-info" style="display:none; text-align:center;">
                 <p style="margin-bottom:15px; font-weight:600;">Sesión iniciada como: <span id="logged-email" style="color:var(--google-blue);"></span></p>
-                <button onclick="cerrarSesionFirebase()" class="btn-primary" style="background:var(--google-red);">Cerrar Sesión</button>
+                <button onclick="cerrarSesion()" class="btn-primary" style="background:var(--google-red);">Cerrar Sesión</button>
             </div>
         </div>
     </div>
 
-
-    <!-- ================= JAVASCRIPT LOCAL ================= -->
+    <!-- JAVASCRIPT CON MOTOR LOCAL COMPATIBLE CON GITHUB PAGES -->
     <script>
+        // 1. Frases Diarias
         const frasesMotivadoras = [
             "¡A por todas! 🚀",
             "Si la vida te da limones, ¡pídeles reseña! 🍋",
@@ -491,14 +482,19 @@
         const fraseElegida = frasesMotivadoras[diaDelAño % frasesMotivadoras.length];
         document.querySelectorAll('.quote-text').forEach(el => el.innerText = fraseElegida);
 
+        // 2. Navegación Split Screen
         function abrirSeccion(id) {
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
             document.getElementById('rfid-section').style.display = 'none';
+            
             document.getElementById(id).style.display = 'block';
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
             window.scrollTo(0, 0);
+
+            // Activar animaciones
+            document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
         }
 
         function volverMenu() {
@@ -509,12 +505,16 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
+        // 3. Tienda Kiwi (Carteles NFC)
         let colorElegido = "Blanco";
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const img = document.getElementById('main-product-img');
                 img.style.opacity = '0.5';
-                setTimeout(() => { img.src = this.getAttribute('data-img'); img.style.opacity = '1'; }, 150);
+                setTimeout(() => { 
+                    img.src = this.getAttribute('data-img'); 
+                    img.style.opacity = '1'; 
+                }, 150);
                 colorElegido = this.getAttribute('data-color');
                 document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
@@ -546,6 +546,7 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-blue)"; }, 800);
         }
 
+        // 4. Tienda RFID
         function updateRFIDQty(tipo, change) {
             const input = document.getElementById(`rfid-qty-${tipo}`);
             let val = parseInt(input.value) + change;
@@ -579,134 +580,119 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
-        function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
-        let modoAuth = 'login';
-        function cambiarPestanaAuth(modo) {
-            modoAuth = modo;
-            document.getElementById('tab-login').classList.toggle('active', modo === 'login');
-            document.getElementById('tab-register').classList.toggle('active', modo === 'register');
-            document.getElementById('auth-submit-btn').innerText = modo === 'login' ? 'Entrar a mi Cuenta' : 'Crear Cuenta Nueva';
-        }
-    </script>
+        // 5. Motor de Reseñas Persistentes en el Navegador
+        const resenasIniciales = [
+            { autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", estrellas: 5 },
+            { autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", estrellas: 5 },
+            { autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", estrellas: 4 }
+        ];
 
-
-    <!-- ================= CONEXIÓN REAL CON TU FIREBASE ================= -->
-    <script type="module">
-        // Importamos directamente desde las librerías oficiales de Google
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        // TUS CLAVES EXACTAS DE KIWI REVIEW
-        const firebaseConfig = {
-            apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMahzacMfac",
-            authDomain: "kiwi-review.firebaseapp.com",
-            projectId: "kiwi-review",
-            storageBucket: "kiwi-review.firebasestorage.app",
-            messagingSenderId: "476930462174",
-            appId: "1:476930462174:web:7a58580ea2b5735922cd4f",
-            measurementId: "G-05HR2HQ6X9"
-        };
-
-        // Arrancamos el motor
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // 1. CARGAR RESEÑAS DESDE FIRESTORE
-        async function cargarResenasFirebase() {
+        function cargarResenas() {
+            const guardadas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
             const contenedor = document.getElementById('reviews-list');
-            try {
-                const q = query(collection(db, "resenas"), orderBy("fecha", "desc"));
-                const res = await getDocs(q);
-                if (!res.empty) {
-                    contenedor.innerHTML = "";
-                    res.forEach(doc => {
-                        const d = doc.data();
-                        let stars = '';
-                        for(let i=0; i<5; i++) {
-                            stars += i < d.estrellas ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
-                        }
-                        const card = document.createElement('div');
-                        card.className = 'review-card fade-up visible';
-                        card.innerHTML = `
-                            <div class="review-stars">${stars}</div>
-                            <p class="review-text">"${d.texto}"</p>
-                            <p class="review-author">- ${d.autor}</p>
-                        `;
-                        contenedor.appendChild(card);
-                    });
+            contenedor.innerHTML = "";
+            guardadas.forEach(d => {
+                let stars = '';
+                for(let i=0; i<5; i++) {
+                    stars += i < d.estrellas ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
                 }
-            } catch(e) { console.error("Error al leer reseñas de Firebase: ", e); }
+                const card = document.createElement('div');
+                card.className = 'review-card fade-up visible';
+                card.innerHTML = `
+                    <div class="review-stars">${stars}</div>
+                    <p class="review-text">"${d.texto}"</p>
+                    <p class="review-author">- ${d.autor}</p>
+                `;
+                contenedor.appendChild(card);
+            });
         }
-        cargarResenasFirebase();
+        cargarResenas();
 
-        // 2. GUARDAR RESEÑAS EN FIRESTORE
-        window.enviarResenaFirebase = async function(e) {
+        function enviarResena(e) {
             e.preventDefault();
             const autor = document.getElementById('rev-name').value;
             const texto = document.getElementById('rev-comment').value;
             const starsInput = document.querySelector('input[name="rating"]:checked');
             const estrellas = starsInput ? parseInt(starsInput.value) : 5;
 
-            try {
-                await addDoc(collection(db, "resenas"), {
-                    autor, texto, estrellas, fecha: serverTimestamp()
-                });
-                alert("¡Reseña publicada con éxito en la nube de Firebase!");
-                document.getElementById('review-form').reset();
-                cargarResenasFirebase();
-            } catch(err) {
-                console.error(err);
-                alert("Error al enviar la reseña.");
-            }
-        };
+            const resenas = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
+            resenas.unshift({ autor, texto, estrellas });
+            localStorage.setItem('kiwi_resenas', JSON.stringify(resenas));
 
-        // 3. REGISTRO E INICIO DE SESIÓN
-        window.gestionarAutenticacion = async function(e) {
+            alert("¡Reseña publicada con éxito!");
+            document.getElementById('review-form').reset();
+            cargarResenas();
+        }
+
+        // 6. Sistema de Cuentas y Sesiones
+        function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
+        let modoAuth = 'login';
+
+        function cambiarPestanaAuth(modo) {
+            modoAuth = modo;
+            document.getElementById('tab-login').classList.toggle('active', modo === 'login');
+            document.getElementById('tab-register').classList.toggle('active', modo === 'register');
+            document.getElementById('auth-submit-btn').innerText = modo === 'login' ? 'Entrar a mi Cuenta' : 'Crear Cuenta Nueva';
+        }
+
+        function gestionarAutenticacion(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value;
             const pass = document.getElementById('auth-password').value;
 
-            try {
-                if (modoAuth === 'register') {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                    alert("¡Cuenta creada con éxito! Ya has iniciado sesión.");
-                } else {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                    alert("¡Bienvenido de nuevo!");
-                }
-                cerrarModalAuth();
-            } catch(err) {
-                alert("Error: " + err.message);
+            if (pass.length < 6) {
+                alert("La contraseña debe tener al menos 6 caracteres.");
+                return;
             }
-        };
 
-        // 4. CERRAR SESIÓN
-        window.cerrarSesionFirebase = async function() {
-            await signOut(auth);
-            alert("Has cerrado sesión.");
+            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+
+            if (modoAuth === 'register') {
+                if (usuarios[email]) {
+                    alert("Este correo ya está registrado.");
+                    return;
+                }
+                usuarios[email] = { email, pass };
+                localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
+                localStorage.setItem('kiwi_sesion', email);
+                alert("¡Cuenta creada exitosamente!");
+            } else {
+                if (!usuarios[email] || usuarios[email].pass !== pass) {
+                    alert("Correo o contraseña incorrectos.");
+                    return;
+                }
+                localStorage.setItem('kiwi_sesion', email);
+                alert("¡Bienvenido de nuevo!");
+            }
+            actualizarEstadoSesion();
             cerrarModalAuth();
-        };
+        }
 
-        // 5. ESTADO DE USUARIO EN TIEMPO REAL
-        onAuthStateChanged(auth, (user) => {
+        function cerrarSesion() {
+            localStorage.removeItem('kiwi_sesion');
+            actualizarEstadoSesion();
+            cerrarModalAuth();
+        }
+
+        function actualizarEstadoSesion() {
+            const sesion = localStorage.getItem('kiwi_sesion');
             const form = document.getElementById('auth-form');
             const loggedInfo = document.getElementById('user-logged-info');
             const labels = document.querySelectorAll('.auth-btn-label');
 
-            if (user) {
-                labels.forEach(l => l.innerText = user.email.split('@')[0]);
+            if (sesion) {
+                labels.forEach(l => l.innerText = sesion.split('@')[0]);
                 form.style.display = 'none';
                 loggedInfo.style.display = 'block';
-                document.getElementById('logged-email').innerText = user.email;
+                document.getElementById('logged-email').innerText = sesion;
             } else {
                 labels.forEach(l => l.innerText = "Mi Cuenta");
                 form.style.display = 'block';
                 loggedInfo.style.display = 'none';
             }
-        });
+        }
+        actualizarEstadoSesion();
     </script>
 </body>
 </html>
