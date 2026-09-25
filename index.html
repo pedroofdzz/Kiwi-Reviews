@@ -17,26 +17,85 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
+        /* ================= 1. VARIABLES DINÁMICAS POR TEMA ================= */
         :root {
+            /* Tema 1: Google Clásico (Default) */
             --bg-light: #F8F9FA;
+            --bg-card: #FFFFFF;
             --text-dark: #202124;
             --text-muted: #5F6368;
+            --border-color: #E8EAED;
             --google-blue: #4285F4;
             --google-red: #EA4335;
             --google-yellow: #FBBC05;
             --google-green: #34A853;
-            --white: #FFFFFF;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Tema 2: Cyber Dark */
+        [data-theme="dark"] {
+            --bg-light: #121316;
+            --bg-card: #1A1D24;
+            --text-dark: #F1F3F4;
+            --text-muted: #9AA0A6;
+            --border-color: #2D3139;
+            --google-blue: #00D2FF;
+            --google-red: #FF5252;
+            --google-yellow: #FFD166;
+            --google-green: #06D6A0;
+            --navbar-bg: rgba(26, 29, 36, 0.95);
+        }
+
+        /* Tema 3: Sunset Gold / Cálido */
+        [data-theme="sunset"] {
+            --bg-light: #FAF6F0;
+            --bg-card: #FFFFFF;
+            --text-dark: #2E211A;
+            --text-muted: #7A6961;
+            --border-color: #E8DCCF;
+            --google-blue: #D97706;
+            --google-red: #DC2626;
+            --google-yellow: #F59E0B;
+            --google-green: #059669;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Tema 4: Ocean Mint */
+        [data-theme="mint"] {
+            --bg-light: #EDF7F6;
+            --bg-card: #FFFFFF;
+            --text-dark: #132A2F;
+            --text-muted: #537178;
+            --border-color: #CCE3DE;
+            --google-blue: #0081A7;
+            --google-red: #F07167;
+            --google-yellow: #FED9B7;
+            --google-green: #00AFB9;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; }
         a { text-decoration: none; color: inherit; }
 
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= SELECTOR DE TEMAS FLOTANTE ================= */
+        .theme-widget-container { position: fixed; bottom: 25px; left: 25px; z-index: 3000; }
+        .btn-theme-toggle { width: 50px; height: 50px; border-radius: 50%; background: var(--google-blue); color: white; border: none; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.25); transition: transform 0.3s ease, background 0.3s; }
+        .btn-theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+        
+        .theme-popover { display: none; position: absolute; bottom: 65px; left: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 230px; animation: slideInUp 0.3s ease; }
+        .theme-popover h4 { font-size: 0.95rem; margin-bottom: 0.8rem; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+        .theme-option { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 8px; cursor: pointer; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); transition: background 0.2s; border: 1px solid transparent; }
+        .theme-option:hover { background: var(--bg-light); border-color: var(--border-color); }
+        .theme-option.active { border-color: var(--google-blue); background: rgba(66, 133, 244, 0.08); }
+        .color-dots { display: flex; gap: 4px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
 
         /* SPLIT SCREEN */
         #menu-container { display: flex; height: 100vh; width: 100vw; transition: opacity 0.5s ease; background: #111; }
@@ -57,10 +116,10 @@
         #kiwi-section, #rfid-section, #shared-reviews, #shared-footer { display: none; opacity: 0; animation: slideInUp 0.6s forwards; }
 
         /* NAVBAR */
-        .btn-back-menu { background-color: var(--text-dark); color: var(--white) !important; padding: 0.5rem 1rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; margin-right: 15px; display: flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s; font-size: 0.9rem; }
+        .btn-back-menu { background-color: var(--text-dark); color: var(--bg-card) !important; padding: 0.5rem 1rem; border-radius: 50px; border: none; cursor: pointer; font-weight: 600; margin-right: 15px; display: flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.2s; font-size: 0.9rem; }
         .btn-back-menu:hover { background-color: var(--google-red); transform: translateY(-2px); }
 
-        .navbar { position: sticky; top: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .navbar { position: sticky; top: 0; background: var(--navbar-bg); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color); }
         .logo-container { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .logo-text { font-weight: 700; font-size: 1.5rem; color: var(--text-dark); letter-spacing: -0.5px; }
@@ -68,10 +127,10 @@
         .daily-quote { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; box-shadow: 0 3px 10px rgba(255, 165, 0, 0.3); margin-left: 10px; display: inline-flex; align-items: center; gap: 5px; }
 
         .nav-links { display: flex; gap: 1.2rem; align-items: center; }
-        .nav-links a { font-weight: 600; font-size: 0.95rem; transition: color 0.3s; }
+        .nav-links a { font-weight: 600; font-size: 0.95rem; color: var(--text-dark); transition: color 0.3s; }
         .nav-links a:hover { color: var(--google-blue); }
-        .btn-nav { background-color: var(--google-blue); color: var(--white) !important; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; transition: background-color 0.3s, transform 0.2s; }
-        .btn-nav:hover { background-color: #3367D6; transform: translateY(-2px); }
+        .btn-nav { background-color: var(--google-blue); color: white !important; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; transition: background-color 0.3s, transform 0.2s; }
+        .btn-nav:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
         .btn-admin-nav { display: none; background: linear-gradient(45deg, #FFB300, #F57C00); color: white !important; padding: 0.4rem 0.9rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; border: none; cursor: pointer; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(245, 124, 0, 0.3); transition: transform 0.2s; }
         .btn-admin-nav:hover { transform: scale(1.05); }
@@ -80,95 +139,95 @@
         .btn-auth:hover { background: var(--google-blue); color: white; }
         .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--google-blue); display: none; }
 
-        .hero { text-align: center; padding: 8rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero { text-align: center; padding: 8rem 2rem; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; color: var(--text-dark); }
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
-        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
         
         .quantity-wrapper { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .quantity-controls { display: flex; align-items: center; border: 2px solid #ddd; border-radius: 50px; overflow: hidden; background: #fff; }
+        .quantity-controls { display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 50px; overflow: hidden; background: var(--bg-card); }
         .qty-btn { background: transparent; border: none; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; color: var(--text-dark); }
-        .qty-btn:hover { background: #f0f0f0; }
+        .qty-btn:hover { background: var(--bg-light); }
         .qty-input { width: 40px; text-align: center; border: none; font-weight: 600; font-size: 1.1rem; background: transparent; color: var(--text-dark); pointer-events: none;}
         
         .price-container { display: flex; align-items: baseline; gap: 10px; margin-bottom: 1rem; }
         .price { font-size: 2.2rem; font-weight: 700; color: var(--google-blue); }
         .discount-badge { background: var(--google-green); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; display: inline-block; opacity: 0; transform: scale(0.8); transition: all 0.3s; }
         .discount-badge.show { opacity: 1; transform: scale(1); }
-        .btn-primary { background-color: var(--google-blue); color: var(--white); padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
-        .btn-primary:hover { background-color: #3367D6; transform: translateY(-3px); }
+        .btn-primary { background-color: var(--google-blue); color: white; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-3px); }
 
         .services { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
         .services-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
         @media (min-width: 769px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
-        .card { background: var(--white); padding: 2.5rem 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; border-top: 4px solid transparent; }
+        .card { background: var(--bg-card); padding: 2.5rem 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; border-top: 4px solid transparent; border: 1px solid var(--border-color); }
         .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-        .card:nth-child(1) { border-top-color: var(--google-blue); }
-        .card:nth-child(2) { border-top-color: var(--google-yellow); }
-        .card:nth-child(3) { border-top-color: var(--google-green); }
-        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .card:nth-child(1) { border-top: 4px solid var(--google-blue); }
+        .card:nth-child(2) { border-top: 4px solid var(--google-yellow); }
+        .card:nth-child(3) { border-top: 4px solid var(--google-green); }
+        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
         .card p { color: var(--text-muted); font-size: 0.95rem; }
 
-        .faq-section { padding: 6rem 2rem; background: var(--white); }
+        .faq-section { padding: 6rem 2rem; background: var(--bg-card); border-top: 1px solid var(--border-color); }
         .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
-        .faq-item { background: var(--bg-light); border-radius: 8px; padding: 1.2rem 1.5rem; border: 1px solid #eee; transition: all 0.3s; }
+        .faq-item { background: var(--bg-light); border-radius: 8px; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color); transition: all 0.3s; }
         .faq-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .faq-item summary { font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .faq-item summary { font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark); }
         .faq-item summary::-webkit-details-marker { display: none; }
         .faq-item summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--google-blue); transition: transform 0.4s ease; }
         .faq-item[open] summary::after { transform: rotate(180deg); }
-        .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid #ddd; padding-top: 1rem; line-height: 1.7; }
+        .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; line-height: 1.7; }
 
         .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
         .showcase-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5rem; align-items: center; max-width: 1000px; margin: 0 auto; }
         .product-image img { width: 100%; max-width: 350px; border-radius: 12px; animation: float 5s ease-in-out infinite; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); }
         .product-details { max-width: 400px; text-align: left; }
-        .product-details h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .product-details h3 { font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--text-dark); }
         .color-selector { display: flex; gap: 1.2rem; margin-bottom: 0.5rem; }
-        .color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: all 0.3s; }
+        .color-btn { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--border-color); cursor: pointer; transition: all 0.3s; }
         .color-btn.active { border: 3px solid var(--google-blue); transform: scale(1.2); }
 
         .rfid-showcase { max-width: 1100px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; }
-        .rfid-product-card { background: var(--white); padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 5px solid var(--google-green); transition: transform 0.4s; }
+        .rfid-product-card { background: var(--bg-card); padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 5px solid var(--google-green); border: 1px solid var(--border-color); transition: transform 0.4s; }
         .rfid-product-card:hover { transform: translateY(-10px); }
         .rfid-product-card img { max-width: 250px; height: 250px; object-fit: contain; margin-bottom: 2rem; animation: float 6s ease-in-out infinite; }
-        .rfid-summary-box { max-width: 800px; margin: 4rem auto; background: var(--white); border-radius: 15px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; }
-        .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ddd; }
+        .rfid-summary-box { max-width: 800px; margin: 4rem auto; background: var(--bg-card); border-radius: 15px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border: 1px solid var(--border-color); }
+        .summary-line { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
         .summary-total { display: flex; justify-content: space-between; font-size: 1.8rem; font-weight: 700; color: var(--google-blue); margin-top: 1rem; margin-bottom: 2rem; }
 
         /* RESEÑAS CON FOTO Y BORRADO */
-        .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid #eee; }
+        .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid var(--border-color); }
         .reviews-container { max-width: 1000px; margin: 0 auto; }
         .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
-        .review-card { background: var(--white); padding: 2rem; border-radius: 15px; border: 1px solid #eee; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
+        .review-card { background: var(--bg-card); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
         .review-stars { color: var(--google-yellow); margin-bottom: 10px; font-size: 1.2rem; }
         .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
-        .review-author { font-weight: 700; font-size: 0.95rem; margin-top: 10px; }
+        .review-author { font-weight: 700; font-size: 0.95rem; margin-top: 10px; color: var(--text-dark); }
         
-        .review-img-attached { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin-top: 12px; margin-bottom: 8px; border: 1px solid #eee; cursor: pointer; transition: transform 0.2s; }
+        .review-img-attached { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin-top: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s; }
         .review-img-attached:hover { transform: scale(1.02); }
 
         .btn-delete-review { position: absolute; top: 15px; right: 15px; background: rgba(234, 67, 53, 0.1); color: var(--google-red); border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: none; align-items: center; gap: 5px; font-weight: 600; transition: background 0.2s; z-index: 10; }
         .btn-delete-review:hover { background: var(--google-red); color: white; }
 
-        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--white); padding: 3rem; border-radius: 15px; border: 2px dashed #ddd; text-align: center; }
+        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 3rem; border-radius: 15px; border: 2px dashed var(--border-color); text-align: center; }
         .star-rating-input { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; margin-bottom: 20px; font-size: 2rem; }
         .star-rating-input input { display: none; }
         .star-rating-input label { color: #ccc; cursor: pointer; transition: color 0.2s; }
         .star-rating-input input:checked ~ label, .star-rating-input label:hover, .star-rating-input label:hover ~ label { color: var(--google-yellow); }
-        .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
+        .form-control-review { width: 100%; padding: 1rem; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-dark); border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
 
-        .review-photo-btn { display: inline-flex; align-items: center; gap: 8px; background: #e8f0fe; color: var(--google-blue); padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: background 0.2s; border: 1px solid #c2dbfe; }
-        .review-photo-btn:hover { background: #d2e3fc; }
+        .review-photo-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(66, 133, 244, 0.1); color: var(--google-blue); padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: background 0.2s; border: 1px solid var(--border-color); }
+        .review-photo-btn:hover { background: rgba(66, 133, 244, 0.2); }
         #review-photo-preview { display: none; max-width: 120px; max-height: 120px; border-radius: 10px; margin: 0 auto 15px auto; object-fit: cover; border: 2px solid var(--google-blue); }
 
         /* MODALES */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-card { background: white; padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 440px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 4000; justify-content: center; align-items: center; }
+        .modal-card { background: var(--bg-card); color: var(--text-dark); padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 440px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
         .modal-card-large { max-width: 850px; max-height: 90vh; overflow-y: auto; }
         .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
-        .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
+        .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
         .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
 
@@ -178,29 +237,29 @@
         .avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--google-blue); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
         .avatar-input-hidden { display: none; }
 
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 1rem; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; }
         .admin-stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { flex: 1; background: var(--bg-light); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--google-blue); text-align: center; }
+        .stat-card { flex: 1; background: var(--bg-light); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--google-blue); text-align: center; border: 1px solid var(--border-color); }
         .stat-card h4 { font-size: 1.8rem; color: var(--google-blue); margin-bottom: 5px; }
         .stat-card p { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 2rem; font-size: 0.9rem; }
-        .admin-table th, .admin-table td { padding: 12px 14px; border-bottom: 1px solid #eee; }
-        .admin-table th { background: #f1f3f4; color: var(--text-dark); }
+        .admin-table th, .admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); }
+        .admin-table th { background: var(--bg-light); color: var(--text-dark); }
         .table-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
         .badge-role { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
         .badge-admin { background: #ffe082; color: #b78103; }
-        .badge-client { background: #e8f0fe; color: var(--google-blue); }
+        .badge-client { background: rgba(66, 133, 244, 0.15); color: var(--google-blue); }
 
-        .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
+        .footer-cta { background-color: #111215; color: #FFFFFF; padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
         .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
         .form-container, .social-qr { flex: 1; min-width: 320px; background: rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 12px; }
         .form-group { margin-bottom: 1.5rem; text-align: left; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #ccc; }
-        .form-control { width: 100%; padding: 1rem; border: 1px solid #444; background: rgba(0,0,0,0.2); color: var(--white); border-radius: 6px; font-family: inherit; }
+        .form-control { width: 100%; padding: 1rem; border: 1px solid #444; background: rgba(0,0,0,0.2); color: #FFF; border-radius: 6px; font-family: inherit; }
         .form-control:focus { outline: none; border-color: var(--google-blue); }
-        .btn-submit { width: 100%; background-color: var(--google-green); color: var(--white); border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
-        .btn-submit:hover { background-color: #2b8b45; }
+        .btn-submit { width: 100%; background-color: var(--google-green); color: white; border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
+        .btn-submit:hover { filter: brightness(0.9); }
         .social-qr { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
         .social-qr img { width: 100%; max-width: 220px; border-radius: 12px; background-color: #fff; padding: 15px; margin-bottom: 1rem; }
         .btn-instagram { display: inline-flex; align-items: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600; text-decoration: none; }
@@ -211,10 +270,57 @@
             .daily-quote { display: none; }
             .footer-content-wrapper { flex-direction: column; }
             .admin-stats { flex-direction: column; }
+            .theme-widget-container { bottom: 15px; left: 15px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ================= BOTÓN Y MENÚ CUADRADO DE TEMAS ================= -->
+    <div class="theme-widget-container">
+        <button class="btn-theme-toggle" onclick="toggleMenuTemas()" title="Cambiar tema de color">
+            <i class="fa-solid fa-palette"></i>
+        </button>
+        <div id="theme-menu-box" class="theme-popover">
+            <h4><i class="fa-solid fa-swatchbook"></i> Temas de Color</h4>
+            
+            <div class="theme-option active" data-theme-name="default" onclick="cambiarTema('default')">
+                <span>Google Classic</span>
+                <div class="color-dots">
+                    <span class="dot" style="background:#4285F4;"></span>
+                    <span class="dot" style="background:#34A853;"></span>
+                    <span class="dot" style="background:#FBBC05;"></span>
+                </div>
+            </div>
+
+            <div class="theme-option" data-theme-name="dark" onclick="cambiarTema('dark')">
+                <span>Cyber Dark</span>
+                <div class="color-dots">
+                    <span class="dot" style="background:#1A1D24;"></span>
+                    <span class="dot" style="background:#00D2FF;"></span>
+                    <span class="dot" style="background:#06D6A0;"></span>
+                </div>
+            </div>
+
+            <div class="theme-option" data-theme-name="sunset" onclick="cambiarTema('sunset')">
+                <span>Sunset Gold</span>
+                <div class="color-dots">
+                    <span class="dot" style="background:#FAF6F0;"></span>
+                    <span class="dot" style="background:#D97706;"></span>
+                    <span class="dot" style="background:#F59E0B;"></span>
+                </div>
+            </div>
+
+            <div class="theme-option" data-theme-name="mint" onclick="cambiarTema('mint')">
+                <span>Ocean Mint</span>
+                <div class="color-dots">
+                    <span class="dot" style="background:#EDF7F6;"></span>
+                    <span class="dot" style="background:#00AFB9;"></span>
+                    <span class="dot" style="background:#0081A7;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- MENÚ PRINCIPAL -->
     <div id="menu-container">
@@ -295,7 +401,7 @@
                     </div>
                     <div class="discount-badge" id="kiwi-discount-badge">¡Ahorras 2€ por cada unidad extra!</div>
                     
-                    <p style="font-weight: 600; margin-bottom: 0.8rem;">Cantidad:</p>
+                    <p style="font-weight: 600; margin-bottom: 0.8rem; color: var(--text-dark);">Cantidad:</p>
                     <div class="quantity-wrapper">
                         <div class="quantity-controls">
                             <button class="qty-btn" onclick="updateKiwiQty(-1)"><i class="fa-solid fa-minus"></i></button>
@@ -304,7 +410,7 @@
                         </div>
                     </div>
 
-                    <p style="font-weight: 600; margin-bottom: 0.8rem;">Color del metacrilato:</p>
+                    <p style="font-weight: 600; margin-bottom: 0.8rem; color: var(--text-dark);">Color del metacrilato:</p>
                     <div class="color-selector">
                         <button class="color-btn active" data-img="cartel blanco.png" data-color="Blanco" style="background-color: #ffffff;"></button>
                         <button class="color-btn" data-img="cartel negro.png" data-color="Negro" style="background-color: #000000;"></button>
@@ -361,18 +467,18 @@
             <p>Sistemas RFID compatibles con la mayoría de portales. Discretos, resistentes y al mejor precio.</p>
         </header>
 
-        <section class="services" style="background: var(--white);">
+        <section class="services">
             <h2 class="section-title fade-up">¿Por qué elegir nuestros accesos RFID?</h2>
             <div class="services-grid">
                 <div class="card fade-up">
                     <h3 style="color: var(--google-blue);">Comodidad Absoluta</h3>
                     <p>Olvídate de buscar las llaves. Solo acerca la tarjeta o el llavero al lector y la puerta se abrirá al instante.</p>
                 </div>
-                <div class="card fade-up" style="transition-delay: 0.1s; border-top-color: var(--google-yellow);">
+                <div class="card fade-up" style="transition-delay: 0.1s;">
                     <h3>Formatos Prácticos</h3>
                     <p>Elige entre una tarjeta fina para tu cartera o un llavero compacto y ultrarresistente para llevar junto a tus llaves.</p>
                 </div>
-                <div class="card fade-up" style="transition-delay: 0.2s; border-top-color: var(--google-green);">
+                <div class="card fade-up" style="transition-delay: 0.2s;">
                     <h3>Alta Compatibilidad</h3>
                     <p>Compatibles con las frecuencias 125kHz y 13.56MHz usadas en la gran mayoría de comunidades de vecinos actuales.</p>
                 </div>
@@ -383,7 +489,7 @@
             <div class="rfid-showcase">
                 <div class="rfid-product-card fade-up">
                     <img src="tarjeta_portal.jpg" alt="Tarjeta RFID" onerror="this.src='https://placehold.co/250x250?text=Tarjeta+RFID'">
-                    <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Tarjeta de Acceso</h3>
+                    <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem; color: var(--text-dark);">Tarjeta de Acceso</h3>
                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Blanca, discreta y programable.</p>
                     <div class="price-container" style="justify-content: center;"><span class="price">8,00€</span></div>
                     <div class="quantity-wrapper" style="justify-content: center; margin-top: 1rem;">
@@ -397,7 +503,7 @@
 
                 <div class="rfid-product-card fade-up" style="border-top-color: var(--google-blue);">
                     <img src="chapa_portal.jpg" alt="Llavero RFID" onerror="this.src='https://placehold.co/250x250?text=Llavero+RFID'">
-                    <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Llavero Proximidad</h3>
+                    <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem; color: var(--text-dark);">Llavero Proximidad</h3>
                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Chapa llavero compacta y resistente.</p>
                     <div class="price-container" style="justify-content: center;"><span class="price">8,00€</span></div>
                     <div class="quantity-wrapper" style="justify-content: center; margin-top: 1rem;">
@@ -411,7 +517,7 @@
             </div>
 
             <div class="rfid-summary-box fade-up">
-                <h3>Resumen de tu pedido RFID</h3>
+                <h3 style="color: var(--text-dark); margin-bottom: 1.5rem;">Resumen de tu pedido RFID</h3>
                 <div class="summary-line"><span>Artículos seleccionados:</span><span id="rfid-total-items">0 unidades</span></div>
                 <div class="summary-line"><span>Subtotal:</span><span id="rfid-subtotal">0,00 €</span></div>
                 <div class="summary-line" style="color: var(--google-green); font-weight: 600;"><span>Descuento aplicado (Promo Pares):</span><span id="rfid-discount">-0,00 €</span></div>
@@ -440,14 +546,14 @@
         </section>
     </div>
 
-    <!-- SECCIÓN RESEÑAS CON SOPORTE DE FOTOS Y BORRADO SEGURO -->
+    <!-- SECCIÓN RESEÑAS CON FOTO Y BORRADO -->
     <section id="shared-reviews" class="reviews-section">
         <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
             <div class="reviews-grid" id="reviews-list"></div>
 
             <div class="add-review-box fade-up">
-                <h3>¡Deja tu valoración!</h3>
+                <h3 style="color: var(--text-dark);">¡Deja tu valoración!</h3>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">¿Qué te parecieron nuestros productos?</p>
                 
                 <form id="review-form" onsubmit="enviarResenaFirebase(event)">
@@ -462,7 +568,6 @@
                     <input type="text" id="rev-name" class="form-control-review" placeholder="Tu nombre o apodo" required>
                     <textarea id="rev-comment" class="form-control-review" placeholder="Cuenta tu experiencia..." required></textarea>
 
-                    <!-- Selector de Foto para la Reseña -->
                     <div>
                         <label for="rev-photo-file" class="review-photo-btn">
                             <i class="fa-solid fa-camera"></i> Añadir foto de tu producto
@@ -511,15 +616,15 @@
 
             <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
                 <div id="group-apodo" style="margin-bottom: 1rem; display: none;">
-                    <label style="font-size:0.85rem; color:#666;">Tu Apodo / Nombre público</label>
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Tu Apodo / Nombre público</label>
                     <input type="text" id="auth-apodo" class="form-control-review" placeholder="Ej: Pedro">
                 </div>
                 <div style="margin-bottom: 1rem;">
-                    <label style="font-size:0.85rem; color:#666;">Correo Electrónico</label>
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Correo Electrónico</label>
                     <input type="email" id="auth-email" class="form-control-review" required placeholder="tu@correo.com">
                 </div>
                 <div style="margin-bottom: 1.5rem;">
-                    <label style="font-size:0.85rem; color:#666;">Contraseña</label>
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Contraseña</label>
                     <input type="password" id="auth-password" class="form-control-review" required placeholder="Mínimo 6 caracteres">
                 </div>
                 <button type="submit" id="auth-submit-btn" class="btn-primary">Entrar a mi Cuenta</button>
@@ -539,13 +644,13 @@
                 </div>
 
                 <div style="text-align: left; margin-bottom: 1rem;">
-                    <label style="font-size:0.85rem; color:#666;">Tu Apodo</label>
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Tu Apodo</label>
                     <input type="text" id="profile-apodo-input" class="form-control-review" placeholder="Tu apodo público">
                 </div>
 
                 <div style="text-align: left; margin-bottom: 1.5rem;">
-                    <label style="font-size:0.85rem; color:#666;">Correo de la cuenta</label>
-                    <input type="text" id="profile-email-input" class="form-control-review" disabled style="background:#eee; cursor:not-allowed;">
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Correo de la cuenta</label>
+                    <input type="text" id="profile-email-input" class="form-control-review" disabled style="opacity:0.6; cursor:not-allowed;">
                 </div>
 
                 <button onclick="guardarDatosPerfil()" class="btn-primary" style="margin-bottom: 10px; background: var(--google-green);">Guardar Cambios</button>
@@ -608,8 +713,45 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT CON LÓGICA DE TEMAS Y MOTORES COMPLETOS -->
     <script>
-        // CONFIGURACIÓN DE TU PROYECTO FIREBASE
+        // ================= 1. GESTIÓN DE TEMAS VISUALES =================
+        function toggleMenuTemas() {
+            const menu = document.getElementById('theme-menu-box');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Cerrar el menú si se hace clic fuera
+        document.addEventListener('click', function(e) {
+            const container = document.querySelector('.theme-widget-container');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('theme-menu-box').style.display = 'none';
+            }
+        });
+
+        function cambiarTema(nombreTema) {
+            if (nombreTema === 'default') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', nombreTema);
+            }
+            
+            localStorage.setItem('kiwi_tema_preferido', nombreTema);
+
+            // Actualizar clase activa visual
+            document.querySelectorAll('.theme-option').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-theme-name') === nombreTema);
+            });
+
+            // Cerrar menú tras elegir
+            document.getElementById('theme-menu-box').style.display = 'none';
+        }
+
+        // Cargar tema guardado al entrar a la web
+        const temaGuardado = localStorage.getItem('kiwi_tema_preferido') || 'default';
+        cambiarTema(temaGuardado);
+
+        // ================= 2. CONFIGURACIÓN FIREBASE =================
         const firebaseConfig = {
             apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMahzacMfac",
             authDomain: "kiwi-review.firebaseapp.com",
@@ -632,7 +774,7 @@
 
         const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
 
-        // 1. Frases Diarias
+        // 3. Frases Diarias
         const frasesMotivadoras = [
             "¡A por todas! 🚀",
             "Si la vida te da limones, ¡pídeles reseña! 🍋",
@@ -646,7 +788,7 @@
         const fraseElegida = frasesMotivadoras[diaDelAño % frasesMotivadoras.length];
         document.querySelectorAll('.quote-text').forEach(el => el.innerText = fraseElegida);
 
-        // 2. Navegación Split Screen
+        // 4. Navegación Split Screen
         function abrirSeccion(id) {
             document.getElementById('menu-container').style.display = 'none';
             document.getElementById('kiwi-section').style.display = 'none';
@@ -667,7 +809,7 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
-        // 3. Tienda Kiwi (Carteles NFC)
+        // 5. Tienda Kiwi
         let colorElegido = "Blanco";
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -708,7 +850,7 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-blue)"; }, 800);
         }
 
-        // 4. Tienda RFID
+        // 6. Tienda RFID
         function updateRFIDQty(tipo, change) {
             const input = document.getElementById(`rfid-qty-${tipo}`);
             let val = parseInt(input.value) + change;
@@ -742,7 +884,7 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        // 5. Gestión de Reseñas: Fotos y Borrado Individual
+        // 7. Fotos en Reseñas y Borrado Individual
         let fotoResenaBase64 = "";
 
         function previsualizarFotoResena(event) {
@@ -868,20 +1010,17 @@
             alert("¡Reseña guardada!");
         }
 
-        // ELIMINACIÓN INDIVIDUAL SEGURA (NO BORRA TODAS)
         async function eliminarResenaIndividual(idResena) {
             if (!confirm("¿Seguro que deseas eliminar ÚNICAMENTE esta reseña?")) return;
 
             if (db && !idResena.startsWith("init_") && !idResena.startsWith("local_")) {
                 try {
                     await db.collection("resenas").doc(idResena).delete();
-                    alert("Reseña eliminada de Firebase.");
                 } catch(err) {
                     console.error("Error borrando en Firestore:", err);
                 }
             }
 
-            // Filtrar también en el almacenamiento local por ID estricto
             let locales = JSON.parse(localStorage.getItem('kiwi_resenas')) || resenasIniciales;
             locales = locales.filter(r => String(r.id) !== String(idResena));
             localStorage.setItem('kiwi_resenas', JSON.stringify(locales));
@@ -893,7 +1032,7 @@
             }
         }
 
-        // 6. Autenticación, Perfil y Roles
+        // 8. Autenticación y Perfil
         function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
         function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
         let modoAuth = 'login';
@@ -948,7 +1087,6 @@
                 }
             }
 
-            // Fallback de contingencia local
             const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
             if (modoAuth === 'register') {
                 if (usuarios[email]) {
@@ -1099,7 +1237,7 @@
         }
         actualizarEstadoSesion();
 
-        // 7. Panel de Administrador
+        // 9. Panel de Administrador
         function abrirModalAdmin() {
             if (!esUsuarioAdmin()) {
                 alert("Acceso reservado para el propietario.");
