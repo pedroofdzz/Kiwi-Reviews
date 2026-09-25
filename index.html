@@ -68,8 +68,10 @@
         .btn-nav { background-color: var(--google-blue); color: var(--white) !important; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; transition: background-color 0.3s, transform 0.2s; }
         .btn-nav:hover { background-color: #3367D6; transform: translateY(-2px); }
 
-        .btn-auth { background: transparent; border: 2px solid var(--google-blue); color: var(--google-blue); padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.9rem; transition: all 0.3s; }
+        /* Botón de cuenta personalizado con avatar */
+        .btn-auth { background: transparent; border: 2px solid var(--google-blue); color: var(--google-blue); padding: 0.35rem 0.9rem; border-radius: 50px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-size: 0.9rem; transition: all 0.3s; }
         .btn-auth:hover { background: var(--google-blue); color: white; }
+        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--google-blue); display: none; }
 
         .hero { text-align: center; padding: 8rem 2rem; background: linear-gradient(180deg, var(--white) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; }
@@ -144,12 +146,20 @@
         .form-control-review { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
         textarea.form-control-review { resize: vertical; min-height: 100px; }
 
+        /* MODAL REGISTRO / LOGIN / PERFIL */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-card { background: white; padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 400px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal-card { background: white; padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 440px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
         .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
         .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
+
+        /* Estilos del editor de foto y perfil */
+        .avatar-uploader { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
+        .avatar-preview-wrap { position: relative; width: 90px; height: 90px; margin-bottom: 10px; }
+        .avatar-preview-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--google-blue); }
+        .avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--google-blue); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .avatar-input-hidden { display: none; }
 
         .footer-cta { background-color: var(--text-dark); color: var(--white); padding: 6rem 2rem; }
         .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
@@ -207,7 +217,11 @@
             <div class="nav-links">
                 <a href="#faq-seccion">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
-                <button class="btn-auth" onclick="abrirModalAuth()"><i class="fa-regular fa-user"></i> <span class="auth-btn-label">Mi Cuenta</span></button>
+                <button class="btn-auth" onclick="abrirModalAuth()">
+                    <img class="nav-avatar" src="" alt="Avatar">
+                    <i class="fa-regular fa-user nav-default-icon"></i> 
+                    <span class="auth-btn-label">Mi Cuenta</span>
+                </button>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
         </nav>
@@ -300,7 +314,11 @@
             <div class="nav-links">
                 <a href="#rfid-faq">FAQ</a>
                 <a href="#clientes-seccion">Clientes</a>
-                <button class="btn-auth" onclick="abrirModalAuth()"><i class="fa-regular fa-user"></i> <span class="auth-btn-label">Mi Cuenta</span></button>
+                <button class="btn-auth" onclick="abrirModalAuth()">
+                    <img class="nav-avatar" src="" alt="Avatar">
+                    <i class="fa-regular fa-user nav-default-icon"></i> 
+                    <span class="auth-btn-label">Mi Cuenta</span>
+                </button>
                 <a href="#contacto" class="btn-nav">Pedir ahora</a>
             </div>
         </nav>
@@ -439,16 +457,22 @@
         </div>
     </footer>
 
-    <!-- MODAL REGISTRO / LOGIN -->
+    <!-- MODAL REGISTRO / LOGIN / PERFIL (ACTUALIZADO CON PASO A) -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="btn-close-modal" onclick="cerrarModalAuth()">&times;</button>
-            <div class="auth-toggle">
+            
+            <div id="auth-tabs-container" class="auth-toggle">
                 <div id="tab-login" class="auth-tab active" onclick="cambiarPestanaAuth('login')">Iniciar Sesión</div>
                 <div id="tab-register" class="auth-tab" onclick="cambiarPestanaAuth('register')">Registrarse</div>
             </div>
 
+            <!-- Formulario Login / Registro -->
             <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
+                <div id="group-apodo" style="margin-bottom: 1rem; display: none;">
+                    <label style="font-size:0.85rem; color:#666;">Tu Apodo / Nombre público</label>
+                    <input type="text" id="auth-apodo" class="form-control-review" placeholder="Ej: PedroElCrack">
+                </div>
                 <div style="margin-bottom: 1rem;">
                     <label style="font-size:0.85rem; color:#666;">Correo Electrónico</label>
                     <input type="email" id="auth-email" class="form-control-review" required placeholder="tu@correo.com">
@@ -459,14 +483,40 @@
                 </div>
                 <button type="submit" id="auth-submit-btn" class="btn-primary">Entrar a mi Cuenta</button>
             </form>
+
+            <!-- Panel de Perfil de Usuario Logueado (PASO A) -->
             <div id="user-logged-info" style="display:none; text-align:center;">
-                <p style="margin-bottom:15px; font-weight:600;">Sesión iniciada como: <span id="logged-email" style="color:var(--google-blue);"></span></p>
+                <h3 style="margin-bottom: 15px; color: var(--text-dark);">Mi Perfil</h3>
+                
+                <!-- Uploader de Foto de Perfil -->
+                <div class="avatar-uploader">
+                    <div class="avatar-preview-wrap">
+                        <img id="profile-avatar-img" class="avatar-preview-img" src="https://placehold.co/100x100?text=Foto" alt="Avatar">
+                        <label for="profile-avatar-file" class="avatar-edit-badge" title="Cambiar foto de perfil">
+                            <i class="fa-solid fa-camera"></i>
+                        </label>
+                        <input type="file" id="profile-avatar-file" class="avatar-input-hidden" accept="image/*" onchange="subirFotoPerfil(event)">
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Toca la cámara para cambiar foto</span>
+                </div>
+
+                <div style="text-align: left; margin-bottom: 1rem;">
+                    <label style="font-size:0.85rem; color:#666;">Tu Apodo</label>
+                    <input type="text" id="profile-apodo-input" class="form-control-review" placeholder="Tu apodo público">
+                </div>
+
+                <div style="text-align: left; margin-bottom: 1.5rem;">
+                    <label style="font-size:0.85rem; color:#666;">Correo de la cuenta</label>
+                    <input type="text" id="profile-email-input" class="form-control-review" disabled style="background:#eee; cursor:not-allowed;">
+                </div>
+
+                <button onclick="guardarDatosPerfil()" class="btn-primary" style="margin-bottom: 10px; background: var(--google-green);">Guardar Cambios</button>
                 <button onclick="cerrarSesion()" class="btn-primary" style="background:var(--google-red);">Cerrar Sesión</button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT CON MOTOR LOCAL COMPATIBLE CON GITHUB PAGES -->
+    <!-- JAVASCRIPT CON MOTOR LOCAL COMPLETO Y PASO A -->
     <script>
         // 1. Frases Diarias
         const frasesMotivadoras = [
@@ -492,8 +542,6 @@
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
             window.scrollTo(0, 0);
-
-            // Activar animaciones
             document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
         }
 
@@ -580,7 +628,7 @@
             setTimeout(() => { msgBox.focus(); msgBox.style.borderColor = "var(--google-green)"; }, 800);
         }
 
-        // 5. Motor de Reseñas Persistentes en el Navegador
+        // 5. Motor de Reseñas
         const resenasIniciales = [
             { autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", estrellas: 5 },
             { autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el envío fue súper rápido. 10/10.", estrellas: 5 },
@@ -624,7 +672,7 @@
             cargarResenas();
         }
 
-        // 6. Sistema de Cuentas y Sesiones
+        // 6. Sistema de Cuentas, Apodos y Fotos (PASO A)
         function abrirModalAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
         function cerrarModalAuth() { document.getElementById('auth-modal').style.display = 'none'; }
         let modoAuth = 'login';
@@ -634,12 +682,14 @@
             document.getElementById('tab-login').classList.toggle('active', modo === 'login');
             document.getElementById('tab-register').classList.toggle('active', modo === 'register');
             document.getElementById('auth-submit-btn').innerText = modo === 'login' ? 'Entrar a mi Cuenta' : 'Crear Cuenta Nueva';
+            document.getElementById('group-apodo').style.display = modo === 'register' ? 'block' : 'none';
         }
 
         function gestionarAutenticacion(e) {
             e.preventDefault();
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value;
+            const apodo = document.getElementById('auth-apodo').value.trim();
 
             if (pass.length < 6) {
                 alert("La contraseña debe tener al menos 6 caracteres.");
@@ -653,20 +703,74 @@
                     alert("Este correo ya está registrado.");
                     return;
                 }
-                usuarios[email] = { email, pass };
+                const apodoFinal = apodo || email.split('@')[0];
+                usuarios[email] = { 
+                    email: email, 
+                    pass: pass, 
+                    apodo: apodoFinal, 
+                    foto: "https://placehold.co/100x100?text=" + encodeURIComponent(apodoFinal.charAt(0).toUpperCase()),
+                    rol: (email === "admin@kiwi.com") ? "admin" : "cliente" // Configuración inicial de rol
+                };
                 localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
                 localStorage.setItem('kiwi_sesion', email);
-                alert("¡Cuenta creada exitosamente!");
+                alert("¡Cuenta creada exitosamente, " + apodoFinal + "!");
             } else {
                 if (!usuarios[email] || usuarios[email].pass !== pass) {
                     alert("Correo o contraseña incorrectos.");
                     return;
                 }
                 localStorage.setItem('kiwi_sesion', email);
-                alert("¡Bienvenido de nuevo!");
+                const usuario = usuarios[email];
+                alert("¡Bienvenido de nuevo, " + (usuario.apodo || usuario.email) + "!");
             }
             actualizarEstadoSesion();
             cerrarModalAuth();
+        }
+
+        // Subir foto de perfil (Convertir a Base64)
+        function subirFotoPerfil(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert("La foto es demasiado grande. Por favor, elige una imagen de menos de 2 MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fotoBase64 = e.target.result;
+                document.getElementById('profile-avatar-img').src = fotoBase64;
+                
+                // Guardar en la sesión del usuario actual
+                const emailSesion = localStorage.getItem('kiwi_sesion');
+                const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+                if (usuarios[emailSesion]) {
+                    usuarios[emailSesion].foto = fotoBase64;
+                    localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
+                    actualizarEstadoSesion();
+                    alert("¡Foto de perfil actualizada!");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Guardar cambios en el apodo
+        function guardarDatosPerfil() {
+            const nuevoApodo = document.getElementById('profile-apodo-input').value.trim();
+            if (!nuevoApodo) {
+                alert("El apodo no puede estar vacío.");
+                return;
+            }
+            const emailSesion = localStorage.getItem('kiwi_sesion');
+            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+            if (usuarios[emailSesion]) {
+                usuarios[emailSesion].apodo = nuevoApodo;
+                localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
+                actualizarEstadoSesion();
+                alert("¡Perfil actualizado con éxito!");
+                cerrarModalAuth();
+            }
         }
 
         function cerrarSesion() {
@@ -676,19 +780,55 @@
         }
 
         function actualizarEstadoSesion() {
-            const sesion = localStorage.getItem('kiwi_sesion');
+            const emailSesion = localStorage.getItem('kiwi_sesion');
             const form = document.getElementById('auth-form');
+            const tabs = document.getElementById('auth-tabs-container');
             const loggedInfo = document.getElementById('user-logged-info');
             const labels = document.querySelectorAll('.auth-btn-label');
+            const navAvatars = document.querySelectorAll('.nav-avatar');
+            const navIcons = document.querySelectorAll('.nav-default-icon');
 
-            if (sesion) {
-                labels.forEach(l => l.innerText = sesion.split('@')[0]);
+            if (emailSesion) {
+                const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+                const usuario = usuarios[emailSesion] || { email: emailSesion, apodo: emailSesion.split('@')[0], foto: '' };
+                const apodo = usuario.apodo || usuario.email.split('@')[0];
+
+                // Actualizar textos en la navbar
+                labels.forEach(l => l.innerText = apodo);
+                
+                // Mostrar avatar o icono en la navbar
+                if (usuario.foto) {
+                    navAvatars.forEach(av => { av.src = usuario.foto; av.style.display = 'inline-block'; });
+                    navIcons.forEach(ic => ic.style.display = 'none');
+                } else {
+                    navAvatars.forEach(av => av.style.display = 'none');
+                    navIcons.forEach(ic => ic.style.display = 'inline-block');
+                }
+
+                // Ajustar modal
                 form.style.display = 'none';
+                tabs.style.display = 'none';
                 loggedInfo.style.display = 'block';
-                document.getElementById('logged-email').innerText = sesion;
+
+                // Llenar campos del modal de perfil
+                document.getElementById('profile-email-input').value = usuario.email;
+                document.getElementById('profile-apodo-input').value = apodo;
+                if (usuario.foto) {
+                    document.getElementById('profile-avatar-img').src = usuario.foto;
+                }
+
+                // Si va a dejar una reseña, autorellenar su nombre con su apodo
+                const revNameInput = document.getElementById('rev-name');
+                if (revNameInput && !revNameInput.value) {
+                    revNameInput.value = apodo;
+                }
+
             } else {
                 labels.forEach(l => l.innerText = "Mi Cuenta");
+                navAvatars.forEach(av => av.style.display = 'none');
+                navIcons.forEach(ic => ic.style.display = 'inline-block');
                 form.style.display = 'block';
+                tabs.style.display = 'flex';
                 loggedInfo.style.display = 'none';
             }
         }
