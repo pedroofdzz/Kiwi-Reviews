@@ -705,7 +705,7 @@
         }
         cambiarTema(localStorage.getItem('kiwi_tema_preferido') || 'default');
 
-        // 2. FIREBASE
+        // 2. FIREBASE (YA CON LA 'H' MAYÚSCULA EN EL API KEY)
         const firebaseConfig = {
             apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMaHzacMfac",
             authDomain: "kiwi-review.firebaseapp.com",
@@ -714,7 +714,6 @@
             messagingSenderId: "476930462174",
             appId: "1:476930462174:web:7a58580ea2b5735922cd4f",
             measurementId: "G-05HR2HQ6X9"
-        };
         };
         let db = null, auth = null;
         try {
