@@ -140,7 +140,6 @@
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
 
-        /* SELLOS DE CONFIANZA SIN MENCIONES DE ENVÍO */
         .trust-strip { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto; padding: 0 1rem; }
         .trust-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .trust-item i { color: var(--google-green); font-size: 1.1rem; }
@@ -683,7 +682,7 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE AÑADIDA ================= -->
+    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE BLINDADA ================= -->
     <script>
         // 1. TEMAS
         function toggleMenuTemas() {
@@ -705,7 +704,7 @@
         }
         cambiarTema(localStorage.getItem('kiwi_tema_preferido') || 'default');
 
-        // 2. FIREBASE (YA CON LA 'H' MAYÚSCULA EN EL API KEY)
+        // 2. FIREBASE SEGURO
         const firebaseConfig = {
             apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMaHzacMfac",
             authDomain: "kiwi-review.firebaseapp.com",
@@ -716,11 +715,17 @@
             measurementId: "G-05HR2HQ6X9"
         };
         let db = null, auth = null;
+        
+        // Bloque Try-Catch para asegurar que, si algo falla en la conexión de red o clave de Firebase, la web siga siendo interactiva y no se congele.
         try {
-            firebase.initializeApp(firebaseConfig);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             auth = firebase.auth();
             db = firebase.firestore();
-        } catch (e) { console.log(e); }
+        } catch (e) { 
+            console.log("Cargando web en modo local sin nube por error de conexión:", e); 
+        }
 
         const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
 
