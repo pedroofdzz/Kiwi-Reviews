@@ -135,147 +135,125 @@
         .btn-auth:hover { background: var(--google-blue); color: white; }
         .nav-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--google-blue); display: none; }
 
-        .hero { text-align: center; padding: 8rem 2rem 5rem 2rem; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .hero h1 { font-size: 2.8rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; color: var(--text-dark); }
-        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
-        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
+        /* HERO AJUSTADO */
+        .hero { text-align: center; padding: 6rem 1.5rem 4rem 1.5rem; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-light) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hero h1 { font-size: 2.5rem; font-weight: 700; max-width: 800px; margin-bottom: 1.5rem; line-height: 1.2; color: var(--text-dark); }
+        .hero p { font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
+        .section-title { text-align: center; font-size: 2rem; margin-bottom: 2.5rem; position: relative; color: var(--text-dark); padding: 0 1rem; }
 
-        /* SELLOS DE CONFIANZA SIN MENCIONES DE ENVÍO */
-        .trust-strip { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto; padding: 0 1rem; }
-        .trust-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        /* SELLOS DE CONFIANZA */
+        .trust-strip { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 3rem; max-width: 1000px; padding: 0 1rem; }
+        .trust-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .trust-item i { color: var(--google-green); font-size: 1.1rem; }
 
-        .services { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
-        .services-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-        @media (min-width: 769px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
-        .card { background: var(--bg-card); padding: 2.5rem 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; border-top: 4px solid transparent; border: 1px solid var(--border-color); }
-        .card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .services { padding: 4rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--bg-card); padding: 2rem 1.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-top: 4px solid transparent; border: 1px solid var(--border-color); }
+        .card:hover { transform: translateY(-5px); }
         .card:nth-child(1) { border-top: 4px solid var(--google-blue); }
         .card:nth-child(2) { border-top: 4px solid var(--google-yellow); }
         .card:nth-child(3) { border-top: 4px solid var(--google-green); }
-        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-dark); }
-        .card p { color: var(--text-muted); font-size: 0.95rem; }
+        .card h3 { font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--text-dark); }
+        .card p { color: var(--text-muted); font-size: 0.9rem; }
 
-        .faq-section { padding: 6rem 2rem; background: var(--bg-card); border-top: 1px solid var(--border-color); }
-        .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
-        .faq-item { background: var(--bg-light); border-radius: 8px; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color); transition: all 0.3s; }
-        .faq-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .faq-item summary { font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark); }
-        .faq-item summary::-webkit-details-marker { display: none; }
-        .faq-item summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--google-blue); transition: transform 0.4s ease; }
-        .faq-item[open] summary::after { transform: rotate(180deg); }
-        .faq-item p { margin-top: 1rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 1rem; line-height: 1.7; }
-
-        /* PRODUCTOS */
-        .product-showcase { padding: 4rem 2rem; background: var(--bg-light); }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 3rem; max-width: 1150px; margin: 0 auto; }
-        .product-card { background: var(--bg-card); border-radius: 20px; padding: 2.5rem 2rem; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .product-card img.prod-img { width: 230px; height: 230px; object-fit: contain; margin-bottom: 1.5rem; border-radius: 12px; animation: float 5s ease-in-out infinite; }
-        .product-card h3 { font-size: 1.6rem; color: var(--text-dark); margin-bottom: 0.5rem; }
-        .product-card p.prod-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.2rem; flex-grow: 1; }
+        /* PRODUCTOS - ADAPTADO PARA MÓVILES */
+        .product-showcase { padding: 3rem 1.5rem; background: var(--bg-light); }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; max-width: 1150px; margin: 0 auto; }
+        .product-card { background: var(--bg-card); border-radius: 16px; padding: 2rem 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 8px 25px rgba(0,0,0,0.04); display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .product-card img.prod-img { width: 100%; max-width: 220px; height: 200px; object-fit: contain; margin-bottom: 1.2rem; border-radius: 12px; animation: float 5s ease-in-out infinite; }
+        .product-card h3 { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .product-card p.prod-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem; flex-grow: 1; }
 
         .price-container { display: flex; align-items: baseline; gap: 8px; margin-bottom: 0.6rem; }
-        .price { font-size: 2.2rem; font-weight: 700; color: var(--google-blue); }
-        .discount-badge { background: var(--google-green); color: white; padding: 0.35rem 0.9rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.2rem; display: inline-block; opacity: 0; transform: scale(0.85); transition: all 0.3s; }
+        .price { font-size: 2rem; font-weight: 700; color: var(--google-blue); }
+        .discount-badge { background: var(--google-green); color: white; padding: 0.35rem 0.9rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.2rem; display: inline-block; opacity: 0; transform: scale(0.85); transition: all 0.3s; }
         .discount-badge.show { opacity: 1; transform: scale(1); }
 
         .variant-selector-wrap { margin-bottom: 1.2rem; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
         .variant-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
         .variant-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .btn-variant { background: var(--bg-light); border: 2px solid var(--border-color); color: var(--text-dark); padding: 6px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-variant { background: var(--bg-light); border: 2px solid var(--border-color); color: var(--text-dark); padding: 6px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
         .btn-variant:hover { border-color: var(--google-blue); }
         .btn-variant.active { background: var(--google-blue); color: white; border-color: var(--google-blue); transform: scale(1.05); }
 
         .quantity-wrapper { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
         .quantity-controls { display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 50px; overflow: hidden; background: var(--bg-card); }
         .qty-btn { background: transparent; border: none; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; color: var(--text-dark); }
-        .qty-btn:hover { background: var(--bg-light); }
         .qty-input { width: 45px; text-align: center; border: none; font-weight: 600; font-size: 1.1rem; background: transparent; color: var(--text-dark); pointer-events: none;}
 
-        .btn-primary { background-color: var(--google-blue); color: white; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); transition: all 0.3s; border: none; cursor: pointer; display: inline-block; width: 100%; text-align: center;}
-        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-3px); }
+        .btn-primary { background-color: var(--google-blue); color: white; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); transition: all 0.3s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; gap: 8px; font-size: 0.95rem; }
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
         /* RESEÑAS PÚBLICAS */
-        .reviews-section { padding: 5rem 2rem; background: var(--bg-light); border-top: 1px solid var(--border-color); }
-        .reviews-container { max-width: 1000px; margin: 0 auto; }
-        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
-        .review-card { background: var(--bg-card); padding: 2rem; border-radius: 15px; border: 1px solid var(--border-color); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
-        .review-stars { color: var(--google-yellow); margin-bottom: 10px; font-size: 1.2rem; }
-        .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
-        .review-author { font-weight: 700; font-size: 0.95rem; margin-top: 10px; color: var(--text-dark); }
-        .review-img-attached { width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; margin-top: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s; }
-        .review-img-attached:hover { transform: scale(1.02); }
+        .reviews-section { padding: 4rem 1.5rem; background: var(--bg-light); border-top: 1px solid var(--border-color); }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .review-card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
+        .review-stars { color: var(--google-yellow); margin-bottom: 8px; font-size: 1.1rem; }
+        .review-text { font-style: italic; color: var(--text-muted); margin-bottom: 12px; flex-grow: 1; font-size: 0.9rem; }
+        .review-author { font-weight: 700; font-size: 0.9rem; margin-top: 10px; color: var(--text-dark); }
+        .review-img-attached { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; margin-top: 10px; margin-bottom: 8px; border: 1px solid var(--border-color); cursor: pointer; }
 
-        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 3rem; border-radius: 15px; border: 2px dashed var(--border-color); text-align: center; }
-        .star-rating-input { display: flex; justify-content: center; gap: 10px; flex-direction: row-reverse; margin-bottom: 20px; font-size: 2rem; }
+        .add-review-box { max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 2rem 1.5rem; border-radius: 12px; border: 2px dashed var(--border-color); text-align: center; }
+        .star-rating-input { display: flex; justify-content: center; gap: 8px; flex-direction: row-reverse; margin-bottom: 15px; font-size: 1.8rem; }
         .star-rating-input input { display: none; }
         .star-rating-input label { color: #ccc; cursor: pointer; transition: color 0.2s; }
         .star-rating-input input:checked ~ label, .star-rating-input label:hover, .star-rating-input label:hover ~ label { color: var(--google-yellow); }
-        .form-control-review { width: 100%; padding: 1rem; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-dark); border-radius: 8px; margin-bottom: 15px; font-family: inherit; }
-        textarea.form-control-review { resize: vertical; min-height: 100px; }
+        .form-control-review { width: 100%; padding: 0.9rem; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-dark); border-radius: 8px; margin-bottom: 15px; font-family: inherit; font-size: 0.9rem; }
+        textarea.form-control-review { resize: vertical; min-height: 90px; }
 
-        .review-photo-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(66, 133, 244, 0.1); color: var(--google-blue); padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; transition: background 0.2s; border: 1px solid var(--border-color); }
-        .review-photo-btn:hover { background: rgba(66, 133, 244, 0.2); }
-        #review-photo-preview { display: none; max-width: 120px; max-height: 120px; border-radius: 10px; margin: 0 auto 15px auto; object-fit: cover; border: 2px solid var(--google-blue); }
+        .review-photo-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(66, 133, 244, 0.1); color: var(--google-blue); padding: 8px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+        #review-photo-preview { display: none; max-width: 100px; max-height: 100px; border-radius: 8px; margin: 0 auto 15px auto; object-fit: cover; border: 2px solid var(--google-blue); }
 
         /* MODALES */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 4000; justify-content: center; align-items: center; }
-        .modal-card { background: var(--bg-card); color: var(--text-dark); padding: 2.5rem; border-radius: 15px; width: 90%; max-width: 440px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
-        .modal-card-large { max-width: 950px; max-height: 90vh; overflow-y: auto; }
-        .btn-close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 4000; justify-content: center; align-items: center; padding: 1rem; }
+        .modal-card { background: var(--bg-card); color: var(--text-dark); padding: 2rem; border-radius: 12px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
+        .modal-card-large { max-width: 900px; }
+        .btn-close-modal { position: absolute; top: 12px; right: 15px; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); border: none; background: none; }
         .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
-        .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
+        .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; font-size: 0.9rem; }
         .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
 
-        /* MENSAJE DE ERROR PROFESIONAL EN EL FORMULARIO */
         .auth-error-box { background: rgba(234, 67, 53, 0.1); color: var(--google-red); border: 1px solid rgba(234, 67, 53, 0.3); padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center; margin-bottom: 1rem; display: none; }
 
-        .avatar-uploader { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
-        .avatar-preview-wrap { position: relative; width: 90px; height: 90px; margin-bottom: 10px; }
-        .avatar-preview-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--google-blue); }
-        .avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--google-blue); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-        .avatar-input-hidden { display: none; }
-
-        /* PANEL ADMIN */
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; }
-        .admin-stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { flex: 1; background: var(--bg-light); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--google-blue); text-align: center; border: 1px solid var(--border-color); }
-        .stat-card h4 { font-size: 1.8rem; color: var(--google-blue); margin-bottom: 5px; }
-        .stat-card p { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+        /* PANEL ADMIN Y TABLAS ADAPTADAS AL MÓVIL */
+        .admin-header { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; text-align: center; }
+        .admin-header h2 { font-size: 1.4rem; }
+        .admin-stats { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .stat-card { flex: 1; min-width: 120px; background: var(--bg-light); padding: 1rem; border-radius: 10px; border-left: 4px solid var(--google-blue); text-align: center; border: 1px solid var(--border-color); }
+        .stat-card h4 { font-size: 1.5rem; color: var(--google-blue); margin-bottom: 2px; }
+        .stat-card p { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
         
-        .admin-section-box { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
-        .admin-table { width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .admin-table th, .admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); }
-        .admin-table th { background: var(--bg-light); color: var(--text-dark); }
-        .table-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
-        .badge-role { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-        .badge-admin { background: #ffe082; color: #b78103; }
-        .badge-client { background: rgba(66, 133, 244, 0.15); color: var(--google-blue); }
+        .admin-section-box { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; }
+        .admin-section-box h3 { font-size: 1.1rem; }
+        
+        .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+        .admin-table { width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 1rem; font-size: 0.8rem; min-width: 500px; }
+        .admin-table th, .admin-table td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); }
+        .admin-table th { background: var(--bg-card); color: var(--text-dark); }
+        .table-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 6px; }
 
-        .variant-row { display: grid; grid-template-columns: 1fr 1.2fr 45px; gap: 10px; align-items: center; margin-bottom: 10px; background: var(--bg-card); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .variant-row { display: grid; grid-template-columns: 1fr 1.2fr 45px; gap: 10px; align-items: center; margin-bottom: 10px; background: var(--bg-card); padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); }
 
-        .footer-cta { background-color: #111215; color: #FFFFFF; padding: 6rem 2rem; }
-        .footer-cta h2 { font-size: 2.2rem; margin-bottom: 3rem; text-align: center; }
-        .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 3rem; max-width: 1100px; margin: 0 auto; }
-        .form-container, .social-qr { flex: 1; min-width: 320px; background: rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 12px; }
-        .form-group { margin-bottom: 1.5rem; text-align: left; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #ccc; }
-        .form-control { width: 100%; padding: 1rem; border: 1px solid #444; background: rgba(0,0,0,0.2); color: #FFF; border-radius: 6px; font-family: inherit; }
-        .form-control:focus { outline: none; border-color: var(--google-blue); }
-        .btn-submit { width: 100%; background-color: var(--google-green); color: white; border: none; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
-        .btn-submit:hover { filter: brightness(0.9); }
-        .social-qr { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
-        .social-qr img { width: 100%; max-width: 220px; border-radius: 12px; background-color: #fff; padding: 15px; margin-bottom: 1rem; }
-        .btn-instagram { display: inline-flex; align-items: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600; text-decoration: none; }
+        .footer-cta { background-color: #111215; color: #FFFFFF; padding: 4rem 1.5rem; }
+        .footer-cta h2 { font-size: 1.8rem; margin-bottom: 2rem; text-align: center; }
+        .footer-content-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; max-width: 1100px; margin: 0 auto; }
+        .form-container, .social-qr { flex: 1; min-width: 100%; background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; }
+        
+        @media (min-width: 768px) {
+            .form-container, .social-qr { min-width: 320px; padding: 2.5rem; }
+            .hero h1 { font-size: 2.8rem; }
+            .hero p { font-size: 1.1rem; }
+            .admin-header { flex-direction: row; text-align: left; }
+            .variant-row { grid-template-columns: 1fr 1.2fr 45px; }
+        }
 
         @media (max-width: 768px) {
             #menu-container { flex-direction: column; }
-            .split h1 { font-size: 2.2rem; }
+            .split h1 { font-size: 2rem; }
             .daily-quote { display: none; }
-            .footer-content-wrapper { flex-direction: column; }
-            .admin-stats { flex-direction: column; }
             .theme-widget-container { bottom: 15px; left: 15px; }
-            .variant-row { grid-template-columns: 1fr; }
+            .variant-row { grid-template-columns: 1fr; border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
+            .variant-row button { width: 100%; height: 40px; margin-top: 5px; }
         }
     </style>
 </head>
@@ -337,8 +315,6 @@
                 <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
             <div class="nav-links">
-                <a href="#faq-seccion">FAQ</a>
-                <a href="#clientes-seccion">Clientes</a>
                 <button id="btn-admin-kiwi" class="btn-admin-nav" onclick="abrirModalAdmin()"><i class="fa-solid fa-crown"></i> Panel Admin</button>
                 <button class="btn-auth" onclick="abrirModalAuth()">
                     <img class="nav-avatar" src="" alt="Avatar">
@@ -395,8 +371,6 @@
                 <span class="daily-quote"><i class="fa-solid fa-bolt"></i> <span class="quote-text">Cargando...</span></span>
             </div>
             <div class="nav-links">
-                <a href="#rfid-faq">FAQ</a>
-                <a href="#clientes-seccion">Clientes</a>
                 <button id="btn-admin-rfid" class="btn-admin-nav" onclick="abrirModalAdmin()"><i class="fa-solid fa-crown"></i> Panel Admin</button>
                 <button class="btn-auth" onclick="abrirModalAuth()">
                     <img class="nav-avatar" src="" alt="Avatar">
@@ -445,7 +419,7 @@
 
     <!-- SECCIÓN RESEÑAS PÚBLICAS -->
     <section id="shared-reviews" class="reviews-section">
-        <h2 id="clientes-seccion" class="section-title fade-up">Lo que dicen nuestros clientes</h2>
+        <h2 class="section-title fade-up">Lo que dicen nuestros clientes</h2>
         <div class="reviews-container">
             <div class="reviews-grid" id="reviews-list"></div>
 
@@ -488,7 +462,7 @@
                     <div class="form-group"><label>Nombre</label><input type="text" id="order-customer-name" name="name" class="form-control" required placeholder="Tu nombre"></div>
                     <div class="form-group"><label>Local / Asunto</label><input type="text" name="local" class="form-control" required placeholder="Nombre de tu negocio o dirección"></div>
                     <div class="form-group"><label>Email</label><input type="email" id="order-customer-email" name="email" class="form-control" required placeholder="tu@correo.com"></div>
-                    <div class="form-group"><label>Detalles del pedido (Autocompletado al pulsar "Añadir al Pedido")</label><textarea id="message-box" name="message" class="form-control" style="min-height: 160px;" required placeholder="Selecciona productos arriba o escribe aquí lo que necesitas..."></textarea></div>
+                    <div class="form-group"><label>Detalles del pedido</label><textarea id="message-box" name="message" class="form-control" style="min-height: 140px;" required placeholder="Selecciona productos arriba o escribe aquí lo que necesitas..."></textarea></div>
                     <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Enviar Pedido a Kiwi Review</button>
                 </form>
             </div>
@@ -501,7 +475,7 @@
         </div>
     </footer>
 
-    <!-- MODAL PERFIL / REGISTRO / LOGIN CON MENSAJE DE ERROR PROFESIONAL -->
+    <!-- MODAL PERFIL / REGISTRO / LOGIN -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="btn-close-modal" onclick="cerrarModalAuth()">&times;</button>
@@ -511,7 +485,7 @@
             </div>
 
             <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
-                <!-- MENSAJE DE ERROR INTEGRADO -->
+                <!-- MENSAJE DE ERROR PROFESIONAL INTEGRADO -->
                 <div id="auth-error-msg" class="auth-error-box"></div>
 
                 <div id="group-apodo" style="margin-bottom: 1rem; display: none;">
@@ -566,21 +540,21 @@
             <div class="admin-stats">
                 <div class="stat-card">
                     <h4 id="stat-total-users">0</h4>
-                    <p>CLIENTES REGISTRADOS</p>
+                    <p>CLIENTES</p>
                 </div>
                 <div class="stat-card" style="border-left-color: var(--google-yellow);">
                     <h4 id="stat-total-reviews" style="color: var(--google-yellow);">0</h4>
-                    <p>RESEÑAS ACTIVAS</p>
+                    <p>RESEÑAS</p>
                 </div>
                 <div class="stat-card" style="border-left-color: var(--google-green);">
                     <h4 id="stat-total-products" style="color: var(--google-green);">0</h4>
-                    <p>PRODUCTOS EN TIENDA</p>
+                    <p>PRODUCTOS</p>
                 </div>
             </div>
 
-            <!-- 1. CASILLA PARA AÑADIR NUEVO PRODUCTO CON FOTOS INDIVIDUALES POR COLOR -->
+            <!-- 1. CASILLA PARA AÑADIR NUEVO PRODUCTO -->
             <div class="admin-section-box">
-                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-plus-circle" style="color:var(--google-green);"></i> Añadir Producto con Colores y Fotos</h3>
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-plus-circle" style="color:var(--google-green);"></i> Añadir Producto a la Tienda</h3>
                 <form id="new-product-form" onsubmit="crearNuevoProducto(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
                         <div>
@@ -609,9 +583,8 @@
                         </select>
                     </div>
 
-                    <!-- Constructor de Variantes / Colores con fotos específicas -->
                     <div style="margin-bottom: 15px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap: wrap; gap:10px;">
                             <label style="font-size:0.9rem; font-weight:600; color:var(--text-dark);">🎨 Colores / Modelos con Foto Específica:</label>
                             <button type="button" onclick="agregarFilaVariante()" class="btn-primary" style="width:auto; padding:4px 12px; font-size:0.8rem; background:var(--google-blue);">
                                 <i class="fa-solid fa-plus"></i> Añadir Otro Color
@@ -631,14 +604,14 @@
                         <textarea id="prod-desc" class="form-control-review" style="min-height: 70px;" required placeholder="Explica detalles del producto..."></textarea>
                     </div>
 
-                    <button type="submit" class="btn-primary" style="background: var(--google-green);"><i class="fa-solid fa-save"></i> Publicar Producto con sus Colores</button>
+                    <button type="submit" class="btn-primary" style="background: var(--google-green);"><i class="fa-solid fa-save"></i> Publicar Producto</button>
                 </form>
             </div>
 
             <!-- 2. GESTIÓN Y ELIMINACIÓN DE PRODUCTOS -->
             <div class="admin-section-box">
-                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-boxes-stacked" style="color:var(--google-blue);"></i> Gestionar / Eliminar Productos de la Tienda</h3>
-                <div style="overflow-x: auto;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-dark);"><i class="fa-solid fa-boxes-stacked" style="color:var(--google-blue);"></i> Gestionar Productos</h3>
+                <div class="table-responsive">
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -655,8 +628,8 @@
             </div>
 
             <!-- 3. TABLA DE CLIENTES REGISTRADOS -->
-            <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes Registrados en la Nube</h3>
-            <div style="overflow-x: auto;">
+            <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes en la Nube</h3>
+            <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -671,8 +644,8 @@
             </div>
 
             <!-- 4. MODERACIÓN PRIVADA DE RESEÑAS -->
-            <h3 style="margin-bottom: 1rem; margin-top: 1.5rem;"><i class="fa-solid fa-comments"></i> Moderación de Reseñas (Borrado Exclusivo)</h3>
-            <div style="overflow-x: auto;">
+            <h3 style="margin-bottom: 1rem; margin-top: 1.5rem;"><i class="fa-solid fa-comments"></i> Moderación de Reseñas</h3>
+            <div class="table-responsive">
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -689,7 +662,7 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE BLINDADA Y ERRORES PROFESIONALES ================= -->
+    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE 100% BLINDADA ================= -->
     <script>
         // 1. TEMAS
         function toggleMenuTemas() {
@@ -711,7 +684,7 @@
         }
         cambiarTema(localStorage.getItem('kiwi_tema_preferido') || 'default');
 
-        // 2. FIREBASE SEGURO
+        // 2. FIREBASE SEGURO Y ROBUSTO
         const firebaseConfig = {
             apiKey: "AIzaSyC36fHDUO_Ddntxaa6fhb39VMaHzacMfac",
             authDomain: "kiwi-review.firebaseapp.com",
@@ -721,8 +694,10 @@
             appId: "1:476930462174:web:7a58580ea2b5735922cd4f",
             measurementId: "G-05HR2HQ6X9"
         };
+        
         let db = null, auth = null;
         
+        // El bloque try-catch salva la web de quedarse en blanco si la conexión a Firebase falla.
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
@@ -730,7 +705,7 @@
             auth = firebase.auth();
             db = firebase.firestore();
         } catch (e) { 
-            console.log("Cargando web en modo local sin nube:", e); 
+            console.log("Aviso: Firebase no pudo inicializarse. Trabajando en modo local.", e); 
         }
 
         const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
@@ -756,7 +731,9 @@
             document.getElementById('shared-reviews').style.display = 'block';
             document.getElementById('shared-footer').style.display = 'block';
             window.scrollTo(0, 0);
-            document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+            document.querySelectorAll('.fade-up').forEach(el => {
+                setTimeout(() => el.classList.add('visible'), 100);
+            });
         }
         function volverMenu() {
             document.getElementById('kiwi-section').style.display = 'none';
@@ -766,7 +743,7 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
-        // ================= 5. CATÁLOGO SINCRONIZADO CON FIREBASE =================
+        // ================= 5. CATÁLOGO SINCRONIZADO NUBE/LOCAL =================
         const productosBase = [
             {
                 id: "prod_nfc_placa",
@@ -824,12 +801,13 @@
                     } else {
                         snap.forEach(doc => prods.push(doc.data()));
                     }
+                    localStorage.setItem('kiwi_catalogo_nube', JSON.stringify(prods)); // Respaldo local
                 } catch(e) {
-                    console.log("Fallo al conectar con Productos en nube, cargando base:", e);
-                    prods = productosBase;
+                    console.log("Fallo al conectar con Productos en nube, cargando memoria local:", e);
+                    prods = JSON.parse(localStorage.getItem('kiwi_catalogo_nube')) || productosBase;
                 }
             } else {
-                prods = productosBase;
+                prods = JSON.parse(localStorage.getItem('kiwi_catalogo_nube')) || productosBase;
             }
 
             const contKiwi = document.getElementById('catalog-kiwi-container');
@@ -1002,7 +980,7 @@
             div.innerHTML = `
                 <input type="text" class="form-control-review var-name" placeholder="Nombre color (Ej: Negro)" required style="margin-bottom:0;">
                 <input type="file" accept="image/*" class="form-control-review var-file" required style="margin-bottom:0;" onchange="procesarFotoVariante(event, ${index})">
-                <button type="button" onclick="this.parentElement.remove()" style="background:var(--google-red); color:white; border:none; border-radius:6px; height:38px; cursor:pointer;" title="Eliminar este color"><i class="fa-solid fa-trash"></i></button>
+                <button type="button" onclick="this.parentElement.remove()" style="background:var(--google-red); color:white; border:none; border-radius:6px; height:40px; cursor:pointer;" title="Eliminar este color"><i class="fa-solid fa-trash"></i></button>
             `;
             list.appendChild(div);
         }
@@ -1053,6 +1031,11 @@
             if (db) {
                 await db.collection("productos").doc(nuevoProd.id).set(nuevoProd);
             }
+            
+            // Guardar también en respaldo local
+            let prodsActuales = JSON.parse(localStorage.getItem('kiwi_catalogo_nube')) || productosBase;
+            prodsActuales.push(nuevoProd);
+            localStorage.setItem('kiwi_catalogo_nube', JSON.stringify(prodsActuales));
 
             alert("¡Nuevo producto subido a la nube con éxito!");
             document.getElementById('new-product-form').reset();
@@ -1068,6 +1051,10 @@
                 await db.collection("productos").doc(idProducto).delete();
             }
             
+            let prodsActuales = JSON.parse(localStorage.getItem('kiwi_catalogo_nube')) || productosBase;
+            prodsActuales = prodsActuales.filter(p => p.id !== idProducto);
+            localStorage.setItem('kiwi_catalogo_nube', JSON.stringify(prodsActuales));
+
             alert("Producto eliminado de la tienda.");
             renderizarCatalogos();
             renderizarDatosAdmin();
@@ -1110,11 +1097,13 @@
                     } else {
                         snap.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
                     }
+                    localStorage.setItem('kiwi_resenas_nube', JSON.stringify(lista));
                 } catch(e) {
-                    lista = resenasFijas;
+                    console.log("Error nube reseñas:", e);
+                    lista = JSON.parse(localStorage.getItem('kiwi_resenas_nube')) || resenasFijas;
                 }
             } else {
-                lista = resenasFijas;
+                lista = JSON.parse(localStorage.getItem('kiwi_resenas_nube')) || resenasFijas;
             }
 
             if (lista.length === 0) {
@@ -1156,8 +1145,15 @@
             };
 
             if (db) {
-                await db.collection("resenas").add(nueva);
+                const docRef = await db.collection("resenas").add(nueva);
+                nueva.id = docRef.id;
+            } else {
+                nueva.id = "rev_local_" + Date.now();
             }
+
+            let locales = JSON.parse(localStorage.getItem('kiwi_resenas_nube')) || resenasFijas;
+            locales.unshift(nueva);
+            localStorage.setItem('kiwi_resenas_nube', JSON.stringify(locales));
 
             alert("¡Muchas gracias! Tu reseña ha sido guardada en la Nube.");
             document.getElementById('review-form').reset();
@@ -1173,13 +1169,17 @@
             if (db) {
                 await db.collection("resenas").doc(idExacto).delete();
             }
+            
+            let locales = JSON.parse(localStorage.getItem('kiwi_resenas_nube')) || resenasFijas;
+            locales = locales.filter(r => r.id !== idExacto);
+            localStorage.setItem('kiwi_resenas_nube', JSON.stringify(locales));
 
             alert("Reseña eliminada correctamente.");
             renderizarResenasWeb();
             renderizarDatosAdmin();
         }
 
-        // ================= 8. SESIÓN Y GESTIÓN PROFESIONAL DE ERRORES =================
+        // ================= 8. SESIÓN Y GESTIÓN DE ERRORES FIREBASE =================
         function esUsuarioAdmin() {
             const sesion = localStorage.getItem('kiwi_sesion');
             return sesion === EMAIL_ADMINISTRADOR;
@@ -1195,7 +1195,7 @@
             document.getElementById('tab-register').classList.toggle('active', modo === 'register');
             document.getElementById('auth-submit-btn').innerText = modo === 'login' ? 'Entrar a mi Cuenta' : 'Crear Cuenta Nueva';
             document.getElementById('group-apodo').style.display = modo === 'register' ? 'block' : 'none';
-            document.getElementById('auth-error-msg').style.display = 'none'; // Limpiar error anterior
+            document.getElementById('auth-error-msg').style.display = 'none'; // Ocultar error
         }
 
         async function gestionarAutenticacion(e) {
@@ -1205,7 +1205,7 @@
             const apodo = document.getElementById('auth-apodo').value.trim();
             const errorBox = document.getElementById('auth-error-msg');
             
-            errorBox.style.display = 'none'; // Resetear caja de error
+            errorBox.style.display = 'none';
 
             if (pass.length < 6) {
                 errorBox.innerText = "La contraseña es muy corta. Debe tener al menos 6 caracteres.";
@@ -1237,9 +1237,8 @@
                     actualizarEstadoSesion();
                     return;
                 } catch(err) {
-                    // TRADUCTOR DE ERRORES FIREBASE PROFESIONAL
+                    // TRADUCTOR DE ERRORES PROFESIONAL
                     let mensajeAmigable = "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.";
-                    
                     switch(err.code) {
                         case 'auth/invalid-credential':
                         case 'auth/user-not-found':
@@ -1262,10 +1261,12 @@
                             mensajeAmigable = "Error de red. Comprueba tu conexión a Internet.";
                             break;
                     }
-                    
                     errorBox.innerText = mensajeAmigable;
                     errorBox.style.display = 'block';
                 }
+            } else {
+                errorBox.innerText = "Error de conexión con la base de datos (Firebase). Revisa tu conexión.";
+                errorBox.style.display = 'block';
             }
         }
 
