@@ -140,6 +140,7 @@
         .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2.5rem; }
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; position: relative; color: var(--text-dark); }
 
+        /* SELLOS DE CONFIANZA SIN MENCIONES DE ENVÍO */
         .trust-strip { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; max-width: 1000px; margin-left: auto; margin-right: auto; padding: 0 1rem; }
         .trust-item { background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .trust-item i { color: var(--google-green); font-size: 1.1rem; }
@@ -225,6 +226,9 @@
         .auth-toggle { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; }
         .auth-tab.active { color: var(--google-blue); border-bottom-color: var(--google-blue); }
+
+        /* MENSAJE DE ERROR PROFESIONAL EN EL FORMULARIO */
+        .auth-error-box { background: rgba(234, 67, 53, 0.1); color: var(--google-red); border: 1px solid rgba(234, 67, 53, 0.3); padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center; margin-bottom: 1rem; display: none; }
 
         .avatar-uploader { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
         .avatar-preview-wrap { position: relative; width: 90px; height: 90px; margin-bottom: 10px; }
@@ -497,7 +501,7 @@
         </div>
     </footer>
 
-    <!-- MODAL PERFIL / REGISTRO / LOGIN -->
+    <!-- MODAL PERFIL / REGISTRO / LOGIN CON MENSAJE DE ERROR PROFESIONAL -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="btn-close-modal" onclick="cerrarModalAuth()">&times;</button>
@@ -507,6 +511,9 @@
             </div>
 
             <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
+                <!-- MENSAJE DE ERROR INTEGRADO -->
+                <div id="auth-error-msg" class="auth-error-box"></div>
+
                 <div id="group-apodo" style="margin-bottom: 1rem; display: none;">
                     <label style="font-size:0.85rem; color:var(--text-muted);">Tu Apodo / Nombre público</label>
                     <input type="text" id="auth-apodo" class="form-control-review" placeholder="Ej: Pedro">
@@ -682,7 +689,7 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE BLINDADA ================= -->
+    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE BLINDADA Y ERRORES PROFESIONALES ================= -->
     <script>
         // 1. TEMAS
         function toggleMenuTemas() {
@@ -716,7 +723,6 @@
         };
         let db = null, auth = null;
         
-        // Bloque Try-Catch para asegurar que, si algo falla en la conexión de red o clave de Firebase, la web siga siendo interactiva y no se congele.
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
@@ -724,7 +730,7 @@
             auth = firebase.auth();
             db = firebase.firestore();
         } catch (e) { 
-            console.log("Cargando web en modo local sin nube por error de conexión:", e); 
+            console.log("Cargando web en modo local sin nube:", e); 
         }
 
         const EMAIL_ADMINISTRADOR = "kiwireview2026@gmail.com";
@@ -1048,7 +1054,7 @@
                 await db.collection("productos").doc(nuevoProd.id).set(nuevoProd);
             }
 
-            alert("¡Nuevo producto con fotos por color subido a la nube con éxito!");
+            alert("¡Nuevo producto subido a la nube con éxito!");
             document.getElementById('new-product-form').reset();
             fotosVariantesTemporales = {};
             renderizarCatalogos();
@@ -1105,7 +1111,6 @@
                         snap.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
                     }
                 } catch(e) {
-                    console.log("Error nube reseñas:", e);
                     lista = resenasFijas;
                 }
             } else {
@@ -1174,7 +1179,7 @@
             renderizarDatosAdmin();
         }
 
-        // ================= 8. SESIÓN, ROLES Y PANEL (NUBE) =================
+        // ================= 8. SESIÓN Y GESTIÓN PROFESIONAL DE ERRORES =================
         function esUsuarioAdmin() {
             const sesion = localStorage.getItem('kiwi_sesion');
             return sesion === EMAIL_ADMINISTRADOR;
@@ -1190,6 +1195,7 @@
             document.getElementById('tab-register').classList.toggle('active', modo === 'register');
             document.getElementById('auth-submit-btn').innerText = modo === 'login' ? 'Entrar a mi Cuenta' : 'Crear Cuenta Nueva';
             document.getElementById('group-apodo').style.display = modo === 'register' ? 'block' : 'none';
+            document.getElementById('auth-error-msg').style.display = 'none'; // Limpiar error anterior
         }
 
         async function gestionarAutenticacion(e) {
@@ -1197,9 +1203,13 @@
             const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value;
             const apodo = document.getElementById('auth-apodo').value.trim();
+            const errorBox = document.getElementById('auth-error-msg');
+            
+            errorBox.style.display = 'none'; // Resetear caja de error
 
             if (pass.length < 6) {
-                alert("La contraseña debe tener mínimo 6 caracteres.");
+                errorBox.innerText = "La contraseña es muy corta. Debe tener al menos 6 caracteres.";
+                errorBox.style.display = 'block';
                 return;
             }
 
@@ -1219,17 +1229,42 @@
                                 fechaRegistro: new Date().toISOString()
                             });
                         }
-                        alert("¡Cuenta registrada con éxito en la nube!");
                     } else {
                         await auth.signInWithEmailAndPassword(email, pass);
-                        alert("¡Bienvenido de nuevo!");
                     }
                     localStorage.setItem('kiwi_sesion', email);
                     cerrarModalAuth();
                     actualizarEstadoSesion();
                     return;
                 } catch(err) {
-                    alert("Aviso Firebase: " + err.message);
+                    // TRADUCTOR DE ERRORES FIREBASE PROFESIONAL
+                    let mensajeAmigable = "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.";
+                    
+                    switch(err.code) {
+                        case 'auth/invalid-credential':
+                        case 'auth/user-not-found':
+                        case 'auth/wrong-password':
+                            mensajeAmigable = "El correo electrónico o la contraseña son incorrectos.";
+                            break;
+                        case 'auth/email-already-in-use':
+                            mensajeAmigable = "Este correo ya está registrado. Por favor, inicia sesión.";
+                            break;
+                        case 'auth/weak-password':
+                            mensajeAmigable = "La contraseña es demasiado débil.";
+                            break;
+                        case 'auth/invalid-email':
+                            mensajeAmigable = "El formato del correo electrónico no es válido.";
+                            break;
+                        case 'auth/too-many-requests':
+                            mensajeAmigable = "Demasiados intentos fallidos. Por favor, espera unos minutos e inténtalo de nuevo.";
+                            break;
+                        case 'auth/network-request-failed':
+                            mensajeAmigable = "Error de red. Comprueba tu conexión a Internet.";
+                            break;
+                    }
+                    
+                    errorBox.innerText = mensajeAmigable;
+                    errorBox.style.display = 'block';
                 }
             }
         }
@@ -1268,7 +1303,6 @@
             localStorage.removeItem('kiwi_sesion');
             actualizarEstadoSesion();
             cerrarModalAuth();
-            alert("Has cerrado sesión.");
         }
 
         async function actualizarEstadoSesion() {
