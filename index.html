@@ -17,6 +17,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
+        /* ================= VARIABLES DINÁMICAS POR TEMA ================= */
         :root {
             --bg-light: #F8F9FA;
             --bg-card: #FFFFFF;
@@ -648,7 +649,7 @@
             </div>
 
             <!-- 3. TABLA DE CLIENTES REGISTRADOS -->
-            <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes Registrados</h3>
+            <h3 style="margin-bottom: 1rem;"><i class="fa-solid fa-users"></i> Clientes Registrados en la Nube</h3>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
                     <thead>
@@ -682,7 +683,7 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT ================= -->
+    <!-- ================= JAVASCRIPT: LÓGICA DE NUBE AÑADIDA ================= -->
     <script>
         // 1. TEMAS
         function toggleMenuTemas() {
@@ -754,7 +755,7 @@
             document.getElementById('menu-container').style.display = 'flex';
         }
 
-        // ================= 5. CATÁLOGO CON FOTOS POR COLOR Y OFERTA DINÁMICA =================
+        // ================= 5. CATÁLOGO SINCRONIZADO CON FIREBASE =================
         const productosBase = [
             {
                 id: "prod_nfc_placa",
@@ -796,17 +797,30 @@
             }
         ];
 
-        function obtenerProductos() {
-            return JSON.parse(localStorage.getItem('kiwi_catalogo_productos')) || productosBase;
-        }
-        function guardarProductos(lista) {
-            localStorage.setItem('kiwi_catalogo_productos', JSON.stringify(lista));
-        }
-
         const estadoProductos = {};
 
-        function renderizarCatalogos() {
-            const prods = obtenerProductos();
+        async function renderizarCatalogos() {
+            let prods = [];
+            
+            if (db) {
+                try {
+                    const snap = await db.collection("productos").get();
+                    if (snap.empty) {
+                        for (const p of productosBase) {
+                            await db.collection("productos").doc(p.id).set(p);
+                            prods.push(p);
+                        }
+                    } else {
+                        snap.forEach(doc => prods.push(doc.data()));
+                    }
+                } catch(e) {
+                    console.log("Fallo al conectar con Productos en nube, cargando base:", e);
+                    prods = productosBase;
+                }
+            } else {
+                prods = productosBase;
+            }
+
             const contKiwi = document.getElementById('catalog-kiwi-container');
             const contRFID = document.getElementById('catalog-rfid-container');
 
@@ -865,13 +879,13 @@
 
                     <div class="quantity-wrapper">
                         <div class="quantity-controls">
-                            <button class="qty-btn" onclick="cambiarCantidadProducto('${p.id}', -1)"><i class="fa-solid fa-minus"></i></button>
+                            <button class="qty-btn" onclick="cambiarCantidadProducto('${p.id}', -1, ${p.precioBase}, '${p.descuentoTipo}')"><i class="fa-solid fa-minus"></i></button>
                             <input type="number" id="qty-input-${p.id}" class="qty-input" value="1" readonly>
-                            <button class="qty-btn" onclick="cambiarCantidadProducto('${p.id}', 1)"><i class="fa-solid fa-plus"></i></button>
+                            <button class="qty-btn" onclick="cambiarCantidadProducto('${p.id}', 1, ${p.precioBase}, '${p.descuentoTipo}')"><i class="fa-solid fa-plus"></i></button>
                         </div>
                     </div>
                     
-                    <button onclick="agregarAlPedido('${p.id}')" class="btn-primary" style="gap:8px; display:inline-flex; align-items:center; justify-content:center;">
+                    <button onclick="agregarAlPedido('${p.id}', '${p.titulo}')" class="btn-primary" style="gap:8px; display:inline-flex; align-items:center; justify-content:center;">
                         <i class="fa-solid fa-cart-shopping"></i> Añadir al Pedido
                     </button>
                 `;
@@ -879,7 +893,7 @@
                 if (p.categoria === 'kiwi') contKiwi.appendChild(card);
                 else contRFID.appendChild(card);
 
-                calcularPrecioDinamico(p.id);
+                calcularPrecioDinamicoDOM(p.id, p.precioBase, p.descuentoTipo);
             });
         }
 
@@ -901,31 +915,26 @@
             btnElem.classList.add('active');
         }
 
-        function cambiarCantidadProducto(idProd, delta) {
+        function cambiarCantidadProducto(idProd, delta, precioBase, descuentoTipo) {
             let actual = estadoProductos[idProd].cantidad;
             actual += delta;
             if (actual >= 1) {
                 estadoProductos[idProd].cantidad = actual;
                 const input = document.getElementById(`qty-input-${idProd}`);
                 if (input) input.value = actual;
-                calcularPrecioDinamico(idProd);
+                calcularPrecioDinamicoDOM(idProd, precioBase, descuentoTipo);
             }
         }
 
-        function calcularPrecioDinamico(idProd) {
-            const prods = obtenerProductos();
-            const producto = prods.find(p => String(p.id) === String(idProd));
-            if (!producto) return;
-
+        function calcularPrecioDinamicoDOM(idProd, precioBase, descuentoTipo) {
             const qty = estadoProductos[idProd].cantidad;
-            const precioBase = producto.precioBase || producto.precio || 0;
             let total = 0;
             let ahorro = 0;
 
-            if (producto.descuentoTipo === "extra") {
+            if (descuentoTipo === "extra") {
                 total = (qty * precioBase) - ((qty - 1) * 2);
                 ahorro = (qty - 1) * 2;
-            } else if (producto.descuentoTipo === "pairs") {
+            } else if (descuentoTipo === "pairs") {
                 const subtotal = qty * precioBase;
                 const pares = Math.floor(qty / 2);
                 ahorro = pares * 2;
@@ -949,18 +958,14 @@
             }
         }
 
-        function agregarAlPedido(idProd) {
-            const prods = obtenerProductos();
-            const producto = prods.find(p => String(p.id) === String(idProd));
-            if (!producto) return;
-
+        function agregarAlPedido(idProd, tituloProd) {
             const estado = estadoProductos[idProd];
             const qty = estado.cantidad;
             const variante = estado.varianteElegida;
             const priceText = document.getElementById(`price-display-${idProd}`).innerText;
 
             const msgBox = document.getElementById('message-box');
-            let linea = `- ${qty}x ${producto.titulo} [Color/Modelo: ${variante}] -> Total con dto: ${priceText}\n`;
+            let linea = `- ${qty}x ${tituloProd} [Color/Modelo: ${variante}] -> Total: ${priceText}\n`;
 
             if (!msgBox.value.includes("¡Hola Kiwi Review! Me gustaría realizar este encargo:")) {
                 msgBox.value = `¡Hola Kiwi Review! Me gustaría realizar este encargo:\n\n` + linea;
@@ -975,7 +980,7 @@
             }, 600);
         }
 
-        // ================= 6. CREADOR DE PRODUCTOS CON FOTOS POR COLOR (ADMIN) =================
+        // ================= 6. CREADOR DE PRODUCTOS (ADMIN) =================
         let fotosVariantesTemporales = {};
 
         function agregarFilaVariante() {
@@ -1001,7 +1006,7 @@
             reader.readAsDataURL(file);
         }
 
-        function crearNuevoProducto(e) {
+        async function crearNuevoProducto(e) {
             e.preventDefault();
             const titulo = document.getElementById('prod-title').value.trim();
             const precio = parseFloat(document.getElementById('prod-price').value);
@@ -1034,34 +1039,30 @@
                 foto: variantes[0].img
             };
 
-            const productos = obtenerProductos();
-            productos.push(nuevoProd);
-            guardarProductos(productos);
+            if (db) {
+                await db.collection("productos").doc(nuevoProd.id).set(nuevoProd);
+            }
 
-            alert("¡Nuevo producto con fotos por color publicado con éxito!");
+            alert("¡Nuevo producto con fotos por color subido a la nube con éxito!");
             document.getElementById('new-product-form').reset();
             fotosVariantesTemporales = {};
             renderizarCatalogos();
-            renderizarDatosAdmin();
+            if(document.getElementById('admin-modal').style.display === 'flex') renderizarDatosAdmin();
         }
 
-        function eliminarProductoAdmin(idProducto) {
-            const prods = obtenerProductos();
-            const prodAEliminar = prods.find(p => String(p.id) === String(idProducto));
-            const nombre = prodAEliminar ? prodAEliminar.titulo : "este producto";
+        async function eliminarProductoAdmin(idProducto) {
+            if (!confirm(`¿Seguro que deseas eliminar definitivamente este producto de la nube?`)) return;
 
-            if (!confirm(`¿Seguro que deseas eliminar definitivamente "${nombre}" de la tienda?`)) return;
-
-            const nuevaLista = prods.filter(p => String(p.id) !== String(idProducto));
-            guardarProductos(nuevaLista);
-            delete estadoProductos[idProducto];
-
+            if (db) {
+                await db.collection("productos").doc(idProducto).delete();
+            }
+            
             alert("Producto eliminado de la tienda.");
             renderizarCatalogos();
             renderizarDatosAdmin();
         }
 
-        // ================= 7. MOTOR DE RESEÑAS SEGURO =================
+        // ================= 7. MOTOR DE RESEÑAS CON NUBE =================
         let fotoResenaBase64 = "";
         function previsualizarFotoResena(event) {
             const file = event.target.files[0];
@@ -1077,27 +1078,34 @@
         }
 
         const resenasFijas = [
-            { id: "rev_1", autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", foto: "", estrellas: 5 },
-            { id: "rev_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, además el servicio fue impecable. 10/10.", foto: "", estrellas: 5 },
-            { id: "rev_3", autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", foto: "", estrellas: 4 }
+            { id: "rev_1", autor: "Carlos M. (La Tagliatella)", texto: "Compré los carteles para mi restaurante y las reseñas han subido un 300% en un mes. Brutal.", foto: "", estrellas: 5, fecha: "2026-09-01T10:00:00Z" },
+            { id: "rev_2", autor: "Comunidad de Vecinos Av. Sur", texto: "Los llaveros del portal funcionan perfecto, un trato inmejorable. 10/10.", foto: "", estrellas: 5, fecha: "2026-09-05T10:00:00Z" },
+            { id: "rev_3", autor: "Clínica Dental Sonrisas", texto: "Diseño muy elegante de las placas blancas, combinan perfecto en nuestra clínica dental.", foto: "", estrellas: 4, fecha: "2026-09-10T10:00:00Z" }
         ];
 
-        function obtenerResenas() {
-            let guardadas = localStorage.getItem('kiwi_resenas_unificadas');
-            if (!guardadas) {
-                localStorage.setItem('kiwi_resenas_unificadas', JSON.stringify(resenasFijas));
-                return resenasFijas;
-            }
-            return JSON.parse(guardadas);
-        }
-        function guardarResenas(lista) {
-            localStorage.setItem('kiwi_resenas_unificadas', JSON.stringify(lista));
-        }
-
-        function renderizarResenasWeb() {
-            const lista = obtenerResenas();
+        async function renderizarResenasWeb() {
             const contenedor = document.getElementById('reviews-list');
             contenedor.innerHTML = "";
+            let lista = [];
+
+            if (db) {
+                try {
+                    const snap = await db.collection("resenas").orderBy("fecha", "desc").get();
+                    if(snap.empty) {
+                        for(const r of resenasFijas) {
+                            await db.collection("resenas").doc(r.id).set(r);
+                            lista.push(r);
+                        }
+                    } else {
+                        snap.forEach(doc => lista.push({ id: doc.id, ...doc.data() }));
+                    }
+                } catch(e) {
+                    console.log("Error nube reseñas:", e);
+                    lista = resenasFijas;
+                }
+            } else {
+                lista = resenasFijas;
+            }
 
             if (lista.length === 0) {
                 contenedor.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:var(--text-muted);'>Aún no hay opiniones publicadas.</p>";
@@ -1121,9 +1129,8 @@
                 contenedor.appendChild(card);
             });
         }
-        renderizarResenasWeb();
 
-        function enviarResena(e) {
+        async function enviarResena(e) {
             e.preventDefault();
             const autor = document.getElementById('rev-name').value.trim();
             const texto = document.getElementById('rev-comment').value.trim();
@@ -1131,38 +1138,30 @@
             const estrellas = ratingInput ? parseInt(ratingInput.value) : 5;
 
             const nueva = {
-                id: "rev_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
                 autor: autor,
                 texto: texto,
                 estrellas: estrellas,
-                foto: fotoResenaBase64
+                foto: fotoResenaBase64,
+                fecha: new Date().toISOString()
             };
 
-            const lista = obtenerResenas();
-            lista.unshift(nueva);
-            guardarResenas(lista);
-
             if (db) {
-                db.collection("resenas").doc(nueva.id).set(nueva).catch(console.error);
+                await db.collection("resenas").add(nueva);
             }
 
-            alert("¡Muchas gracias! Tu reseña ha sido publicada.");
+            alert("¡Muchas gracias! Tu reseña ha sido guardada en la Nube.");
             document.getElementById('review-form').reset();
             document.getElementById('review-photo-preview').style.display = 'none';
             fotoResenaBase64 = "";
             renderizarResenasWeb();
-            renderizarDatosAdmin();
+            if(document.getElementById('admin-modal').style.display === 'flex') renderizarDatosAdmin();
         }
 
-        function eliminarResenaAdmin(idExacto) {
-            if (!confirm("¿Deseas eliminar definitivamente solo esta reseña?")) return;
-
-            let lista = obtenerResenas();
-            lista = lista.filter(item => String(item.id) !== String(idExacto));
-            guardarResenas(lista);
+        async function eliminarResenaAdmin(idExacto) {
+            if (!confirm("¿Deseas eliminar definitivamente solo esta reseña de la nube?")) return;
 
             if (db) {
-                db.collection("resenas").doc(idExacto).delete().catch(console.error);
+                await db.collection("resenas").doc(idExacto).delete();
             }
 
             alert("Reseña eliminada correctamente.");
@@ -1170,7 +1169,7 @@
             renderizarDatosAdmin();
         }
 
-        // ================= 8. SESIÓN Y ROLES =================
+        // ================= 8. SESIÓN, ROLES Y PANEL (NUBE) =================
         function esUsuarioAdmin() {
             const sesion = localStorage.getItem('kiwi_sesion');
             return sesion === EMAIL_ADMINISTRADOR;
@@ -1188,7 +1187,7 @@
             document.getElementById('group-apodo').style.display = modo === 'register' ? 'block' : 'none';
         }
 
-        function gestionarAutenticacion(e) {
+        async function gestionarAutenticacion(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value;
@@ -1199,80 +1198,75 @@
                 return;
             }
 
-            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
+            if (auth) {
+                try {
+                    if (modoAuth === 'register') {
+                        const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                        const apodoFinal = apodo || (email === EMAIL_ADMINISTRADOR ? "Admin Kiwi" : email.split('@')[0]);
+                        const fotoInicial = "https://placehold.co/100x100?text=" + encodeURIComponent(apodoFinal.charAt(0).toUpperCase());
 
-            if (modoAuth === 'register') {
-                if (usuarios[email]) {
-                    alert("Este correo ya está registrado.");
+                        if (db) {
+                            await db.collection("usuarios").doc(cred.user.uid).set({
+                                email: email,
+                                apodo: apodoFinal,
+                                foto: fotoInicial,
+                                rol: email === EMAIL_ADMINISTRADOR ? "admin" : "cliente",
+                                fechaRegistro: new Date().toISOString()
+                            });
+                        }
+                        alert("¡Cuenta registrada con éxito en la nube!");
+                    } else {
+                        await auth.signInWithEmailAndPassword(email, pass);
+                        alert("¡Bienvenido de nuevo!");
+                    }
+                    localStorage.setItem('kiwi_sesion', email);
+                    cerrarModalAuth();
+                    actualizarEstadoSesion();
                     return;
+                } catch(err) {
+                    alert("Aviso Firebase: " + err.message);
                 }
-                const apodoFinal = apodo || (email === EMAIL_ADMINISTRADOR ? "Admin Kiwi" : email.split('@')[0]);
-                usuarios[email] = {
-                    email: email,
-                    pass: pass,
-                    apodo: apodoFinal,
-                    foto: "https://placehold.co/100x100?text=" + encodeURIComponent(apodoFinal.charAt(0).toUpperCase()),
-                    rol: email === EMAIL_ADMINISTRADOR ? "admin" : "cliente"
-                };
-                localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
-                localStorage.setItem('kiwi_sesion', email);
-                alert("¡Bienvenido, " + apodoFinal + "!");
-            } else {
-                if (email === EMAIL_ADMINISTRADOR && !usuarios[email]) {
-                    usuarios[email] = { email, pass, apodo: "Admin Kiwi", foto: "https://placehold.co/100x100?text=ADMIN", rol: "admin" };
-                    localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
-                }
-                if (!usuarios[email] || usuarios[email].pass !== pass) {
-                    alert("Correo o contraseña incorrectos.");
-                    return;
-                }
-                localStorage.setItem('kiwi_sesion', email);
-                alert("¡Sesión iniciada!");
             }
-            cerrarModalAuth();
-            actualizarEstadoSesion();
         }
 
-        function subirFotoPerfil(event) {
+        async function subirFotoPerfil(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const fotoBase64 = e.target.result;
                 document.getElementById('profile-avatar-img').src = fotoBase64;
-                const sesion = localStorage.getItem('kiwi_sesion');
-                const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
-                if (usuarios[sesion]) {
-                    usuarios[sesion].foto = fotoBase64;
-                    localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
+
+                if (auth && auth.currentUser && db) {
+                    await db.collection("usuarios").doc(auth.currentUser.uid).update({ foto: fotoBase64 });
                 }
                 actualizarEstadoSesion();
+                alert("¡Foto de perfil actualizada en la nube!");
             };
             reader.readAsDataURL(file);
         }
 
-        function guardarDatosPerfil() {
+        async function guardarDatosPerfil() {
             const nuevoApodo = document.getElementById('profile-apodo-input').value.trim();
-            const sesion = localStorage.getItem('kiwi_sesion');
-            const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
-            if (usuarios[sesion] && nuevoApodo) {
-                usuarios[sesion].apodo = nuevoApodo;
-                localStorage.setItem('kiwi_usuarios', JSON.stringify(usuarios));
-                alert("Perfil actualizado.");
-                cerrarModalAuth();
-                actualizarEstadoSesion();
+            if (!nuevoApodo) return;
+
+            if (auth && auth.currentUser && db) {
+                await db.collection("usuarios").doc(auth.currentUser.uid).update({ apodo: nuevoApodo });
             }
+            alert("Perfil actualizado.");
+            cerrarModalAuth();
+            actualizarEstadoSesion();
         }
 
-        function cerrarSesionFirebase() {
+        async function cerrarSesionFirebase() {
+            if (auth) { await auth.signOut(); }
             localStorage.removeItem('kiwi_sesion');
             actualizarEstadoSesion();
             cerrarModalAuth();
             alert("Has cerrado sesión.");
         }
 
-        function actualizarEstadoSesion() {
-            const sesion = localStorage.getItem('kiwi_sesion');
+        async function actualizarEstadoSesion() {
             const form = document.getElementById('auth-form');
             const tabs = document.getElementById('auth-tabs-container');
             const loggedInfo = document.getElementById('user-logged-info');
@@ -1282,28 +1276,38 @@
             const btnKiwi = document.getElementById('btn-admin-kiwi');
             const btnRfid = document.getElementById('btn-admin-rfid');
 
-            if (sesion) {
-                const usuarios = JSON.parse(localStorage.getItem('kiwi_usuarios')) || {};
-                const u = usuarios[sesion] || { email: sesion, apodo: sesion.split('@')[0], foto: '' };
+            if (auth && auth.currentUser) {
+                const user = auth.currentUser;
+                localStorage.setItem('kiwi_sesion', user.email);
 
-                labels.forEach(l => l.innerText = u.apodo);
-                if (u.foto) {
-                    navAvatars.forEach(av => { av.src = u.foto; av.style.display = 'inline-block'; });
-                    navIcons.forEach(ic => ic.style.display = 'none');
-                    document.getElementById('profile-avatar-img').src = u.foto;
+                let datosUsuario = { apodo: user.email.split('@')[0], foto: '' };
+                if (db) {
+                    const snap = await db.collection("usuarios").doc(user.uid).get();
+                    if (snap.exists) datosUsuario = snap.data();
                 }
+
+                labels.forEach(l => l.innerText = datosUsuario.apodo);
+                if (datosUsuario.foto) {
+                    navAvatars.forEach(av => { av.src = datosUsuario.foto; av.style.display = 'inline-block'; });
+                    navIcons.forEach(ic => ic.style.display = 'none');
+                    document.getElementById('profile-avatar-img').src = datosUsuario.foto;
+                } else {
+                    navAvatars.forEach(av => av.style.display = 'none');
+                    navIcons.forEach(ic => ic.style.display = 'inline-block');
+                }
+
                 form.style.display = 'none';
                 tabs.style.display = 'none';
                 loggedInfo.style.display = 'block';
-                document.getElementById('profile-email-input').value = u.email;
-                document.getElementById('profile-apodo-input').value = u.apodo;
+                document.getElementById('profile-email-input').value = user.email;
+                document.getElementById('profile-apodo-input').value = datosUsuario.apodo;
 
                 const nameInput = document.getElementById('order-customer-name');
                 const mailInput = document.getElementById('order-customer-email');
-                if (nameInput) nameInput.value = u.apodo;
-                if (mailInput) mailInput.value = u.email;
+                if (nameInput) nameInput.value = datosUsuario.apodo;
+                if (mailInput) mailInput.value = user.email;
 
-                if (esUsuarioAdmin()) {
+                if (user.email === EMAIL_ADMINISTRADOR) {
                     btnKiwi.style.display = 'inline-flex';
                     btnRfid.style.display = 'inline-flex';
                 } else {
@@ -1311,6 +1315,7 @@
                     btnRfid.style.display = 'none';
                 }
             } else {
+                localStorage.removeItem('kiwi_sesion');
                 labels.forEach(l => l.innerText = "Mi Cuenta");
                 navAvatars.forEach(av => av.style.display = 'none');
                 navIcons.forEach(ic => ic.style.display = 'inline-block');
@@ -1321,37 +1326,56 @@
                 btnRfid.style.display = 'none';
             }
         }
-        actualizarEstadoSesion();
 
-        // ================= 9. PANEL DE ADMINISTRADOR =================
-        function abrirModalAdmin() {
+        if (auth) {
+            auth.onAuthStateChanged(user => {
+                actualizarEstadoSesion();
+            });
+        } else {
+            actualizarEstadoSesion();
+        }
+
+        // ================= 10. PANEL ADMIN NUBE =================
+        async function abrirModalAdmin() {
             if (!esUsuarioAdmin()) {
                 alert("Acceso reservado a la cuenta de propietario.");
                 return;
             }
-            renderizarDatosAdmin();
             document.getElementById('admin-modal').style.display = 'flex';
+            await renderizarDatosAdmin();
         }
         function cerrarModalAdmin() {
             document.getElementById('admin-modal').style.display = 'none';
         }
 
-        function renderizarDatosAdmin() {
-            const usuarios = Object.values(JSON.parse(localStorage.getItem('kiwi_usuarios')) || {});
-            const resenas = obtenerResenas();
-            const productos = obtenerProductos();
+        async function renderizarDatosAdmin() {
+            let listaUsuarios = [];
+            let listaResenas = [];
+            let listaProductos = [];
 
-            document.getElementById('stat-total-users').innerText = usuarios.length;
-            document.getElementById('stat-total-reviews').innerText = resenas.length;
-            document.getElementById('stat-total-products').innerText = productos.length;
+            if (db) {
+                try {
+                    const uSnap = await db.collection("usuarios").get();
+                    uSnap.forEach(d => listaUsuarios.push(d.data()));
+                    const rSnap = await db.collection("resenas").get();
+                    rSnap.forEach(d => listaResenas.push({ id: d.id, ...d.data() }));
+                    const pSnap = await db.collection("productos").get();
+                    pSnap.forEach(d => listaProductos.push({ id: d.id, ...d.data() }));
+                } catch(e) {
+                    console.log("Error consultando nube para Admin:", e);
+                }
+            }
 
-            // 1. Tabla de Productos Activos
+            document.getElementById('stat-total-users').innerText = listaUsuarios.length;
+            document.getElementById('stat-total-reviews').innerText = listaResenas.length;
+            document.getElementById('stat-total-products').innerText = listaProductos.length;
+
             const tbodyProducts = document.getElementById('admin-products-tbody');
             tbodyProducts.innerHTML = "";
-            if (productos.length === 0) {
+            if (listaProductos.length === 0) {
                 tbodyProducts.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay productos en la tienda actualmente.</td></tr>`;
             } else {
-                productos.forEach(p => {
+                listaProductos.forEach(p => {
                     const tr = document.createElement('tr');
                     const variantesStr = (p.variantes && p.variantes.length > 0) ? p.variantes.map(v => v.nombre).join(', ') : 'Estándar';
                     const categoriaStr = p.categoria === 'kiwi' ? 'Reseñas NFC' : 'Accesos RFID';
@@ -1375,13 +1399,12 @@
                 });
             }
 
-            // 2. Tabla de Clientes
             const tbodyUsers = document.getElementById('admin-users-tbody');
             tbodyUsers.innerHTML = "";
-            if (usuarios.length === 0) {
-                tbodyUsers.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No hay clientes registrados aún.</td></tr>`;
+            if (listaUsuarios.length === 0) {
+                tbodyUsers.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No hay clientes registrados en la nube aún.</td></tr>`;
             } else {
-                usuarios.forEach(u => {
+                listaUsuarios.forEach(u => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><img class="table-avatar" src="${u.foto || 'https://placehold.co/40x40?text=U'}"> <strong>${u.apodo}</strong></td>
@@ -1393,13 +1416,12 @@
                 });
             }
 
-            // 3. Tabla de Moderación de Reseñas
             const tbodyReviews = document.getElementById('admin-reviews-tbody');
             tbodyReviews.innerHTML = "";
-            if (resenas.length === 0) {
-                tbodyReviews.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay reseñas publicadas.</td></tr>`;
+            if (listaResenas.length === 0) {
+                tbodyReviews.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay reseñas en la nube publicadas.</td></tr>`;
             } else {
-                resenas.forEach(r => {
+                listaResenas.forEach(r => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong>${r.autor}</strong></td>
@@ -1418,6 +1440,7 @@
         }
 
         renderizarCatalogos();
+        renderizarResenasWeb();
     </script>
 </body>
 </html>
