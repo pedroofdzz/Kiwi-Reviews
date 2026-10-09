@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kiwi Review & Accesos RFID</title>
+    <!-- Etiqueta de verificación de Google Search Console -->
+    <meta name="google-site-verification" content="TU_CODIGO_AQUI_SI_LO_NECESITAS" />
+    <title>Kiwi Review | Placas NFC para Reseñas Google y Accesos RFID</title>
+    <meta name="description" content="Multiplica las valoraciones de tu negocio con nuestras placas y carteles NFC. Sistemas RFID, tarjetas y llaveros para accesos de portal sin llaves.">
+    <meta name="keywords" content="kiwi review, nfc reseñas google, comprar cartel reseñas, llaveros rfid, tarjetas rfid portal">
     
     <!-- Fuentes e Iconos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -198,9 +202,9 @@
         .btn-primary { background-color: var(--google-blue); color: white; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); transition: all 0.3s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; gap: 8px; font-size: 0.95rem; -webkit-appearance: none; text-decoration: none; }
         .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); color: white; }
 
-        /* PREGUNTAS FRECUENTES - ¡AHORA CENTRADAS! */
+        /* PREGUNTAS FRECUENTES CENTRADAS */
         .faq-section { padding: 4rem 1.5rem; background: var(--bg-card); border-top: 1px solid var(--border-color); }
-        .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; text-align: left; /* Las preguntas se leen mejor alineadas a la izquierda dentro de una caja centrada */ }
+        .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; text-align: left; }
         .faq-item { background: var(--bg-light); border-radius: 8px; padding: 1.2rem 1.5rem; border: 1px solid var(--border-color); transition: all 0.3s; margin: 0 auto; width: 100%; max-width: 750px; }
         .faq-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .faq-item summary { font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark); }
@@ -221,7 +225,6 @@
 
         .add-review-box { max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 2rem 1.5rem; border-radius: 12px; border: 2px dashed var(--border-color); text-align: center; width: 100%; }
         
-        /* CAJA DE AVISO PARA CUANDO EL USUARIO DEBE INICIAR SESIÓN O YA HA VOTADO */
         .review-auth-warning { background: rgba(251, 188, 5, 0.1); color: #d09400; border: 1px solid rgba(251, 188, 5, 0.3); padding: 15px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; text-align: center; margin-bottom: 1rem; display: none; }
 
         .star-rating-input { display: flex; justify-content: center; gap: 8px; flex-direction: row-reverse; margin-bottom: 15px; font-size: 1.8rem; }
@@ -259,7 +262,7 @@
         .btn-instagram { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #fff !important; padding: 1rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 1.1rem; text-decoration: none; width: 100%; max-width: 300px; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4); transition: transform 0.2s; }
         .btn-instagram:hover { transform: scale(1.05); color: #FFF; }
 
-        /* MODALES ESTRUCTURADOS */
+        /* MODALES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 4000; justify-content: center; align-items: center; padding: 1rem; overflow-y: auto; }
         .modal-card { background: var(--bg-card); color: var(--text-dark); padding: 2rem 1.5rem; border-radius: 12px; width: 100%; max-width: 440px; margin: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border-color); }
         .modal-card-large { max-width: 900px; }
@@ -572,7 +575,7 @@
         </div>
     </footer>
 
-    <!-- MODAL PERFIL / REGISTRO / LOGIN -->
+    <!-- MODAL PERFIL / REGISTRO / LOGIN CON GOOGLE -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="btn-close-modal" onclick="cerrarModalAuth()">&times;</button>
@@ -582,7 +585,20 @@
             </div>
 
             <form id="auth-form" onsubmit="gestionarAutenticacion(event)">
+                <!-- MENSAJE DE ERROR PROFESIONAL INTEGRADO -->
                 <div id="auth-error-msg" class="auth-error-box"></div>
+
+                <!-- NUEVO: BOTÓN DE GOOGLE -->
+                <button type="button" onclick="iniciarSesionGoogle()" class="btn-primary" style="background-color: white; color: var(--text-dark); border: 1px solid var(--border-color); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width: 20px; height: 20px;">
+                    Continuar con Google
+                </button>
+                
+                <div style="display: flex; align-items: center; text-align: center; margin-bottom: 1.5rem;">
+                    <div style="flex-grow: 1; height: 1px; background: var(--border-color);"></div>
+                    <span style="padding: 0 10px; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">o con tu correo</span>
+                    <div style="flex-grow: 1; height: 1px; background: var(--border-color);"></div>
+                </div>
 
                 <div id="group-apodo" class="form-group" style="display: none;">
                     <label>Tu Apodo / Nombre público</label>
@@ -1224,7 +1240,6 @@
         async function enviarResena(e) {
             e.preventDefault();
             
-            // Doble comprobación de seguridad por si el usuario puentea el botón
             if (!auth || !auth.currentUser) {
                 alert("Debes iniciar sesión para publicar una reseña.");
                 abrirModalAuth();
@@ -1233,20 +1248,18 @@
 
             const emailActual = auth.currentUser.email;
 
-            // Comprobar si el usuario ya ha publicado una reseña antes en la nube
             if (db) {
                 try {
                     const snap = await db.collection("resenas").where("emailUsuario", "==", emailActual).get();
                     if (!snap.empty) {
                         alert("¡Gracias por tu entusiasmo! Pero solo se permite publicar una reseña por cliente.");
-                        return; // Bloquea el envío si ya existe
+                        return; 
                     }
                 } catch(err) {
                     console.log("Error verificando reseñas previas:", err);
                 }
             }
 
-            // Si pasa la comprobación, se recoge el texto y se guarda
             const autor = document.getElementById('rev-name').value.trim();
             const texto = document.getElementById('rev-comment').value.trim();
             const ratingInput = document.querySelector('input[name="rating"]:checked');
@@ -1258,7 +1271,7 @@
                 estrellas: estrellas,
                 foto: fotoResenaBase64,
                 fecha: new Date().toISOString(),
-                emailUsuario: emailActual // Se guarda el correo en oculto para control
+                emailUsuario: emailActual
             };
 
             if (db) {
@@ -1278,7 +1291,7 @@
             fotoResenaBase64 = "";
             
             renderizarResenasWeb();
-            validarEstadoFormularioResena(); // Bloquea el botón ahora que ya ha publicado
+            validarEstadoFormularioResena(); 
             if(document.getElementById('admin-modal').style.display === 'flex') renderizarDatosAdmin();
         }
 
@@ -1296,11 +1309,10 @@
             alert("Reseña eliminada correctamente.");
             renderizarResenasWeb();
             renderizarDatosAdmin();
-            // Al borrarla, si el usuario está conectado, se le vuelve a desbloquear la caja
             validarEstadoFormularioResena();
         }
 
-        // ================= 8. SESIÓN, ROLES Y CONTROL DE RESEÑAS =================
+        // ================= 8. SESIÓN, ROLES Y GOOGLE AUTH =================
         function esUsuarioAdmin() {
             const sesion = localStorage.getItem('kiwi_sesion');
             return sesion === EMAIL_ADMINISTRADOR;
@@ -1390,6 +1402,50 @@
             }
         }
 
+        // NUEVA FUNCIÓN: Inicio de sesión con Google
+        async function iniciarSesionGoogle() {
+            const errorBox = document.getElementById('auth-error-msg');
+            errorBox.style.display = 'none';
+
+            if (auth) {
+                try {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    const cred = await auth.signInWithPopup(provider);
+                    const user = cred.user;
+
+                    // Si es la primera vez que entra con Google, guardamos sus datos en nuestra base
+                    if (cred.additionalUserInfo && cred.additionalUserInfo.isNewUser) {
+                        if (db) {
+                            await db.collection("usuarios").doc(user.uid).set({
+                                email: user.email,
+                                apodo: user.displayName || user.email.split('@')[0],
+                                foto: user.photoURL || "https://placehold.co/100x100?text=" + encodeURIComponent(user.email.charAt(0).toUpperCase()),
+                                rol: user.email === EMAIL_ADMINISTRADOR ? "admin" : "cliente",
+                                fechaRegistro: new Date().toISOString()
+                            });
+                        }
+                    }
+
+                    localStorage.setItem('kiwi_sesion', user.email);
+                    cerrarModalAuth();
+                    actualizarEstadoSesion();
+                    alert("¡Bienvenido, " + (user.displayName || user.email.split('@')[0]) + "!");
+                    
+                } catch (err) {
+                    console.log("Error Google Auth:", err);
+                    let mensajeAmigable = "Error al conectar con Google. Por favor, inténtalo de nuevo.";
+                    if (err.code === 'auth/popup-closed-by-user') {
+                        mensajeAmigable = "Has cerrado la ventana de Google antes de terminar.";
+                    }
+                    errorBox.innerText = mensajeAmigable;
+                    errorBox.style.display = 'block';
+                }
+            } else {
+                errorBox.innerText = "Error de conexión con la base de datos (Firebase). Revisa tu conexión.";
+                errorBox.style.display = 'block';
+            }
+        }
+
         async function subirFotoPerfil(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1426,7 +1482,6 @@
             cerrarModalAuth();
         }
 
-        // Esta función desbloquea o bloquea la caja de reseñas según el usuario
         async function validarEstadoFormularioResena() {
             const btnSubmit = document.getElementById('btn-submit-review');
             const authWarning = document.getElementById('review-auth-warning');
@@ -1434,7 +1489,6 @@
             const inputComentario = document.getElementById('rev-comment');
 
             if (!auth || !auth.currentUser) {
-                // Modo Visitante (No logueado)
                 btnSubmit.innerText = "Inicia sesión para publicar";
                 btnSubmit.style.opacity = "0.5";
                 btnSubmit.style.cursor = "not-allowed";
@@ -1449,7 +1503,6 @@
                 return;
             }
 
-            // Modo Logueado (Comprobar si ya opinó)
             const emailActual = auth.currentUser.email;
             let yaOpino = false;
 
@@ -1461,7 +1514,6 @@
             }
 
             if (yaOpino) {
-                // Modo Logueado - Ya ha votado (Bloquear para evitar Spam)
                 btnSubmit.innerText = "Ya has publicado una reseña";
                 btnSubmit.style.opacity = "0.5";
                 btnSubmit.style.cursor = "not-allowed";
@@ -1473,7 +1525,6 @@
                 inputApodo.disabled = true;
                 inputComentario.disabled = true;
             } else {
-                // Modo Logueado - Aún no ha votado (Vía libre)
                 btnSubmit.innerText = "Publicar Reseña";
                 btnSubmit.style.opacity = "1";
                 btnSubmit.style.cursor = "pointer";
@@ -1481,7 +1532,6 @@
                 
                 authWarning.style.display = "none";
                 
-                // Rellenar automáticamente el nombre con el apodo del perfil
                 if(db) {
                     const snap = await db.collection("usuarios").doc(auth.currentUser.uid).get();
                     if (snap.exists) inputApodo.value = snap.data().apodo;
@@ -1554,7 +1604,6 @@
                 btnRfid.style.display = 'none';
             }
             
-            // Cada vez que se loguea/desloguea alguien, actualizamos la caja de la reseña
             validarEstadoFormularioResena();
         }
 
